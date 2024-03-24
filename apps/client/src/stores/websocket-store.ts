@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 type WebsocketStore = {
     ws: WebSocket | null;
-
     connect: () => void;
 };
 
@@ -12,7 +11,11 @@ export const useWebsocketStore = create<WebsocketStore>((set, get) => ({
     connect: () => {
         try {
             console.log("[WS] Connecting");
-            const ws = new WebSocket("/api/ws");
+
+            const url = new URL("/api/ws", window.location.href);
+            url.protocol = url.protocol.replace("http", "wss");
+
+            const ws = new WebSocket(url);
 
             ws.onopen = () => {
                 console.log("[WS] Connected");

@@ -16,11 +16,19 @@ const server = Bun.serve({
         }
     },
     websocket: {
+        async open(ws) {
+            console.log("[WS] Connected");
+        },
         async message(ws, message) {
             console.log(`[WS] Message: ${message}`);
             ws.send("Hello World!");
         },
+        async close(ws) {
+            console.log("[WS] Disconnected");
+        },
     },
 });
 
-console.log(`Backend server running at ${server.url}`);
+console.log(
+    `Backend server running at ${server.url ?? `0.0.0.0:${server.port}`}`
+);

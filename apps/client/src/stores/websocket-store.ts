@@ -26,7 +26,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
 
         ws.onopen = () => {
             console.log("[WS] Connected");
-            set({ ws });
+            set({ ws, exponentialBackoff: 1000 });
         };
 
         ws.onmessage = (event) => {

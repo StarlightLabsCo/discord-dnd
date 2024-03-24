@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { setup } from "./discord";
 import { useDiscordStore } from "./stores/discord-store";
+import { useWebsocketStore } from "./stores/websocket-store";
 
 function App() {
     const auth = useDiscordStore((state) => state.auth);
+    const ws = useWebsocketStore((state) => state.ws);
 
     useEffect(() => {
         setup();
@@ -23,6 +25,9 @@ function App() {
                     User: {auth.user.username}#{auth.user.discriminator}
                 </div>
             )}
+            <div className='text-sm text-gray-500'>
+                WebSocket: {ws != null ? "Connected" : "Disconnected"}
+            </div>
         </>
     );
 }

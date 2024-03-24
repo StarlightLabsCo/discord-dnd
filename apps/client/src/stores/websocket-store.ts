@@ -12,10 +12,7 @@ export const useWebsocketStore = create<WebsocketStore>((set, get) => ({
         try {
             console.log("[WS] Connecting");
 
-            const url = new URL("/api/ws", window.location.href);
-            url.protocol = url.protocol.replace("http", "ws");
-
-            const ws = new WebSocket(url);
+            const ws = new WebSocket(`wss://${location.host}/api/ws`);
 
             ws.onopen = () => {
                 console.log("[WS] Connected");

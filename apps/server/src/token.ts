@@ -35,7 +35,18 @@ export async function handleTokenRequest(req: Request) {
         access_token: string;
     };
 
-    // TODO: fetch discord's /me api to fetch user info, and create one in db if it doesn't
+    // Check if user exists in db
+    const userResponse = await fetch(
+        `${process.env.VITE_DISCORD_API_BASE}/users/@me`,
+        {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        }
+    );
+
+    const user = await userResponse.json();
+    console.log(user);
 
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },

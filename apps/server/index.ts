@@ -21,7 +21,6 @@ const server = Bun.serve({
         },
         async message(ws, message) {
             console.log(`[WS] Message: ${message}`);
-            ws.send("Hello World!");
         },
         async close(ws) {
             console.log("[WS] Disconnected");

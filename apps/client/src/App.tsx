@@ -5,11 +5,19 @@ import { useWebsocketStore } from "./stores/websocket-store";
 
 function App() {
     const auth = useDiscordStore((state) => state.auth);
+
+    const connect = useWebsocketStore((state) => state.connect);
     const ws = useWebsocketStore((state) => state.ws);
 
     useEffect(() => {
         setup();
     }, []);
+
+    useEffect(() => {
+        if (auth != null) {
+            connect();
+        }
+    }, [connect, auth]);
 
     return (
         <>

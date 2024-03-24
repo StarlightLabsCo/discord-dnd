@@ -1,4 +1,6 @@
 import discordSdk from "./";
+import type { AsyncReturnType } from "type-fest";
+export type Auth = AsyncReturnType<typeof discordSdk.commands.authenticate>;
 
 export async function authenticate() {
     const { code } = await discordSdk.commands.authorize({
@@ -49,5 +51,5 @@ export async function authenticate() {
         throw new Error("Discord SDK authenticate command failed");
     }
 
-    return auth;
+    return auth as Auth;
 }

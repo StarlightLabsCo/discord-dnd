@@ -1,11 +1,12 @@
 import { create } from "zustand";
+import { Auth } from "../discord/auth";
 
 type DiscordStore = {
-    auth: any;
-    setAuth: (auth: any) => void;
+    auth: Auth | null;
+    setAuth: (auth: Auth | null) => void;
 };
 
 export const useDiscordStore = create<DiscordStore>((set) => ({
     auth: null,
-    setAuth: (auth: any) => set({ auth }),
+    setAuth: (auth: Auth | null) => set({ auth }),
 }));

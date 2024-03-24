@@ -13,8 +13,6 @@ async function setup() {
     const auth = await authenticate();
     useDiscordStore.getState().setAuth(auth);
     console.log("[DiscordD&D] Authenticated");
-
-    
 }
 
 export { setup, discordSdk as default };

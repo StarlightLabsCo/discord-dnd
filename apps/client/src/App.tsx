@@ -4,6 +4,7 @@ import { useDiscordStore } from "./stores/discord-store";
 import { useWebsocketStore } from "./stores/websocket-store";
 
 function App() {
+    const instanceId = useDiscordStore((state) => state.instanceId);
     const auth = useDiscordStore((state) => state.auth);
 
     const connect = useWebsocketStore((state) => state.connect);
@@ -24,6 +25,9 @@ function App() {
             <div className='text-lg font-bold'>Hello World!</div>
             <div className='text-sm text-gray-500'>
                 This is a Discord D&D app
+            </div>
+            <div className='text-sm text-gray-500'>
+                Instance ID: {instanceId ?? "Not set"}
             </div>
             <div className='text-sm text-gray-500'>
                 Authenticated: {auth != null ? "True" : "False"}

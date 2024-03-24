@@ -20,21 +20,18 @@ export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
     try {
-        console.log("[WS] Connecting");
-
         const ws = new WebSocket(`wss://${location.host}/api/ws`);
 
         ws.onopen = () => {
-            console.log("[WS] Connected");
             set({ ws, exponentialBackoff: 1000 });
         };
 
         ws.onmessage = (event) => {
-            console.log(`[WS] Message: ${event.data}`);
+            console.log(`[DiscordD&D WS] Message: ${event.data}`);
         };
 
         ws.onerror = (error) => {
-            console.error("[WS] Error:", error);
+            console.error("[DiscordD&D WS] Error:", error);
         };
 
         ws.onclose = (event: CloseEvent) => {
@@ -43,7 +40,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
             });
 
             console.log(
-                `[WS] WebSocket connection closed. Code: ${event.code} Reason: ${event.reason}`
+                `[DiscordD&D WS] WebSocket connection closed. Code: ${event.code} Reason: ${event.reason}`
             );
 
             if (!event.wasClean) {
@@ -53,7 +50,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
             retry(set, get);
         };
     } catch (error) {
-        console.error("[WS] Error:", error);
+        console.error("[DiscordD&D WS] Error:", error);
         retry(set, get);
     }
 }

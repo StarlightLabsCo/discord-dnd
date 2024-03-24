@@ -11,7 +11,7 @@ export const useWebsocketStore = create<WebsocketStore>((set, get) => ({
 
     connect: () => {
         try {
-            const ws = new WebSocket("/api/ws");
+            const ws = new WebSocket("wss://0.0.0.0/api/ws");
 
             ws.onopen = () => {
                 console.log("[WS] Connected");

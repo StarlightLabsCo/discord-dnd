@@ -39,6 +39,9 @@ export async function handleTokenRequest(req: Request) {
     };
 
     // Check if user exists in db (and if not, create user in db)
+    if (!access_token) {
+        return new Response("Invalid access token", { status: 400 });
+    }
     await getUser(access_token);
 
     return new Response(JSON.stringify({ access_token }), {

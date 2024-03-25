@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "database";
 import type { APIUser } from "discord-api-types/v10";
 
 /**
@@ -9,7 +9,7 @@ import type { APIUser } from "discord-api-types/v10";
  */
 export async function getUser(access_token: string) {
     const userResponse = await fetch(
-        `${process.env.VITE_DISCORD_API_BASE}/users/@me`,
+        `${process.env.DISCORD_API_BASE}/users/@me`,
         {
             headers: {
                 Authorization: `Bearer ${access_token}`,

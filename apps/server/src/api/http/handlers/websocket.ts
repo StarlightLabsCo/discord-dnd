@@ -1,7 +1,7 @@
 import type { Server } from "bun";
-import { getUser } from "./discord";
+import { getUser } from "../../../lib/discord.js";
 
-export async function handleWebSocket(req: Request, server: Server) {
+export async function handleWebSocketInitRequest(req: Request, server: Server) {
     // Get instanceId from query params
     const url = new URL(req.url);
     const access_token = url.searchParams.get("access_token");

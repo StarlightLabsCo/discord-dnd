@@ -9,7 +9,7 @@
             "cache": false
         },
         "build": {
-            "dependsOn": ["^db:generate", "^build"]
+            "dependsOn": ["^build"]
         },
         "lint": {
             "dependsOn": ["^lint"]
@@ -20,7 +20,7 @@
             "persistent": true
         },
         "start": {
-            "dependsOn": ["^start"],
+            "dependsOn": ["^db:generate, ^start"],
             "persistent": true,
             "env": ["NODE_ENV=production"]
         }

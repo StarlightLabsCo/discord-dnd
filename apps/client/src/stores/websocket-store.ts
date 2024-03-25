@@ -32,6 +32,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
 
         ws.onmessage = (event) => {
             console.log(`[DiscordD&D WS] Message: ${event.data}`);
+            alert(event.data);
         };
 
         ws.onerror = (error) => {

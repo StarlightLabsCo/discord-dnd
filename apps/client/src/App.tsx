@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setup } from "./discord";
 import { useDiscordStore } from "./stores/discord-store";
 import { useWebsocketStore } from "./stores/websocket-store";
@@ -20,6 +20,14 @@ function App() {
         }
     }, [connect, auth]);
 
+    const sendMessage = (message: string) => {
+        if (ws != null) {
+            ws.send(message);
+        }
+    };
+
+    const [inputValue, setInputValue] = useState("");
+
     return (
         <>
             <div className='text-lg font-bold'>Hello World!</div>
@@ -40,6 +48,22 @@ function App() {
             <div className='text-sm text-gray-500'>
                 WebSocket: {ws != null ? "Connected" : "Disconnected"}
             </div>
+            <input
+                type='text'
+                className='border'
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+            />
+            {/* Added button to send message */}
+            <button
+                className='px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700'
+                onClick={() => {
+                    sendMessage(inputValue);
+                    setInputValue(""); // Clear input after sending
+                }}
+            >
+                Send
+            </button>
         </>
     );
 }

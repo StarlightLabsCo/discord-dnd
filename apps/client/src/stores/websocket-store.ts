@@ -21,9 +21,10 @@ export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
     try {
+        const access_token = useDiscordStore.getState().auth?.access_token;
         const instanceId = useDiscordStore.getState().instanceId;
         const ws = new WebSocket(
-            `wss://${location.host}/api/ws?instanceId=${instanceId}`
+            `wss://${location.host}/api/ws?access_token=${access_token}instanceId=${instanceId}`
         );
 
         ws.onopen = () => {

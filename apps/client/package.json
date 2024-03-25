@@ -3,7 +3,6 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "packageManager": "bun@1.0.30",
     "scripts": {
         "dev": "bunx --bun vite",
         "build": "bun install --frozen-lockfile && vite build",

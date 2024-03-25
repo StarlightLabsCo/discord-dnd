@@ -44,8 +44,6 @@ export async function handleTokenRequest(req: Request) {
     const { access_token } =
         (await response.json()) as RESTPostOAuth2AccessTokenResult;
 
-    await getUser(access_token);
-
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },
     });

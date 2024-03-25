@@ -15,7 +15,6 @@ export async function handleWebSocket(req: Request, server: Server) {
     }
 
     const instanceId = url.searchParams.get("instanceId");
-
     if (!instanceId) {
         return new Response("instanceId is required", { status: 400 });
     }

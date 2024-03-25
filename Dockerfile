@@ -4,7 +4,6 @@ WORKDIR /usr/src/app
 RUN apt update \
     && apt install -y curl
 
-# Install nodejs using n
 ARG NODE_VERSION=18
 RUN curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n \
     && bash n $NODE_VERSION \
@@ -16,7 +15,5 @@ ARG DATABASE_URL
 RUN bun install --frozen-lockfile && cd /usr/src/app
 
 ENV NODE_ENV=production
-RUN bunx prisma generate
-
 
 CMD bunx turbo run start --filter=server

@@ -23,8 +23,19 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
     try {
         const access_token = useDiscordStore.getState().auth?.access_token;
         const instanceId = useDiscordStore.getState().instanceId;
+
+        if (!access_token) {
+            console.error("[DiscordD&D WS] No access_token found");
+            return;
+        }
+
+        if (!instanceId) {
+            console.error("[DiscordD&D WS] No instanceId found");
+            return;
+        }
+
         const ws = new WebSocket(
-            `wss://${location.host}/api/ws?access_token=${access_token}instanceId=${instanceId}`
+            `wss://${location.host}/api/ws?access_token=${access_token}&instanceId=${instanceId}`
         );
 
         ws.onopen = () => {

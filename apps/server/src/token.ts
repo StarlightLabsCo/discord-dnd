@@ -1,5 +1,4 @@
 import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
-import { getUser } from "./discord";
 
 export async function handleTokenRequest(req: Request) {
     if (!process.env.VITE_DISCORD_CLIENT_ID) {

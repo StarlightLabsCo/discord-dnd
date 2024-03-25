@@ -12,6 +12,7 @@ export async function getUser(access_token: string) {
     );
 
     const user = (await userResponse.json()) as APIUser;
+    if (!user) throw new Error("Invalid user response");
 
     await db.user.upsert({
         where: { id: user.id },

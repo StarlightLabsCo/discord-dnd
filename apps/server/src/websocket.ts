@@ -10,6 +10,9 @@ export async function handleWebSocket(req: Request, server: Server) {
     }
 
     const user = await getUser(access_token);
+    if (!user) {
+        return new Response("Invalid user", { status: 400 });
+    }
 
     const instanceId = url.searchParams.get("instanceId");
 

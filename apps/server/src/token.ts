@@ -39,7 +39,7 @@ export async function handleTokenRequest(req: Request) {
     };
 
     // Check if user exists in db (and if not, create user in db)
-    const user = await getUser(access_token);
+    await getUser(access_token);
 
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },

@@ -1,5 +1,4 @@
-import type { APIUser } from "discord-api-types/v10";
-import { db } from "./db";
+import { getUser } from "./discord";
 
 export async function handleTokenRequest(req: Request) {
     if (!process.env.VITE_DISCORD_CLIENT_ID) {
@@ -40,33 +39,7 @@ export async function handleTokenRequest(req: Request) {
     };
 
     // Check if user exists in db (and if not, create user in db)
-    const userResponse = await fetch(
-        `${process.env.VITE_DISCORD_API_BASE}/users/@me`,
-        {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        }
-    );
-
-    const user = (await userResponse.json()) as APIUser;
-
-    await db.user.upsert({
-        where: { id: user.id },
-        create: {
-            id: user.id,
-            username: user.username,
-            global_name: user.global_name,
-            avatar: user.avatar,
-            locale: user.locale,
-        },
-        update: {
-            username: user.username,
-            global_name: user.global_name,
-            avatar: user.avatar,
-            locale: user.locale,
-        },
-    });
+    const user = await getUser(access_token);
 
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },

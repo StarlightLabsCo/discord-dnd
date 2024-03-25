@@ -10,9 +10,6 @@ function App() {
     const connect = useWebsocketStore((state) => state.connect);
     const ws = useWebsocketStore((state) => state.ws);
 
-    // debug
-    const debugMessages = useWebsocketStore((state) => state.debugMessages);
-
     useEffect(() => {
         setup();
     }, []);
@@ -23,13 +20,29 @@ function App() {
         }
     }, [connect, auth]);
 
-    const sendMessage = (message: string) => {
+    // Mouse Move
+    const sendCursorPosition = () => {
         if (ws != null) {
-            ws.send(message);
+            const cursorPosition = JSON.stringify({
+                x:
+                    window.pageXOffset +
+                    document.documentElement.scrollLeft +
+                    document.body.scrollLeft,
+                y:
+                    window.pageYOffset +
+                    document.documentElement.scrollTop +
+                    document.body.scrollTop,
+            });
+            ws.send(cursorPosition);
         }
     };
 
-    const [inputValue, setInputValue] = useState("");
+    useEffect(() => {
+        window.addEventListener("mousemove", sendCursorPosition);
+        return () => {
+            window.removeEventListener("mousemove", sendCursorPosition);
+        };
+    }, [ws]);
 
     return (
         <>
@@ -50,28 +63,6 @@ function App() {
             )}
             <div className='text-sm text-gray-500'>
                 WebSocket: {ws != null ? "Connected" : "Disconnected"}
-            </div>
-            <input
-                type='text'
-                className='border'
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-            />
-            {/* Added button to send message */}
-            <button
-                className='px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700'
-                onClick={() => {
-                    sendMessage(inputValue);
-                    setInputValue(""); // Clear input after sending
-                }}
-            >
-                Send
-            </button>
-            <div className='text-sm text-gray-500'>
-                Debug Messages:
-                {debugMessages.map((message, index) => (
-                    <div key={index}>{message}</div>
-                ))}
             </div>
         </>
     );

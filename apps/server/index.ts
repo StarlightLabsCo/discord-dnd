@@ -1,8 +1,10 @@
 import type { Server } from "bun";
 import { handleTokenRequest } from "./src/token";
 import { handleWebSocket } from "./src/websocket";
+import type { APIUser } from "discord-api-types/v10";
 
 type WebSocketData = {
+    user: APIUser;
     instanceId: string;
 };
 
@@ -26,7 +28,11 @@ const server = Bun.serve<WebSocketData>({
         },
         async message(ws, message) {
             console.log(`[WS] Message: ${message}`);
-            ws.publish(ws.data.instanceId, message);
+            const data = JSON.parse(message as string);
+            ws.publish(
+                ws.data.instanceId,
+                JSON.stringify({ userId: ws.data.user.id, message: data })
+            );
         },
         async close(ws) {
             console.log("[WS] Disconnected");

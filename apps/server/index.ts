@@ -2,7 +2,11 @@ import type { Server } from "bun";
 import { handleTokenRequest } from "./src/token";
 import { handleWebSocket } from "./src/websocket";
 
-const server = Bun.serve({
+type WebSocketData = {
+    instanceId: string;
+};
+
+const server = Bun.serve<WebSocketData>({
     async fetch(req: Request, server: Server) {
         try {
             const url = new URL(req.url);
@@ -18,9 +22,11 @@ const server = Bun.serve({
     websocket: {
         async open(ws) {
             console.log("[WS] Connected");
+            ws.subscribe(ws.data.instanceId);
         },
         async message(ws, message) {
             console.log(`[WS] Message: ${message}`);
+            ws.publish(ws.data.instanceId, message);
         },
         async close(ws) {
             console.log("[WS] Disconnected");

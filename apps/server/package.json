@@ -4,12 +4,19 @@
     "type": "module",
     "scripts": {
         "dev": "bun index.ts",
-        "start": "bun index.ts"
+        "start": "bun index.ts",
+        "db:generate": "prisma generate",
+        "db:push": "prisma db push --skip-generate"
     },
     "devDependencies": {
-        "@types/bun": "latest"
+        "@types/bun": "latest",
+        "prisma": "5.11.0"
     },
     "peerDependencies": {
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "typescript-config": "workspace:*"
+    },
+    "dependencies": {
+        "@prisma/client": "5.11.0"
     }
 }

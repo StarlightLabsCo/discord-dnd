@@ -9,6 +9,7 @@ export async function handleTokenRequest(req: Request) {
         return new Response("Internal Server Error", { status: 500 });
     }
 
+    // Get code from request body and exchange it for an access token
     const { code } = (await req.json()) as { code: string };
 
     if (!code) {
@@ -35,7 +36,7 @@ export async function handleTokenRequest(req: Request) {
         access_token: string;
     };
 
-    // Check if user exists in db
+    // Check if user exists in db (and if not, create user in db)
     const userResponse = await fetch(
         `${process.env.VITE_DISCORD_API_BASE}/users/@me`,
         {
@@ -46,7 +47,7 @@ export async function handleTokenRequest(req: Request) {
     );
 
     const user = await userResponse.json();
-    console.log(user);
+    
 
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },

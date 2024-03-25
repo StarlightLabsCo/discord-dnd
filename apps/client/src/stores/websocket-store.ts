@@ -5,18 +5,24 @@ type WebSocketStore = {
     ws: WebSocket | null;
     connect: () => void;
     exponentialBackoff: number;
+
+    debugMessages: string[];
 };
 
 type WebSocketStoreSet = (arg0: {
     ws?: WebSocket | null;
     connect?: () => void;
     exponentialBackoff?: number;
+
+    debugMessages?: string[];
 }) => void;
 
 export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
     ws: null,
     connect: () => connect(set, get),
     exponentialBackoff: 1000,
+
+    debugMessages: [],
 }));
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
@@ -32,7 +38,9 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
 
         ws.onmessage = (event) => {
             console.log(`[DiscordD&D WS] Message: ${event.data}`);
-            alert(event.data);
+            set({
+                debugMessages: [...get().debugMessages, event.data],
+            });
         };
 
         ws.onerror = (error) => {

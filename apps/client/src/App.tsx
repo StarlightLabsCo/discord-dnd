@@ -10,6 +10,9 @@ function App() {
     const connect = useWebsocketStore((state) => state.connect);
     const ws = useWebsocketStore((state) => state.ws);
 
+    // debug
+    const debugMessages = useWebsocketStore((state) => state.debugMessages);
+
     useEffect(() => {
         setup();
     }, []);
@@ -64,6 +67,12 @@ function App() {
             >
                 Send
             </button>
+            <div className='text-sm text-gray-500'>
+                Debug Messages:
+                {debugMessages.map((message, index) => (
+                    <div key={index}>{message}</div>
+                ))}
+            </div>
         </>
     );
 }

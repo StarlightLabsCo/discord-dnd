@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useDiscordStore } from "./discord-store";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -20,7 +21,10 @@ export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
     try {
-        const ws = new WebSocket(`wss://${location.host}/api/ws`);
+        const instanceId = useDiscordStore.getState().instanceId;
+        const ws = new WebSocket(
+            `wss://${location.host}/api/ws?instanceId=${instanceId}`
+        );
 
         ws.onopen = () => {
             set({ ws, exponentialBackoff: 1000 });

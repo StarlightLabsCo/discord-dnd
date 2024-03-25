@@ -15,4 +15,6 @@ model User {
     avatar      String?
 
     locale String?
+
+    updatedAt DateTime @updatedAt
 }

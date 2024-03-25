@@ -31,7 +31,7 @@ const server = Bun.serve<WebSocketData>({
             const data = JSON.parse(message as string);
             ws.publish(
                 ws.data.instanceId,
-                JSON.stringify({ userId: ws.data.user.id, message: data })
+                JSON.stringify({ userId: ws.data.user.id, data })
             );
         },
         async close(ws) {

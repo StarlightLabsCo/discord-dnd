@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { setup } from "./discord";
 import { useDiscordStore } from "./stores/discord-store";
 import { useWebsocketStore } from "./stores/websocket-store";
@@ -19,30 +19,6 @@ function App() {
             connect();
         }
     }, [connect, auth]);
-
-    // Mouse Move
-    const sendCursorPosition = () => {
-        if (ws != null) {
-            const cursorPosition = JSON.stringify({
-                x:
-                    window.pageXOffset +
-                    document.documentElement.scrollLeft +
-                    document.body.scrollLeft,
-                y:
-                    window.pageYOffset +
-                    document.documentElement.scrollTop +
-                    document.body.scrollTop,
-            });
-            ws.send(cursorPosition);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener("mousemove", sendCursorPosition);
-        return () => {
-            window.removeEventListener("mousemove", sendCursorPosition);
-        };
-    }, [ws]);
 
     return (
         <>

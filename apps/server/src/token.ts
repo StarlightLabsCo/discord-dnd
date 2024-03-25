@@ -1,3 +1,4 @@
+import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import { getUser } from "./discord";
 
 export async function handleTokenRequest(req: Request) {
@@ -34,14 +35,15 @@ export async function handleTokenRequest(req: Request) {
         }
     );
 
-    const { access_token } = (await response.json()) as {
-        access_token: string;
-    };
-
-    // Check if user exists in db (and if not, create user in db)
-    if (!access_token) {
-        return new Response("Invalid access token", { status: 400 });
+    if (!response.ok) {
+        return new Response("Failed to exchange code for access token", {
+            status: 400,
+        });
     }
+
+    const { access_token } =
+        (await response.json()) as RESTPostOAuth2AccessTokenResult;
+
     await getUser(access_token);
 
     return new Response(JSON.stringify({ access_token }), {

@@ -47,16 +47,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
 
             try {
                 const data = JSON.parse(event.data);
-                if (
-                    data.message.x !== undefined &&
-                    data.message.y !== undefined
-                ) {
-                    drawOtherUserCursor(
-                        data.message.x,
-                        data.message.y,
-                        data.userId
-                    );
-                }
+                console.log(`[DiscordD&D WS] Parsed message:`, data);
             } catch (error) {
                 console.error("[DiscordD&D WS] Error parsing message:", error);
             }
@@ -92,19 +83,4 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
         set({ exponentialBackoff: get().exponentialBackoff * 2 });
         get().connect();
     }, get().exponentialBackoff);
-}
-
-function drawOtherUserCursor(x: number, y: number, userId: string) {
-    let cursor = document.getElementById(`cursor-${userId}`);
-    if (!cursor) {
-        cursor = document.createElement("div");
-        cursor.id = `cursor-${userId}`;
-        cursor.style.position = "absolute";
-        cursor.style.width = "10px";
-        cursor.style.height = "10px";
-        cursor.style.backgroundColor = "red";
-        document.body.appendChild(cursor);
-    }
-    cursor.style.left = `${x}px`;
-    cursor.style.top = `${y}px`;
 }

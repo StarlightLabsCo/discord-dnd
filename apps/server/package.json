@@ -18,8 +18,5 @@
     },
     "dependencies": {
         "@prisma/client": "5.11.0"
-    },
-    "engines": {
-        "node": "18"
     }
 }

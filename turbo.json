@@ -15,12 +15,12 @@
             "dependsOn": ["^lint"]
         },
         "dev": {
-            "dependsOn": ["^db:generate"],
+            "dependsOn": ["db:generate"],
             "cache": false,
             "persistent": true
         },
         "start": {
-            "dependsOn": ["^db:generate, ^start"],
+            "dependsOn": ["db:generate", "^start"],
             "persistent": true,
             "env": ["NODE_ENV=production"]
         }

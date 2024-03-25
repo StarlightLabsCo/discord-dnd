@@ -1,3 +1,6 @@
+import type { APIUser } from "discord-api-types/v10";
+import { db } from "./db";
+
 export async function handleTokenRequest(req: Request) {
     if (!process.env.VITE_DISCORD_CLIENT_ID) {
         console.error("VITE_DISCORD_CLIENT_ID is required");
@@ -46,8 +49,24 @@ export async function handleTokenRequest(req: Request) {
         }
     );
 
-    const user = await userResponse.json();
-    
+    const user = (await userResponse.json()) as APIUser;
+
+    await db.user.upsert({
+        where: { id: user.id },
+        create: {
+            id: user.id,
+            username: user.username,
+            global_name: user.global_name,
+            avatar: user.avatar,
+            locale: user.locale,
+        },
+        update: {
+            username: user.username,
+            global_name: user.global_name,
+            avatar: user.avatar,
+            locale: user.locale,
+        },
+    });
 
     return new Response(JSON.stringify({ access_token }), {
         headers: { "Content-Type": "application/json" },

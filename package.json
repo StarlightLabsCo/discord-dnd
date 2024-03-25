@@ -1,25 +1,26 @@
 {
-    "name": "discord-dnd",
-    "private": true,
-    "scripts": {
-        "build": "turbo build",
-        "dev": "turbo dev",
-        "start": "turbo start",
-        "lint": "turbo lint",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\""
-    },
-    "devDependencies": {
-        "@repo/eslint-config": "*",
-        "@repo/typescript-config": "*",
-        "prettier": "^3.2.5",
-        "turbo": "latest"
-    },
-    "engines": {
-        "node": ">=18"
-    },
-    "packageManager": "bun@1.0.30",
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ]
+  "name": "discord-dnd",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "discord-api-types": "^0.37.76",
+    "prettier": "^3.2.5",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.0.30",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

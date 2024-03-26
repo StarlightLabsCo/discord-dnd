@@ -1,14 +1,7 @@
-import { useEffect } from "react";
 import fantasyforgelogo from "@/assets/fantasyforgelogo.png";
 import starlightlabslogo from "@/assets/starlightlabslogo.png";
-import startupSound from "@/assets/startup.mp3";
 
 export function LoadingScreen() {
-    useEffect(() => {
-        const audio = new Audio(startupSound);
-        audio.play();
-    }, []);
-
     return (
         <div className='w-screen h-screen bg-gradient-to-t from-[#01131D] to-[#172737] flex justify-center items-center'>
             <img

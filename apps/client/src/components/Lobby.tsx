@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import startupSound from "@/assets/startup.mp3";
 import logo from "@/assets/fantasyforgelogo.png";
 
 const connectedUsers = [
@@ -10,6 +12,11 @@ const connectedUsers = [
 ];
 
 export function Lobby() {
+    useEffect(() => {
+        const audio = new Audio(startupSound);
+        audio.play();
+    }, []);
+
     return (
         <div className='w-screen h-screen bg-[#01131D] p-8'>
             <div className='flex w-full'>

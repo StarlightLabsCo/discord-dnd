@@ -1,4 +1,4 @@
-import { db } from "database";
+import { db } from "@/lib/db";
 import type { APIUser } from "discord-api-types/v10";
 
 /**

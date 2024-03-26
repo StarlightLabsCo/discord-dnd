@@ -20,9 +20,7 @@ function App() {
         }
     }, [connect, auth]);
 
-    return <Lobby />; // TODO: remove
-
-    // return ws === null ? <LoadingScreen /> : <Lobby />;
+    return ws === null ? <LoadingScreen /> : <Lobby />;
 }
 
 export default App;

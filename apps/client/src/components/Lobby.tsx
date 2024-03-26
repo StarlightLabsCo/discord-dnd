@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.png";
+import logo from "@/assets/fantasyforgelogo.png";
 
 const connectedUsers = [
     { name: "Player 1" },

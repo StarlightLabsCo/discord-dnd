@@ -1,5 +1,7 @@
 import { create } from "zustand";
-import { useDiscordStore } from "./discord-store";
+import { useDiscordStore } from "../discord";
+import { validateWebSocketResponse } from "starlight-api-types/websocket";
+import { handleLobbyPlayerInfoResponse } from "./handlers/lobbyPlayerInfo";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -42,16 +44,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
             set({ ws, exponentialBackoff: 1000 });
         };
 
-        ws.onmessage = (event) => {
-            console.log(`[DiscordD&D WS] Message: ${event.data}`);
-
-            try {
-                const data = JSON.parse(event.data);
-                console.log(`[DiscordD&D WS] Parsed message:`, data);
-            } catch (error) {
-                console.error("[DiscordD&D WS] Error parsing message:", error);
-            }
-        };
+        ws.onmessage = onMessage;
 
         ws.onerror = (error) => {
             console.error("[DiscordD&D WS] Error:", error);
@@ -84,3 +77,27 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
         get().connect();
     }, get().exponentialBackoff);
 }
+
+async function onMessage(event: MessageEvent) {
+    try {
+        const response = validateWebSocketResponse(event.data);
+        if (!response) return;
+
+        const handler = handlers[response.type];
+        if (!handler) {
+            console.error(
+                "[DiscordD&D WS] No handler for message type:",
+                response.type
+            );
+            return;
+        }
+
+        await handler(response);
+    } catch (error) {
+        console.error("[DiscordD&D WS] Error parsing message:", error);
+    }
+}
+
+const handlers = {
+    LobbyPlayerInfoResponse: handleLobbyPlayerInfoResponse,
+};

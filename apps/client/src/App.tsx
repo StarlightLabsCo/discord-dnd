@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { setup } from "./discord";
-import { useDiscordStore } from "./stores/discord-store";
-import { useWebsocketStore } from "./stores/websocket-store";
+import { setup, useDiscordStore } from "./discord";
+import { useWebsocketStore } from "./websocket";
 
 function App() {
     const instanceId = useDiscordStore((state) => state.instanceId);

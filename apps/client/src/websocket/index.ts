@@ -23,6 +23,8 @@ export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
     try {
+        console.log(`[DiscordD&D WS] Connecting...`);
+
         const access_token = useDiscordStore.getState().auth?.access_token;
         const instanceId = useDiscordStore.getState().instanceId;
 
@@ -41,6 +43,7 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
         );
 
         ws.onopen = () => {
+            console.log(`[DiscordD&D WS] Connected`);
             set({ ws, exponentialBackoff: 1000 });
         };
 
@@ -51,13 +54,13 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
         };
 
         ws.onclose = (event: CloseEvent) => {
-            set({
-                ws: null,
-            });
-
             console.log(
                 `[DiscordD&D WS] WebSocket connection closed. Code: ${event.code} Reason: ${event.reason}`
             );
+
+            set({
+                ws: null,
+            });
 
             if (!event.wasClean) {
                 // TODO: log error to sentry

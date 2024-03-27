@@ -6,7 +6,6 @@ import { Lobby } from "./components/Lobby";
 
 function App() {
     const auth = useDiscordStore((state) => state.auth);
-
     const connect = useWebsocketStore((state) => state.connect);
 
     useEffect(() => {

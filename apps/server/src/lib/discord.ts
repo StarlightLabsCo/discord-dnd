@@ -18,43 +18,27 @@ export async function getUser(access_token: string) {
         }
     );
 
-    const user = (await userResponse.json()) as APIUser;
-    if (!user.id) {
+    const apiUser = (await userResponse.json()) as APIUser;
+    if (!apiUser.id) {
         return null;
     }
 
-    await db.user.upsert({
-        where: { id: user.id },
+    const user = await db.user.upsert({
+        where: { id: apiUser.id },
         create: {
-            id: user.id,
-            username: user.username,
-            global_name: user.global_name,
-            avatar: user.avatar,
-            locale: user.locale,
+            id: apiUser.id,
+            username: apiUser.username,
+            global_name: apiUser.global_name,
+            avatar: apiUser.avatar,
+            locale: apiUser.locale,
         },
         update: {
-            username: user.username,
-            global_name: user.global_name,
-            avatar: user.avatar,
-            locale: user.locale,
+            username: apiUser.username,
+            global_name: apiUser.global_name,
+            avatar: apiUser.avatar,
+            locale: apiUser.locale,
         },
     });
 
-    return user as APIUser;
-}
-
-/**
- * Converts an API user to a starlight user (stored in db).
- *
- * @param user The API user.
- * @returns The user.
- */
-export function apiUserToUser(user: APIUser) {
-    return {
-        id: user.id,
-        username: user.username,
-        global_name: user.global_name,
-        avatar: user.avatar,
-        locale: user.locale,
-    } as User;
+    return user as User;
 }

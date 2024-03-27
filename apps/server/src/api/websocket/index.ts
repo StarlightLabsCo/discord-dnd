@@ -1,10 +1,10 @@
 import type { ServerWebSocket, WebSocketHandler } from "bun";
-import type { APIUser } from "discord-api-types/v10";
 import { validateWebSocketRequest } from "starlight-api-types/websocket";
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
+import type { User } from "database";
 
 export type WebSocketData = {
-    user: APIUser;
+    user: User;
     instanceId: string;
 };
 

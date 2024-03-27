@@ -3,54 +3,43 @@ import type { ConnectedPlayersInfoResponse } from "starlight-api-types/websocket
 import type { User } from "database";
 import { server } from "index";
 import type { WebSocketData } from ".";
-import { apiUserToUser } from "@/lib/discord";
 
 const instanceIdToPlayers = new Map<string, User[]>();
 
 export async function handlePlayerConnect(ws: ServerWebSocket<WebSocketData>) {
-    ws.subscribe(ws.data.instanceId);
+    const { instanceId, user } = ws.data;
+    ws.subscribe(instanceId);
 
-    const players = instanceIdToPlayers.get(ws.data.instanceId) ?? [];
+    const players = instanceIdToPlayers.get(instanceId) ?? [];
+    instanceIdToPlayers.set(instanceId, [...players, user]);
 
-    instanceIdToPlayers.set(ws.data.instanceId, [
-        ...players,
-        apiUserToUser(ws.data.user),
-    ]);
-
-    server.publish(
-        ws.data.instanceId,
-        JSON.stringify({
-            type: "ConnectedPlayersInfoResponse",
-            data: {
-                players: instanceIdToPlayers.get(ws.data.instanceId) ?? [],
-            },
-        } as ConnectedPlayersInfoResponse)
-    );
+    const response: ConnectedPlayersInfoResponse = {
+        type: "ConnectedPlayersInfoResponse",
+        data: { players: instanceIdToPlayers.get(instanceId) ?? [] },
+    };
+    server.publish(instanceId, JSON.stringify(response));
 }
 
 export async function handlePlayerDisconnect(
     ws: ServerWebSocket<WebSocketData>
 ) {
-    ws.unsubscribe(ws.data.instanceId);
+    const { instanceId, user } = ws.data;
+    ws.unsubscribe(instanceId);
 
-    const players = instanceIdToPlayers.get(ws.data.instanceId) ?? [];
-    const updatedPlayers = players.filter(
-        (player) => player.id !== ws.data.user.id
-    );
+    const players = instanceIdToPlayers.get(instanceId) ?? [];
+    const updatedPlayers = players.filter((player) => player.id !== user.id);
 
-    if (updatedPlayers.length > 0) {
-        instanceIdToPlayers.set(ws.data.instanceId, updatedPlayers);
+    instanceIdToPlayers.set(instanceId, updatedPlayers);
 
-        server.publish(
-            ws.data.instanceId,
-            JSON.stringify({
-                type: "ConnectedPlayersInfoResponse",
-                data: {
-                    players: updatedPlayers,
-                },
-            } as ConnectedPlayersInfoResponse)
-        );
-    } else {
-        instanceIdToPlayers.delete(ws.data.instanceId);
+    if (updatedPlayers.length === 0) {
+        instanceIdToPlayers.delete(instanceId);
     }
+
+    server.publish(
+        instanceId,
+        JSON.stringify({
+            type: "ConnectedPlayersInfoResponse",
+            data: { players: updatedPlayers },
+        } as ConnectedPlayersInfoResponse)
+    );
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useGameStore } from "@/game";
 import startupSound from "@/assets/sfx/lobby/startup.mp3";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
+import clickSound from "@/assets/sfx/lobby/click.mp3";
 import fantasyforgelogo from "@/assets/fantasyforgelogocropped.png";
 import campaignCover from "@/assets/campaigncover.png";
 import discordSdk from "@/discord";
@@ -26,6 +27,8 @@ export function Lobby() {
             readySfx.play();
             setReady(true);
         } else {
+            const clickSfx = new Audio(readySound);
+            clickSfx.play();
             setReady(false);
         }
     };

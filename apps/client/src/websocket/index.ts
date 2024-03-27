@@ -79,6 +79,8 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
 }
 
 async function onMessage(event: MessageEvent) {
+    console.log(`[DiscordD&D WS] Message: ${event.data}`);
+
     try {
         const response = validateWebSocketResponse(event.data);
         if (!response) return;

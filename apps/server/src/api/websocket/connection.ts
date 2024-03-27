@@ -1,6 +1,7 @@
 import type { ServerWebSocket } from "bun";
 import type { ConnectedPlayersInfoResponse } from "starlight-api-types/websocket";
 import type { User } from "database";
+import { server } from "index";
 import type { WebSocketData } from ".";
 import { apiUserToUser } from "@/lib/discord";
 
@@ -16,7 +17,7 @@ export async function handlePlayerConnect(ws: ServerWebSocket<WebSocketData>) {
         apiUserToUser(ws.data.user),
     ]);
 
-    ws.publish(
+    server.publish(
         ws.data.instanceId,
         JSON.stringify({
             type: "ConnectedPlayersInfoResponse",
@@ -40,7 +41,7 @@ export async function handlePlayerDisconnect(
     if (updatedPlayers.length > 0) {
         instanceIdToPlayers.set(ws.data.instanceId, updatedPlayers);
 
-        ws.publish(
+        server.publish(
             ws.data.instanceId,
             JSON.stringify({
                 type: "ConnectedPlayersInfoResponse",

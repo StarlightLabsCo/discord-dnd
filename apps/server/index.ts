@@ -2,7 +2,7 @@ import type { Server } from "bun";
 import { handleApiRequest } from "./src/api/http";
 import { WebSocketHandlers } from "./src/api/websocket";
 
-const server = Bun.serve({
+export const server = Bun.serve({
     async fetch(req: Request, server: Server) {
         try {
             const url = new URL(req.url);

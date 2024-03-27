@@ -15,9 +15,11 @@ datasource db {
 model User {
     id String @id // https://discord.com/developers/docs/reference#snowflakes
 
-    username    String  @unique
-    global_name String?
-    avatar      String?
+    username          String  @unique
+    discriminator     String
+    global_name       String?
+    avatar            String?
+    avatar_decoration String?
 
     locale String?
 

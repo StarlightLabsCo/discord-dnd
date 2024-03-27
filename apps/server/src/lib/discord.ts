@@ -28,14 +28,18 @@ export async function getUser(access_token: string) {
         create: {
             id: apiUser.id,
             username: apiUser.username,
+            discriminator: apiUser.discriminator,
             global_name: apiUser.global_name,
             avatar: apiUser.avatar,
+            avatar_decoration: apiUser.avatar_decoration,
             locale: apiUser.locale,
         },
         update: {
             username: apiUser.username,
+            discriminator: apiUser.discriminator,
             global_name: apiUser.global_name,
             avatar: apiUser.avatar,
+            avatar_decoration: apiUser.avatar_decoration,
             locale: apiUser.locale,
         },
     });

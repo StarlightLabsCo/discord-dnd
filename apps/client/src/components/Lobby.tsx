@@ -3,6 +3,7 @@ import { useGameStore } from "@/game";
 import startupSound from "@/assets/startup.mp3";
 import logo from "@/assets/fantasyforgelogo.png";
 import discordSdk from "@/discord";
+import { DiscordAvatar } from "./DiscordAvatar";
 
 export function Lobby() {
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
@@ -32,19 +33,8 @@ export function Lobby() {
                             key={index}
                             className='flex items-center w-full px-2 py-1 text-white bg-gray-700 rounded-lg gap-x-2 h-14'
                         >
-                            <img
-                                src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
-                                className='w-8 h-8 rounded-full'
-                                alt='User Avatar'
-                            />
-                            {user.global_name ? (
-                                user.global_name
-                            ) : (
-                                <div className='flex items-center'>
-                                    <span>Add Player</span>
-                                    <span className='ml-2'>+</span>
-                                </div>
-                            )}
+                            <DiscordAvatar user={user} className='w-8 h-8' />
+                            {user.global_name}
                         </div>
                     ))}
                     {connectedPlayers.length < 6 && (

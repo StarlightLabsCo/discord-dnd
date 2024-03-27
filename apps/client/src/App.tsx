@@ -18,7 +18,16 @@ function App() {
         }
     }, [connect, auth]);
 
-    return auth === null ? <LoadingScreen /> : <Lobby />;
+    // Debugging
+    if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
+        return <Lobby className='select-none drag-none' />;
+    }
+
+    return auth === null ? (
+        <LoadingScreen className='select-none drag-none' />
+    ) : (
+        <Lobby className='select-none drag-none' />
+    );
 }
 
 export default App;

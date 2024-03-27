@@ -18,16 +18,10 @@ const useDiscordStore = create<DiscordStore>((set) => ({
 }));
 
 // ---- Setup Discord SDK ----
-
-// -- REAL --
-const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
-
-// -- DEBUG --
-// const discordSdk = new DiscordSDKMock(
-//     import.meta.env.VITE_DISCORD_CLIENT_ID,
-//     "1234",
-//     "5678"
-// );
+const discordSdk: DiscordSDK | DiscordSDKMock = import.meta.env
+    .VITE_DISCORD_EMBED_DEBUG
+    ? new DiscordSDKMock(import.meta.env.VITE_DISCORD_CLIENT_ID, "1234", "5678")
+    : new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
 
 const instanceId = discordSdk.instanceId;
 useDiscordStore.getState().setInstanceId(instanceId);

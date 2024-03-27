@@ -5,10 +5,17 @@ import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
 import fantasyforgelogo from "@/assets/fantasyforgelogocropped.png";
 import campaignCover from "@/assets/campaigncover.png";
-import discordSdk from "@/discord";
-import { DiscordAvatar } from "./DiscordAvatar";
 
-export function Lobby() {
+import { cn } from "@/lib/utils";
+import { LobbyControls } from "./LobbyControls";
+import { CharacterPortrait } from "./CharacterPortrait";
+import { AddPlayerButton } from "./AddPlayerButton";
+
+type LobbyProps = {
+    className?: string;
+};
+
+export function Lobby({ className }: LobbyProps) {
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
     const [ready, setReady] = useState(false); // TODO: swap this with useGameStore
 
@@ -16,10 +23,6 @@ export function Lobby() {
         const audio = new Audio(startupSound);
         audio.play();
     }, []);
-
-    const openInviteDialog = async () => {
-        await discordSdk.commands.openInviteDialog();
-    };
 
     const toggleReady = () => {
         if (!ready) {
@@ -34,7 +37,7 @@ export function Lobby() {
     };
 
     return (
-        <div className='w-screen h-screen bg-[#01131D]'>
+        <div className={cn("w-screen h-screen bg-[#01131D]", className)}>
             <div className='flex w-full h-full'>
                 <div className='relative flex flex-col justify-between w-1/2 p-8'>
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t from-black/30 to-transparent' />
@@ -54,29 +57,12 @@ export function Lobby() {
                     </div>
                 </div>
                 <div className='flex flex-col justify-between w-1/2 p-8'>
-                    <div className='flex items-center justify-end w-full'></div>
-                    <div className='flex flex-col items-center w-full gap-y-2'>
-                        {connectedPlayers.map((user, index) => (
-                            <div
-                                key={index}
-                                className='flex items-center w-full px-2 py-1 text-white bg-gray-700 rounded-lg gap-x-2 h-14'
-                            >
-                                <DiscordAvatar
-                                    user={user}
-                                    className='w-8 h-8'
-                                />
-                                {user.global_name}
-                            </div>
+                    <LobbyControls />
+                    <div className='grid w-full grid-cols-3 gap-4 place-items-center'>
+                        {connectedPlayers.map((user) => (
+                            <CharacterPortrait key={user.id} user={user} />
                         ))}
-                        {connectedPlayers.length < 6 && (
-                            <div
-                                className='flex items-center w-full px-2 py-1 text-white bg-gray-700 rounded-lg cursor-pointer gap-x-2 h-14 hover:scale-105 hover:drop-shadow-lg'
-                                onClick={openInviteDialog}
-                            >
-                                <span>Add Player</span>
-                                <span className='ml-2'>+</span>
-                            </div>
-                        )}
+                        {connectedPlayers.length < 6 && <AddPlayerButton />}
                     </div>
                     <div className='flex items-center justify-end w-full'>
                         <div

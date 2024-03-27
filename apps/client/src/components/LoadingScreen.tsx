@@ -1,9 +1,19 @@
 import fantasyforgelogo from "@/assets/fantasyforgelogo.png";
 import starlightlabslogo from "@/assets/starlightlabslogo.png";
+import { cn } from "@/lib/utils";
 
-export function LoadingScreen() {
+type LoadingScreenProps = {
+    className?: string;
+};
+
+export function LoadingScreen({ className }: LoadingScreenProps) {
     return (
-        <div className='w-screen h-screen bg-gradient-to-t from-[#01131D] to-[#172737] flex justify-center items-center'>
+        <div
+            className={cn(
+                "w-screen h-screen bg-gradient-to-t from-[#01131D] to-[#172737] flex justify-center items-center",
+                className
+            )}
+        >
             <img
                 src={fantasyforgelogo}
                 className='w-[768px] h-[768px]'

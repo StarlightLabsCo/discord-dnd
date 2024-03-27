@@ -4,7 +4,7 @@ import startupSound from "@/assets/startup.mp3";
 import logo from "@/assets/fantasyforgelogo.png";
 
 export function Lobby() {
-    const connectedUsers = useGameStore((state) => state.connectedPlayers);
+    const connectedPlayers = useGameStore((state) => state.connectedPlayers);
 
     useEffect(() => {
         const audio = new Audio(startupSound);
@@ -22,11 +22,16 @@ export function Lobby() {
                     />
                 </div>
                 <div className='flex flex-col items-center w-1/2'>
-                    {connectedUsers.map((user, index) => (
+                    {connectedPlayers.map((user, index) => (
                         <div
                             key={index}
-                            className='flex items-center justify-center w-full h-12 max-w-md mb-4 text-white bg-gray-700 rounded-lg'
+                            className='flex items-center w-full h-12 max-w-md mb-4 text-white bg-gray-700 rounded-lg'
                         >
+                            <img
+                                src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+                                className='w-32 h-32 rounded-full'
+                                alt='User Avatar'
+                            />
                             {user.global_name ? (
                                 user.global_name
                             ) : (

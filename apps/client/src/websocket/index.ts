@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useDiscordStore } from "../discord";
 import { validateWebSocketResponse } from "starlight-api-types/websocket";
-import { handleLobbyPlayerInfoResponse } from "./handlers/lobbyPlayerInfo";
+import { handleConnectedPlayersInfoResponse } from "./handlers/connectedPlayersInfo";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -99,5 +99,5 @@ async function onMessage(event: MessageEvent) {
 }
 
 const handlers = {
-    LobbyPlayerInfoResponse: handleLobbyPlayerInfoResponse,
+    ConnectedPlayersInfoResponse: handleConnectedPlayersInfoResponse,
 };

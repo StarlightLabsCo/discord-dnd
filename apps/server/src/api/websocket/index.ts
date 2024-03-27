@@ -1,8 +1,9 @@
 import type { ServerWebSocket, WebSocketHandler } from "bun";
 import type { APIUser } from "discord-api-types/v10";
 import { validateWebSocketRequest } from "starlight-api-types/websocket";
+import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 
-type WebSocketData = {
+export type WebSocketData = {
     user: APIUser;
     instanceId: string;
 };
@@ -10,13 +11,14 @@ type WebSocketData = {
 export const WebSocketHandlers: WebSocketHandler<WebSocketData> = {
     async open(ws) {
         console.log("[WS] Connected");
-        ws.subscribe(ws.data.instanceId);
+        await handlePlayerConnect(ws);
     },
     async message(ws, message) {
         await handleWebSocketMessage(ws, message);
     },
     async close(ws) {
         console.log("[WS] Disconnected");
+        await handlePlayerDisconnect(ws);
     },
 };
 

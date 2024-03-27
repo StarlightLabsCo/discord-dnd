@@ -1,17 +1,11 @@
 import { useEffect } from "react";
+import { useGameStore } from "@/game";
 import startupSound from "@/assets/startup.mp3";
 import logo from "@/assets/fantasyforgelogo.png";
 
-const connectedUsers = [
-    { name: "Player 1" },
-    { name: "Player 2" },
-    {},
-    {},
-    {},
-    {},
-];
-
 export function Lobby() {
+    const connectedUsers = useGameStore((state) => state.connectedPlayers);
+
     useEffect(() => {
         const audio = new Audio(startupSound);
         audio.play();
@@ -33,8 +27,8 @@ export function Lobby() {
                             key={index}
                             className='flex items-center justify-center w-full h-12 max-w-md mb-4 text-white bg-gray-700 rounded-lg'
                         >
-                            {user.name ? (
-                                user.name
+                            {user.global_name ? (
+                                user.global_name
                             ) : (
                                 <div className='flex items-center'>
                                     <span>Add Player</span>

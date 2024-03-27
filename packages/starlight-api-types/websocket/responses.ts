@@ -1,22 +1,21 @@
 import z from "zod";
 import { UserSchema } from "database";
 
-export type LobbyPlayerInfoResponse = z.infer<
-    typeof LobbyPlayerInfoResponseZodSchema
+export type ConnectedPlayersInfoResponse = z.infer<
+    typeof ConnectedPlayersInfoResponseZodSchema
 >;
 
-export const LobbyPlayerInfoResponseZodSchema = z.object({
-    type: z.literal("LobbyPlayerInfoResponse"),
+export const ConnectedPlayersInfoResponseZodSchema = z.object({
+    type: z.literal("ConnectedPlayersInfoResponse"),
     data: z
         .object({
-            instanceId: z.string(),
             players: z.array(UserSchema),
         })
         .strict(),
 });
 
 const responseTypeToSchema = {
-    LobbyPlayerInfoResponse: LobbyPlayerInfoResponseZodSchema,
+    ConnectedPlayersInfoResponse: ConnectedPlayersInfoResponseZodSchema,
 };
 
 export function getResponseSchema(type: keyof typeof responseTypeToSchema) {

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import type { User } from "database";
 import type { APIUser } from "discord-api-types/v10";
 
 /**
@@ -40,4 +41,20 @@ export async function getUser(access_token: string) {
     });
 
     return user as APIUser;
+}
+
+/**
+ * Converts an API user to a starlight user (stored in db).
+ *
+ * @param user The API user.
+ * @returns The user.
+ */
+export function apiUserToUser(user: APIUser) {
+    return {
+        id: user.id,
+        username: user.username,
+        global_name: user.global_name,
+        avatar: user.avatar,
+        locale: user.locale,
+    } as User;
 }

@@ -18,6 +18,8 @@ function App() {
         }
     }, [connect, auth]);
 
+    return <Lobby />;
+
     return auth === null ? <LoadingScreen /> : <Lobby />;
 }
 

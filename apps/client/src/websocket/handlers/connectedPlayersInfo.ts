@@ -1,8 +1,8 @@
+import { useGameStore } from "@/game";
 import { ConnectedPlayersInfoResponse } from "starlight-api-types/websocket";
 
 export async function handleConnectedPlayersInfoResponse(
     response: ConnectedPlayersInfoResponse
 ) {
-    alert("ConnectedPlayersInfoResponse");
-    console.log(response);
+    useGameStore.getState().setConnectedPlayers(response.data.players);
 }

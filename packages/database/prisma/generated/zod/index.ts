@@ -28,7 +28,7 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string().uuid(),
   username: z.string(),
   global_name: z.string().nullable(),
   avatar: z.string().nullable(),

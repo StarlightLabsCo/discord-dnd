@@ -8,7 +8,6 @@ function App() {
     const auth = useDiscordStore((state) => state.auth);
 
     const connect = useWebsocketStore((state) => state.connect);
-    const ws = useWebsocketStore((state) => state.ws);
 
     useEffect(() => {
         setup();
@@ -20,7 +19,7 @@ function App() {
         }
     }, [connect, auth]);
 
-    return ws === null ? <LoadingScreen /> : <Lobby />;
+    return auth === null ? <LoadingScreen /> : <Lobby />;
 }
 
 export default App;

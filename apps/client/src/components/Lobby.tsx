@@ -27,7 +27,7 @@ export function Lobby() {
             readySfx.play();
             setReady(true);
         } else {
-            const clickSfx = new Audio(readySound);
+            const clickSfx = new Audio(clickSound);
             clickSfx.play();
             setReady(false);
         }

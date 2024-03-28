@@ -40,7 +40,7 @@ export function Lobby({ className }: LobbyProps) {
         <div className={cn("w-screen h-screen bg-[#01131D]", className)}>
             <div className='flex w-full h-full'>
                 <div className='relative flex flex-col justify-between w-1/2 p-8'>
-                    <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t from-black/30 to-transparent' />
+                    <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t from-black/50 to-transparent' />
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-b from-black/30 to-transparent' />
                     <img
                         src={campaignCover}
@@ -52,8 +52,16 @@ export function Lobby({ className }: LobbyProps) {
                         className='z-10 w-32'
                         alt='Fantasy Fogo Logo'
                     />
-                    <div className='z-20 font-sans text-5xl font-bold text-white drop-shadow-xl'>
-                        The Forbidden Tower
+                    <div className='z-20 flex flex-col gap-y-2'>
+                        <div className='font-sans text-5xl font-bold text-white drop-shadow-xl'>
+                            The Forbidden Tower
+                        </div>
+                        <div className='font-sans text-lg font-light text-neutral-300 drop-shadow-xl max-w-[80%]'>
+                            Ancient power awakens as a legendary tower, steeped
+                            in forbidden magic, emerges from the mists,
+                            promising untold riches and arcane knowledge to
+                            those brave enough to face its dark mysteries.
+                        </div>
                     </div>
                 </div>
                 <div className='flex flex-col justify-between w-1/2 p-8'>

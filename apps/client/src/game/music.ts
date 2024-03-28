@@ -70,3 +70,7 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
         get().audio.volume = volume;
     },
 }));
+
+useMusicStore.getState().audio.addEventListener("ended", () => {
+    useMusicStore.getState().next();
+});

@@ -1,5 +1,5 @@
-import fantasyforgelogo from "@/assets/fantasyforgelogo.png";
-import starlightlabslogo from "@/assets/starlightlabslogo.png";
+import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogo.png";
+import starlightlabslogo from "@/assets/images/logos/starlightlabslogo.png";
 import { cn } from "@/lib/utils";
 
 type LoadingScreenProps = {

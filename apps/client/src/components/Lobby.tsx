@@ -3,8 +3,8 @@ import { useGameStore } from "@/game";
 import startupSound from "@/assets/sfx/lobby/startup.mp3";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
-import fantasyforgelogo from "@/assets/fantasyforgelogocropped.png";
-import campaignCover from "@/assets/campaigncover.png";
+import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
+import campaignCover from "@/assets/images/logos/campaigncover.png";
 
 import { cn } from "@/lib/utils";
 import { LobbyControls } from "./LobbyControls";

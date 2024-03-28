@@ -1,4 +1,5 @@
 import { User } from "database";
+import { characters } from "@/assets/images/characters";
 import { DiscordAvatar } from "./DiscordAvatar";
 
 type CharacterPortraitProps = {
@@ -6,12 +7,12 @@ type CharacterPortraitProps = {
 };
 
 export function CharacterPortrait({ user }: CharacterPortraitProps) {
-    const index = BigInt(user.id) % BigInt(16);
+    const index = Number(BigInt(user.id) % BigInt(16));
 
     return (
         <div className='relative w-48 h-48 border border-white aspect-square'>
             <img
-                src={`/characters/character${index}.webp`}
+                src={characters[index]}
                 className='object-cover w-full h-full'
                 alt='Character Portrait'
             />

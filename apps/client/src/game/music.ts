@@ -21,13 +21,14 @@ export const useMusicStore = create<MusicStore>((set, get) => {
     };
 
     const prev = () => {
-        const prevIndex = (get().musicIndex - 1 + musicFiles.length) % musicFiles.length;
+        const prevIndex =
+            (get().musicIndex - 1 + musicFiles.length) % musicFiles.length;
         updateMusicIndex(prevIndex);
     };
 
     const createAudio = (index: number) => {
         const audio = new Audio(musicFiles[index].src);
-        audio.volume = get().volume || 0.5;
+        audio.volume = get()?.volume || 0.5;
         audio.onended = next;
         return audio;
     };

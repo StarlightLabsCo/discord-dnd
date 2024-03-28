@@ -20,7 +20,7 @@ export const useMusicStore = create<MusicStore>((set, get) => ({
     ),
     musicIndex: 0,
     playing: false,
-    volume: 1,
+    volume: 0.5,
 
     play: () => {
         const { audio } = get();

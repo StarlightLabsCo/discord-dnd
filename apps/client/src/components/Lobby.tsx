@@ -4,7 +4,7 @@ import startupSound from "@/assets/sfx/lobby/startup.mp3";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
-import campaignCover from "@/assets/images/logos/campaigncover.png";
+import campaignCover from "@/assets/images/game/campaigncover.png";
 
 import { cn } from "@/lib/utils";
 import { LobbyControls } from "./LobbyControls";

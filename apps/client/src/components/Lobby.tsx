@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGameStore } from "@/game";
-import startupSound from "@/assets/sfx/lobby/startup.mp3";
+// import startupSound from "@/assets/sfx/lobby/startup.mp3";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { LobbyControls } from "./LobbyControls";
 import { CharacterPortrait } from "./CharacterPortrait";
 import { AddPlayerButton } from "./AddPlayerButton";
+import { useMusicStore } from "@/game/music";
 
 type LobbyProps = {
     className?: string;
@@ -17,12 +18,16 @@ type LobbyProps = {
 
 export function Lobby({ className }: LobbyProps) {
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
+    const play = useMusicStore((state) => state.play);
+
     const [ready, setReady] = useState(false); // TODO: swap this with useGameStore
 
     useEffect(() => {
-        const audio = new Audio(startupSound);
-        audio.play();
-    }, []);
+        // const audio = new Audio(startupSound);
+        // audio.play();
+
+        play();
+    }, [play]);
 
     const toggleReady = () => {
         if (!ready) {
@@ -53,10 +58,10 @@ export function Lobby({ className }: LobbyProps) {
                         alt='Fantasy Fogo Logo'
                     />
                     <div className='z-20 flex flex-col gap-y-2'>
-                        <div className='font-sans text-5xl font-bold text-white drop-shadow-xl'>
+                        <div className='font-sans text-5xl font-bold text-white drop-shadow-xl max-w-[80%]'>
                             The Forbidden Tower
                         </div>
-                        <div className='font-sans text-lg font-light text-neutral-300 drop-shadow-xl max-w-[80%]'>
+                        <div className='font-sans text-md font-light text-neutral-300 drop-shadow-xl max-w-[80%]'>
                             Ancient power awakens as a legendary tower, steeped
                             in forbidden magic, emerges from the mists,
                             promising untold riches and arcane knowledge to

@@ -14,63 +14,52 @@ type MusicStore = {
     setVolume: (volume: number) => void;
 };
 
-export const useMusicStore = create<MusicStore>((set, get) => ({
-    audio: new Audio(
-        musicFiles[Math.floor(Math.random() * musicFiles.length)].src
-    ),
-    musicIndex: 0,
-    playing: false,
-    volume: 0.5,
+export const useMusicStore = create<MusicStore>((set, get) => {
+    const createAudio = (index: number) => {
+        const audio = new Audio(musicFiles[index].src);
+        audio.volume = get().volume;
+        audio.onended = () => get().next();
+        return audio;
+    };
 
-    play: () => {
-        const { audio } = get();
-        if (!audio.src) {
-            audio.src = musicFiles[get().musicIndex].src;
-        }
-
-        set({ playing: true });
-        audio.play();
-    },
-    pause: () => {
-        set({ playing: false });
-        get().audio.pause();
-    },
-    next: () => {
-        set((state) => {
-            let nextIndex = state.musicIndex + 1;
-            if (nextIndex >= musicFiles.length) {
-                nextIndex = 0;
-            }
-            get().pause();
-            return {
-                ...state,
-                musicIndex: nextIndex,
-                audio: new Audio(musicFiles[nextIndex].src),
-            };
-        });
+    const updateMusicIndex = (index: number) => {
+        get().pause();
+        set({ musicIndex: index, audio: createAudio(index) });
         get().play();
-    },
-    prev: () => {
-        set((state) => {
-            let prevIndex = state.musicIndex - 1;
-            if (prevIndex < 0) {
-                prevIndex = musicFiles.length - 1;
-            }
-            get().pause();
-            return {
-                ...state,
-                musicIndex: prevIndex,
-                audio: new Audio(musicFiles[prevIndex].src),
-            };
-        });
-        get().play();
-    },
-    setVolume: (volume) => {
-        set({ volume });
-        get().audio.volume = volume;
-    },
-}));
+    };
 
-useMusicStore.getState().audio.addEventListener("ended", () => {
-    useMusicStore.getState().next();
+    return {
+        audio: createAudio(Math.floor(Math.random() * musicFiles.length)),
+        musicIndex: 0,
+        playing: false,
+        volume: 0.5,
+
+        play: () => {
+            const { audio } = get();
+            if (!audio.src) {
+                audio.src = musicFiles[get().musicIndex].src;
+            }
+            set({ playing: true });
+            audio.play();
+        },
+        pause: () => {
+            set({ playing: false });
+            get().audio.pause();
+        },
+        next: () => {
+            const nextIndex = (get().musicIndex + 1) % musicFiles.length;
+            updateMusicIndex(nextIndex);
+        },
+        prev: () => {
+            const prevIndex =
+                (get().musicIndex - 1 + musicFiles.length) % musicFiles.length;
+            updateMusicIndex(prevIndex);
+        },
+        setVolume: (volume: number) => {
+            set((state) => {
+                state.audio.volume = volume;
+                return { volume };
+            });
+        },
+    };
 });

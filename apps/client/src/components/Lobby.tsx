@@ -36,28 +36,36 @@ export function Lobby({ className }: LobbyProps) {
             const readySfx = new Audio(readySound);
             readySfx.play();
 
-            setGameState({
+            const newGameState = {
                 readyUserIds: [...gameState.readyUserIds, user.id],
-            });
+            };
+
+            setGameState(newGameState);
             sendMessage(
                 JSON.stringify({
                     type: "GameStateUpdateRequest",
-                    gameState: gameState,
+                    data: {
+                        gameState: newGameState,
+                    },
                 })
             );
         } else {
             const clickSfx = new Audio(clickSound);
             clickSfx.play();
 
-            setGameState({
+            const newGameState = {
                 readyUserIds: gameState.readyUserIds.filter(
                     (id) => id !== user.id
                 ),
-            });
+            };
+
+            setGameState(newGameState);
             sendMessage(
                 JSON.stringify({
                     type: "GameStateUpdateRequest",
-                    gameState: gameState,
+                    data: {
+                        gameState: newGameState,
+                    },
                 })
             );
         }

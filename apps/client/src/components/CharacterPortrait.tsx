@@ -13,7 +13,7 @@ export function CharacterPortrait({ user, ready }: CharacterPortraitProps) {
     return (
         <div className='relative w-48 h-48 border border-white aspect-square'>
             {ready && (
-                <div className='absolute inset-0 z-10 flex items-center justify-center w-full h-full text-5xl bg-black/30'>
+                <div className='absolute inset-0 z-10 flex items-end w-full h-full text-5xl font-bold text-white pb-[10%] justify-center bg-black/30'>
                     Ready
                 </div>
             )}

@@ -88,6 +88,8 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
 }
 
 export function sendMessage(message: string) {
+    console.log(`[DiscordD&D WS] Sending message: ${message}`);
+
     const ws = useWebsocketStore.getState().ws;
     if (!ws) {
         console.error("[DiscordD&D WS] WebSocket connection not open");

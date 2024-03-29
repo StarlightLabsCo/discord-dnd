@@ -21,7 +21,7 @@ export function LoadingScreen({ className }: LoadingScreenProps) {
             />
             <img
                 src={starlightlabslogo}
-                className='absolute bottom-2 right-2 h-[25px]'
+                className='absolute bottom-2 right-1/2 h-[25px] transform -translate-x-1/2 md:right-2 md:translate-x-0'
                 alt='Starlight Labs Logo'
             />
         </div>

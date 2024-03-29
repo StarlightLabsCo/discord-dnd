@@ -16,7 +16,7 @@ export function LoadingScreen({ className }: LoadingScreenProps) {
         >
             <img
                 src={fantasyforgelogo}
-                className='w-[768px] h-[768px]'
+                className='h-1/2 aspect-square'
                 alt='Fantasy Forge Logo'
             />
             <img

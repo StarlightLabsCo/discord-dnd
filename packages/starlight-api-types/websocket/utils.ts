@@ -1,9 +1,21 @@
-import { getResponseSchema } from ".";
+import { getRequestSchema, getResponseSchema } from ".";
 
 export function validateWebSocketRequest(message: string | Buffer) {
     const rawRequest = JSON.parse(message.toString());
 
-    return rawRequest;
+    const schema = getRequestSchema(rawRequest.type);
+    if (!schema) {
+        console.error("Received unknown request type", rawRequest.type);
+        return;
+    }
+
+    const result = schema.safeParse(rawRequest);
+    if (!result.success) {
+        console.error("Malformed or invalid request data:", result.error);
+        return;
+    }
+
+    return result.data as (typeof result)["data"];
 }
 
 export function validateWebSocketResponse(message: string | Buffer) {

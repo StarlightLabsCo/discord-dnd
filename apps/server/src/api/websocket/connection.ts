@@ -1,6 +1,9 @@
 import type { ServerWebSocket } from "bun";
-import type { ConnectedPlayersInfoResponse } from "starlight-api-types/websocket";
 import type { User } from "database";
+import type {
+    UserInfoResponse,
+    ConnectedPlayersInfoResponse,
+} from "starlight-api-types/websocket";
 import { server } from "index";
 import type { WebSocketData } from ".";
 
@@ -12,6 +15,13 @@ export async function handlePlayerConnect(ws: ServerWebSocket<WebSocketData>) {
 
     const players = instanceIdToPlayers.get(instanceId) ?? [];
     instanceIdToPlayers.set(instanceId, [...players, user]);
+
+    // Send initial messages
+    const userInfoResponse: UserInfoResponse = {
+        type: "UserInfoResponse",
+        data: user,
+    };
+    ws.send(JSON.stringify(userInfoResponse));
 
     const response: ConnectedPlayersInfoResponse = {
         type: "ConnectedPlayersInfoResponse",

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGameStore } from "@/game";
-// import startupSound from "@/assets/sfx/lobby/startup.mp3";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
@@ -11,35 +10,60 @@ import { LobbyControls } from "./LobbyControls";
 import { CharacterPortrait } from "./CharacterPortrait";
 import { AddPlayerButton } from "./AddPlayerButton";
 import { useMusicStore } from "@/game/music";
+import { sendMessage } from "@/websocket";
 
 type LobbyProps = {
     className?: string;
 };
 
 export function Lobby({ className }: LobbyProps) {
+    const user = useGameStore((state) => state.user);
+
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
+
+    const gameState = useGameStore((state) => state.gameState);
+    const setGameState = useGameStore((state) => state.setGameState);
+
     const play = useMusicStore((state) => state.play);
 
-    const [ready, setReady] = useState(false); // TODO: swap this with useGameStore
-
     useEffect(() => {
-        // const audio = new Audio(startupSound);
-        // audio.play();
-
         play();
     }, [play]);
 
     const toggleReady = () => {
-        if (!ready) {
+        if (!user) return;
+        if (!gameState.readyUserIds.includes(user.id)) {
             const readySfx = new Audio(readySound);
             readySfx.play();
-            setReady(true);
+
+            setGameState({
+                readyUserIds: [...gameState.readyUserIds, user.id],
+            });
+            sendMessage(
+                JSON.stringify({
+                    type: "GameStateUpdateRequest",
+                    gameState: gameState,
+                })
+            );
         } else {
             const clickSfx = new Audio(clickSound);
             clickSfx.play();
-            setReady(false);
+
+            setGameState({
+                readyUserIds: gameState.readyUserIds.filter(
+                    (id) => id !== user.id
+                ),
+            });
+            sendMessage(
+                JSON.stringify({
+                    type: "GameStateUpdateRequest",
+                    gameState: gameState,
+                })
+            );
         }
     };
+
+    if (!user) return null; // Invalid state
 
     return (
         <div className={cn("w-screen h-screen bg-[#01131D]", className)}>
@@ -72,9 +96,19 @@ export function Lobby({ className }: LobbyProps) {
                 <div className='flex flex-col justify-between w-1/2 p-8'>
                     <LobbyControls />
                     <div className='grid w-full grid-cols-3 gap-4 place-items-center'>
-                        {connectedPlayers.map((user) => (
-                            <CharacterPortrait key={user.id} user={user} />
-                        ))}
+                        {connectedPlayers.map((user) => {
+                            const ready = gameState.readyUserIds.includes(
+                                user.id
+                            );
+
+                            return (
+                                <CharacterPortrait
+                                    key={user.id}
+                                    user={user}
+                                    ready={ready}
+                                />
+                            );
+                        })}
                         {connectedPlayers.length < 6 && <AddPlayerButton />}
                     </div>
                     <div className='flex items-center justify-end w-full'>
@@ -82,7 +116,9 @@ export function Lobby({ className }: LobbyProps) {
                             className='text-5xl font-bold text-white cursor-pointer drop-shadow-xl hover:scale-105'
                             onClick={toggleReady}
                         >
-                            {ready ? "Unready" : "Ready"}
+                            {gameState.readyUserIds.includes(user.id)
+                                ? "Unready"
+                                : "Ready"}
                         </div>
                     </div>
                 </div>

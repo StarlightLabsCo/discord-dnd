@@ -1,7 +1,13 @@
 import { create } from "zustand";
-import { useDiscordStore } from "../discord";
-import { validateWebSocketResponse } from "starlight-api-types/websocket";
+import { useDiscordStore } from "@/discord";
+import {
+    validateWebSocketRequest,
+    validateWebSocketResponse,
+} from "starlight-api-types/websocket";
+
+import { handleUserInfoResponse } from "./handlers/userInfo";
 import { handleConnectedPlayersInfoResponse } from "./handlers/connectedPlayersInfo";
+import { handleGameStateUpdateResponse } from "./handlers/gameStateUpdate";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -18,7 +24,7 @@ type WebSocketStoreSet = (arg0: {
 export const useWebsocketStore = create<WebSocketStore>((set, get) => ({
     ws: null,
     connect: () => connect(set, get),
-    exponentialBackoff: 1000,
+    exponentialBackoff: 250,
 }));
 
 async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
@@ -81,6 +87,22 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
     }, get().exponentialBackoff);
 }
 
+export function sendMessage(message: string) {
+    const ws = useWebsocketStore.getState().ws;
+    if (!ws) {
+        console.error("[DiscordD&D WS] WebSocket connection not open");
+        return;
+    }
+
+    const request = validateWebSocketRequest(message);
+    if (!request) {
+        console.error("[DiscordD&D WS] Invalid request:", message);
+        return;
+    }
+
+    ws.send(JSON.stringify(request));
+}
+
 async function onMessage(event: MessageEvent) {
     console.log(`[DiscordD&D WS] Message: ${event.data}`);
 
@@ -97,12 +119,14 @@ async function onMessage(event: MessageEvent) {
             return;
         }
 
-        await handler(response);
+        await handler(response as any);
     } catch (error) {
         console.error("[DiscordD&D WS] Error parsing message:", error);
     }
 }
 
 const handlers = {
+    UserInfoResponse: handleUserInfoResponse,
     ConnectedPlayersInfoResponse: handleConnectedPlayersInfoResponse,
+    GameStateUpdateResponse: handleGameStateUpdateResponse,
 };

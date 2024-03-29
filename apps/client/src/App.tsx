@@ -3,10 +3,12 @@ import { setup, useDiscordStore } from "./discord";
 import { useWebsocketStore } from "./websocket";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { Lobby } from "./components/Lobby";
+import { useGameStore } from "./game";
 
 function App() {
     const auth = useDiscordStore((state) => state.auth);
     const connect = useWebsocketStore((state) => state.connect);
+    const user = useGameStore((state) => state.user);
 
     useEffect(() => {
         setup();
@@ -23,7 +25,7 @@ function App() {
         return <Lobby className='select-none drag-none' />;
     }
 
-    return auth === null ? (
+    return user === null ? (
         <LoadingScreen className='select-none drag-none' />
     ) : (
         <Lobby className='select-none drag-none' />

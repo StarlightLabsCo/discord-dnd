@@ -2,6 +2,7 @@ import type { ServerWebSocket, WebSocketHandler } from "bun";
 import { validateWebSocketRequest } from "starlight-api-types/websocket";
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 import type { User } from "database";
+import { handleGameStateUpdateRequest } from "./handlers/gameStateUpdate";
 
 export type WebSocketData = {
     user: User;
@@ -26,8 +27,20 @@ async function handleWebSocketMessage(
     ws: ServerWebSocket<WebSocketData>,
     message: any
 ) {
+    console.log("[WS] Message:", message);
+
     const request = validateWebSocketRequest(message);
     if (!request) return;
 
-    // TODO: do stuff with the request
+    const handler = handlers[request.type];
+    if (!handler) {
+        console.error(`[WS] No handler found for ${request.type}`);
+        return;
+    }
+
+    await handler(ws, request);
 }
+
+const handlers = {
+    GameStateUpdateRequest: handleGameStateUpdateRequest,
+};

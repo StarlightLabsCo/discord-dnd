@@ -11,6 +11,7 @@ import { CharacterPortrait } from "./CharacterPortrait";
 import { AddPlayerButton } from "./AddPlayerButton";
 import { useMusicStore } from "@/game/music";
 import { sendMessage } from "@/websocket";
+import { GameStateUpdateRequest } from "starlight-api-types/websocket";
 
 type LobbyProps = {
     className?: string;
@@ -44,10 +45,8 @@ export function Lobby({ className }: LobbyProps) {
             sendMessage(
                 JSON.stringify({
                     type: "GameStateUpdateRequest",
-                    data: {
-                        gameState: newGameState,
-                    },
-                })
+                    data: newGameState,
+                } as GameStateUpdateRequest)
             );
         } else {
             const clickSfx = new Audio(clickSound);
@@ -63,10 +62,8 @@ export function Lobby({ className }: LobbyProps) {
             sendMessage(
                 JSON.stringify({
                     type: "GameStateUpdateRequest",
-                    data: {
-                        gameState: newGameState,
-                    },
-                })
+                    data: newGameState,
+                } as GameStateUpdateRequest)
             );
         }
     };

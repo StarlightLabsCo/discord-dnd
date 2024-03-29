@@ -28,7 +28,7 @@ export const useMusicStore = create<MusicStore>((set, get) => {
 
     const createAudio = (index: number) => {
         const audio = new Audio(musicFiles[index].src);
-        audio.volume = get().volume !== undefined ? get().volume : 0.5;
+        audio.volume = get()?.volume !== undefined ? get().volume : 0.5;
         audio.onended = next;
         return audio;
     };

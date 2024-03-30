@@ -21,6 +21,7 @@ function App() {
     }, [connect, auth]);
 
     // Debugging
+    // TODO: remove
     if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
         return <Lobby className='select-none drag-none' />;
     }

@@ -18,6 +18,7 @@ const useDiscordStore = create<DiscordStore>((set) => ({
 }));
 
 // ---- Setup Discord SDK ----
+// TODO: remove debug flag
 const discordSdk: DiscordSDK | DiscordSDKMock = import.meta.env
     .VITE_DISCORD_EMBED_DEBUG
     ? new DiscordSDKMock(import.meta.env.VITE_DISCORD_CLIENT_ID, "1234", "5678")

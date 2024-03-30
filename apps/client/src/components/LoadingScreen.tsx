@@ -16,12 +16,12 @@ export function LoadingScreen({ className }: LoadingScreenProps) {
         >
             <img
                 src={fantasyforgelogo}
-                className='h-3/4 aspect-square'
+                className='object-contain h-3/4 aspect-square'
                 alt='Fantasy Forge Logo'
             />
             <img
                 src={starlightlabslogo}
-                className='absolute bottom-2 right-1/2 h-[25px] transform -translate-x-1/2 md:right-2 md:translate-x-0'
+                className='absolute right-2 bottom-2 h-[3%]'
                 alt='Starlight Labs Logo'
             />
         </div>

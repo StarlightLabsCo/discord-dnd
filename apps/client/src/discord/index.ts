@@ -31,6 +31,15 @@ async function setup() {
     await discordSdk.ready();
     const auth = await authenticate();
     useDiscordStore.getState().setAuth(auth);
+
+    // TODO: Debugging presence
+    await discordSdk.commands.setActivity({
+        activity: {
+            type: 0,
+            details: "Details",
+            state: "Playing",
+        },
+    });
 }
 
 export { setup, discordSdk as default, useDiscordStore };

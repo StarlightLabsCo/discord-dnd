@@ -17,7 +17,7 @@ export function DiscordAvatar({ user, className }: DiscordAvatarProps) {
     return (
         <div
             className={cn(
-                "relative flex items-center justify-center rounded-lg aspect-square",
+                "flex relative justify-center items-center rounded-lg aspect-square",
                 className
             )}
         >
@@ -25,7 +25,7 @@ export function DiscordAvatar({ user, className }: DiscordAvatarProps) {
                 <>
                     <img
                         src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${user.avatar.startsWith("a_") ? ".gif" : ".png"}`}
-                        className='w-full h-full rounded-full'
+                        className='w-full h-full rounded-full aspect-square shrink-0'
                         alt='User Avatar'
                     />
                     {hasAvatarDecoration && (

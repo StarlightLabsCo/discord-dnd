@@ -35,9 +35,15 @@ async function setup() {
     // TODO: Debugging presence
     await discordSdk.commands.setActivity({
         activity: {
-            type: 0,
-            details: "Details",
-            state: "Playing",
+            details: "In the Forge",
+            state: "Building a new world",
+            assets: {
+                large_image: "fantasyforge",
+                large_text: "Fantasy Forge",
+                small_image: "fantasyforge",
+                small_text: "Fantasy Forge",
+            },
+            instance: true,
         },
     });
 }

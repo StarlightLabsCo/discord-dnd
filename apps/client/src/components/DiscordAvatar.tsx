@@ -25,7 +25,7 @@ export function DiscordAvatar({ user, className }: DiscordAvatarProps) {
                 <>
                     <img
                         src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${user.avatar.startsWith("a_") ? ".gif" : ".png"}`}
-                        className='w-full h-full rounded-full aspect-square shrink-0'
+                        className='w-full h-full rounded-full'
                         alt='User Avatar'
                     />
                     {hasAvatarDecoration && (

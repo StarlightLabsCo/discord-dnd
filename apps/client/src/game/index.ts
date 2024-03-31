@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { User } from "database";
+import discordSdk from "@/discord";
 
 type GameState = {
     readyUserIds: string[];
@@ -21,8 +22,27 @@ export const useGameStore = create<GameStore>((set) => ({
     setUser: (user: User) => set({ user }),
 
     connectedPlayers: [],
-    setConnectedPlayers: (players: User[]) =>
-        set({ connectedPlayers: players }),
+    setConnectedPlayers: (players: User[]) => {
+        set({ connectedPlayers: players });
+
+        discordSdk.commands.setActivity({
+            activity: {
+                details: "In Lobby",
+                state: "Creating a new campaign",
+                party: {
+                    id: "1234",
+                    size: [Math.min(players.length, 6), 6],
+                },
+                assets: {
+                    large_image: "fantasyforgebigsquare",
+                    large_text: "Fantasy Forge",
+                    small_image: "fantasyforgebigsquare",
+                    small_text: "Fantasy Forge",
+                },
+                instance: true,
+            },
+        });
+    },
 
     gameState: {
         readyUserIds: [],

@@ -31,21 +31,6 @@ async function setup() {
     await discordSdk.ready();
     const auth = await authenticate();
     useDiscordStore.getState().setAuth(auth);
-
-    // TODO: Debugging presence
-    await discordSdk.commands.setActivity({
-        activity: {
-            details: "In the Forge",
-            state: "Building a new world",
-            assets: {
-                large_image: "fantasyforge",
-                large_text: "Fantasy Forge",
-                small_image: "fantasyforge",
-                small_text: "Fantasy Forge",
-            },
-            instance: true,
-        },
-    });
 }
 
 export { setup, discordSdk as default, useDiscordStore };

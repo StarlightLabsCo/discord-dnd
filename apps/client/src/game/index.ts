@@ -27,8 +27,8 @@ export const useGameStore = create<GameStore>((set) => ({
 
         discordSdk.commands.setActivity({
             activity: {
-                details: "In Lobby",
-                state: "Creating campaign. Party:",
+                details: "Lobby",
+                state: "New Campaign. Party:",
                 party: {
                     id: discordSdk.instanceId,
                     size: [Math.min(players.length, 6), 6],

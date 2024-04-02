@@ -1,12 +1,24 @@
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogo.png";
 import starlightlabslogo from "@/assets/images/logos/starlightlabslogo.png";
 import { cn } from "@/lib/utils";
+import { useGameStore } from "@/game";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 type LoadingScreenProps = {
     className?: string;
 };
 
 export function LoadingScreen({ className }: LoadingScreenProps) {
+    const user = useGameStore((state) => state.user);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user != null) {
+            navigate("/lobby");
+        }
+    }, [user, navigate]);
+
     return (
         <div
             className={cn(

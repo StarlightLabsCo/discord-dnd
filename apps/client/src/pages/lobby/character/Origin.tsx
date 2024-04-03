@@ -13,7 +13,7 @@ export function Origin() {
                         onClick={() => setSelected(index)}
                     >
                         {selected !== index && (
-                            <div className='absolute inset-0 w-full h-full bg-black/50 group-hover:bg-transparent' />
+                            <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img
                             src={characters[index]}

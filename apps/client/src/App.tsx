@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { setup, useDiscordStore } from "./discord";
 import { useWebsocketStore } from "./websocket";
 
-function App() {
+export function App() {
     const auth = useDiscordStore((state) => state.auth);
     const connect = useWebsocketStore((state) => state.connect);
 
@@ -19,5 +19,3 @@ function App() {
 
     return <Outlet />;
 }
-
-export default App;

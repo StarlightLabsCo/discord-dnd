@@ -15,7 +15,7 @@ export function LoadingScreen({ className }: LoadingScreenProps) {
 
     useEffect(() => {
         if (user != null) {
-            navigate("/lobby");
+            navigate("/lobby", { replace: true });
         }
     }, [user, navigate]);
 

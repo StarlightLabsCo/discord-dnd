@@ -1,4 +1,4 @@
-import { Icons } from "./Icons";
+import { Icons } from "../../components/Icons";
 
 export function SettingsButton() {
     return (

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { SidebarLink } from "./SidebarLink";
 import { CharacterPreview } from "./CharacterPreview";
 
@@ -31,7 +31,7 @@ export function CharacterCreatorLayout({
     return (
         <div
             className={cn(
-                "w-screen h-screen bg-[#01131D] flex items-center text-white",
+                "w-screen h-screen bg-[#01131D] flex items-center text-white relative",
                 className
             )}
         >
@@ -52,6 +52,14 @@ export function CharacterCreatorLayout({
                 <Outlet />
             </div>
             <CharacterPreview />
+            <div className='absolute bottom-[1vw] left-[1vw] hover:scale-105'>
+                <Link
+                    to='/lobby'
+                    className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer'
+                >
+                    Lobby
+                </Link>
+            </div>
         </div>
     );
 }

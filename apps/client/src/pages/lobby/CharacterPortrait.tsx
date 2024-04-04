@@ -1,5 +1,5 @@
 import { User } from "database";
-import { characters } from "@/assets/images/portaits";
+import { characters } from "@/assets/images/portraits";
 import { DiscordAvatar } from "./DiscordAvatar";
 import { Link } from "react-router-dom";
 

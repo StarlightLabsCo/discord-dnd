@@ -1,32 +1,50 @@
-import { characters } from "@/assets/images/portaits";
+import { characters } from "@/assets/images/portraits";
 import { useState } from "react";
+import { SelectableGrid } from "./SelectableGrid";
+
+// TODO: fetch these characters from the server
+const originCharacters = [
+    {
+        src: characters[0],
+        title: "George",
+        subtitle: "Half-Elf / Half-Human",
+    },
+    {
+        src: characters[1],
+        title: "Luna",
+        subtitle: "Human Sorcerer",
+    },
+    {
+        src: characters[2],
+        title: "Thorn",
+        subtitle: "Wood Elf Ranger",
+    },
+    {
+        src: characters[3],
+        title: "Mira",
+        subtitle: "Tiefling Rogue",
+    },
+    {
+        src: characters[4],
+        title: "Darius",
+        subtitle: "Dragonborn Paladin",
+    },
+    {
+        src: characters[5],
+        title: "Custom",
+        subtitle: "",
+    },
+];
 
 export function Origin() {
     const [selected, setSelected] = useState(0);
 
     return (
-        <div className='grid grid-cols-3 gap-4 w-[80%]'>
-            {[...Array(6)].map((_, index) => (
-                <div key={index} className='flex flex-col items-center'>
-                    <div
-                        className={`relative rounded-xl cursor-pointer ${selected === index ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
-                        onClick={() => setSelected(index)}
-                    >
-                        {selected !== index && (
-                            <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
-                        )}
-                        <img
-                            src={characters[index]}
-                            className={`rounded-xl w-[12vw] h-[12vw]`}
-                        />
-                    </div>
-
-                    <div className='mt-2'>Title {index + 1}</div>
-                    <div className='text-sm font-light text-gray-500'>
-                        Subtitle {index + 1}
-                    </div>
-                </div>
-            ))}
-        </div>
+        <SelectableGrid
+            items={originCharacters}
+            selected={selected}
+            setSelected={setSelected}
+            columns={3}
+        />
     );
 }

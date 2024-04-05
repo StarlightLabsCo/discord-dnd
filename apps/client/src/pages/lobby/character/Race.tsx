@@ -1,62 +1,28 @@
-import { useState } from "react";
 import { SelectableGrid } from "./SelectableGrid";
 
-import { raceImages } from "@/assets/images/portraits/races";
-
-const races = [
-    {
-        src: raceImages.human,
-        title: "Human",
-        subtitle: "",
-    },
-    {
-        src: raceImages.elf,
-        title: "Elf",
-        subtitle: "",
-    },
-    {
-        src: raceImages.halfElf,
-        title: "Half-Elf",
-        subtitle: "",
-    },
-    {
-        src: raceImages.dragonborn,
-        title: "Dragonborn",
-        subtitle: "",
-    },
-    {
-        src: raceImages.dwarf,
-        title: "Dwarf",
-        subtitle: "",
-    },
-    {
-        src: raceImages.gnome,
-        title: "Gnome",
-        subtitle: "",
-    },
-    {
-        src: raceImages.halfling,
-        title: "Halfling",
-        subtitle: "",
-    },
-    {
-        src: raceImages.halfOrc,
-        title: "Half-Orc",
-        subtitle: "",
-    },
-    {
-        src: raceImages.tiefling,
-        title: "Tiefling",
-        subtitle: "",
-    },
-];
+import { races } from "@/assets/images/portraits/races";
+import { useGameStore } from "@/game";
 
 export function Race() {
-    const [selected, setSelected] = useState(0);
+    const selected = useGameStore((state) => state.character.race);
+    const setSelected = (index: number) => {
+        useGameStore.setState({
+            character: {
+                ...useGameStore.getState().character,
+                race: index,
+            },
+        });
+    };
+
+    const items = Object.values(races).map((race) => ({
+        src: race.baseImage,
+        title: race.title,
+        subtitle: "",
+    }));
 
     return (
         <SelectableGrid
-            items={races}
+            items={items}
             selected={selected}
             setSelected={setSelected}
             columns={3}

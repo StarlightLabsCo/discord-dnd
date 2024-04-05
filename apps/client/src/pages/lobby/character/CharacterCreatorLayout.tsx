@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { SidebarLink } from "./SidebarLink";
 import { CharacterPreview } from "./CharacterPreview";
+import { useGameStore } from "@/game";
 
 type CharacterCreatorLayoutProps = {
     className?: string;
@@ -17,14 +18,14 @@ export function CharacterCreatorLayout({
     };
 
     const sidebarLinks = [
-        { to: "/lobby/character", text: "Origin", subtext: "Valeria" },
-        { to: "/lobby/character/race", text: "Race", subtext: "Elf" },
+        { to: "/lobby/character", text: "Origin", subtext: "Custom" },
+        { to: "/lobby/character/race", text: "Race", subtext: "Dwarf" },
         {
             to: "/lobby/character/subrace",
             text: "Subrace",
-            subtext: "High Elf",
+            subtext: "None",
         },
-        { to: "/lobby/character/class", text: "Class", subtext: "Wizard" },
+        { to: "/lobby/character/class", text: "Class", subtext: "Rogue" },
         { to: "/lobby/character/background", text: "Background", subtext: "" },
     ];
 

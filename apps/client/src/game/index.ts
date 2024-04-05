@@ -15,6 +15,17 @@ type GameStore = {
 
     gameState: GameState;
     setGameState: (gameState: GameState) => void;
+
+    // TODO: MOVE THIS SOMEWHERE ELSE
+    character: Character;
+    setCharacter: (character: Character) => void;
+};
+
+// TODO: MOVE THIS SOMEWHERE ELSE
+type Character = {
+    origin: number;
+    race: number;
+    class: number;
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -48,6 +59,14 @@ export const useGameStore = create<GameStore>((set) => ({
         readyUserIds: [],
     },
     setGameState: (gameState: GameState) => set({ gameState }),
+
+    // TODO: MOVE THIS SOMEWHERE ELSE
+    character: {
+        origin: 0,
+        race: 0,
+        class: 0,
+    },
+    setCharacter: (character: Character) => set({ character }),
 }));
 
 // TODO: remove debug flag

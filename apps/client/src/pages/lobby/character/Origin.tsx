@@ -1,6 +1,6 @@
 import { characters } from "@/assets/images/portraits";
-import { useState } from "react";
 import { SelectableGrid } from "./SelectableGrid";
+import { useGameStore } from "@/game";
 
 // TODO: fetch these characters from the server
 const originCharacters = [
@@ -37,7 +37,12 @@ const originCharacters = [
 ];
 
 export function Origin() {
-    const [selected, setSelected] = useState(0);
+    const selected = useGameStore((state) => state.character.origin);
+    const setSelected = (index: number) => {
+        useGameStore.setState({
+            character: { ...useGameStore.getState().character, origin: index },
+        });
+    };
 
     return (
         <SelectableGrid

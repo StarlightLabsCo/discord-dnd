@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useMusicStore } from "../../game/music";
-import { Icons } from "../../components/Icons";
+import { useMusicStore } from "../../lib/game/music";
+import { Icons } from "../Icons";
 
 export function MusicControlsButton() {
     const { playing, volume, play, pause, next, prev, setVolume } =

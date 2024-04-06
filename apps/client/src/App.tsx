@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { setup, useDiscordStore } from "./discord";
-import { useWebsocketStore } from "./websocket";
+import { setup, useDiscordStore } from "./lib/discord";
+import { useWebsocketStore } from "./lib/websocket";
 
 export function App() {
     const auth = useDiscordStore((state) => state.auth);

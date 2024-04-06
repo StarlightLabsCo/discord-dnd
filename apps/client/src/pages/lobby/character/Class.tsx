@@ -1,5 +1,5 @@
-import { SelectableGrid } from "./SelectableGrid";
-import { useGameStore } from "@/game";
+import { useGameStore } from "@/lib/game";
+import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 import { races } from "@/assets/images/portraits/races";
 
 export function Class() {

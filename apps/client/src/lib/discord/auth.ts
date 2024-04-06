@@ -1,4 +1,4 @@
-import discordSdk from "./";
+import discordSdk from ".";
 import type { AsyncReturnType } from "type-fest";
 export type Auth = AsyncReturnType<typeof discordSdk.commands.authenticate>;
 

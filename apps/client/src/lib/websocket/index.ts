@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { useDiscordStore } from "@/discord";
+import { useDiscordStore } from "@/lib/discord";
 import {
     validateWebSocketRequest,
     validateWebSocketResponse,

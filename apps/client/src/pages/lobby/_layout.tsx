@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { LobbyControls } from "./LobbyControls";
+import { LobbyControls } from "@/components/lobby/LobbyControls";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
 
 export function LobbyLayout() {

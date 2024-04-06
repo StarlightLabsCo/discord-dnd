@@ -1,6 +1,6 @@
 import character1 from "@/assets/images/fullbody/character1.webp";
 import { CharacterStat } from "./CharacterStat";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind/utils";
 
 type CharacterPreviewProps = {
     className?: string;

@@ -1,4 +1,4 @@
-import { useGameStore } from "@/game";
+import { useGameStore } from "@/lib/game";
 import { GameStateUpdateResponse } from "starlight-api-types/websocket";
 
 export async function handleGameStateUpdateResponse(

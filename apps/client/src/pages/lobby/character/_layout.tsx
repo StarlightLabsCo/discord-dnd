@@ -1,16 +1,9 @@
-import { cn } from "@/lib/utils";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { SidebarLink } from "./SidebarLink";
-import { CharacterPreview } from "./CharacterPreview";
-import { useGameStore } from "@/game";
 
-type CharacterCreatorLayoutProps = {
-    className?: string;
-};
+import { SidebarLink } from "@/components/lobby/character/SidebarLink";
+import { CharacterPreview } from "@/components/lobby/character/CharacterPreview";
 
-export function CharacterCreatorLayout({
-    className,
-}: CharacterCreatorLayoutProps) {
+export function CharacterCreatorLayout() {
     const location = useLocation();
 
     const isActive = (path: string) => {
@@ -30,12 +23,7 @@ export function CharacterCreatorLayout({
     ];
 
     return (
-        <div
-            className={cn(
-                "w-screen h-screen bg-[#01131D] flex items-center text-white relative",
-                className
-            )}
-        >
+        <div className='w-screen h-screen bg-[#01131D] flex items-center text-white relative'>
             <div className='flex flex-col justify-center items-center w-1/5'>
                 <div className='flex flex-col gap-y-2 w-3/4'>
                     {sidebarLinks.map(({ to, text, subtext }) => (

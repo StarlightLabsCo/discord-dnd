@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind/utils";
 import { Link } from "react-router-dom";
 
 type SidebarLinkProps = {

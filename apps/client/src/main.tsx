@@ -1,21 +1,21 @@
+import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
 
-import { App } from "./App";
-import { LoadingScreen } from "./pages/loading/LoadingScreen";
+import { App } from "@/App";
+import { LoadingScreen } from "@/pages/LoadingScreen";
 
-import { LobbyLayout } from "./pages/lobby/LobbyLayout";
-import { Lobby } from "./pages/lobby/Lobby";
+import { LobbyLayout } from "@/pages/lobby/_layout";
+import { Lobby } from "@/pages/lobby/Lobby";
 
-import { CharacterCreatorLayout } from "./pages/lobby/character/CharacterCreatorLayout";
-import { Origin } from "./pages/lobby/character/Origin";
-import { Race } from "./pages/lobby/character/Race";
-import { Subrace } from "./pages/lobby/character/Subrace";
-import { Class } from "./pages/lobby/character/Class";
-import { Background } from "./pages/lobby/character/Background";
-import { Abilities } from "./pages/lobby/character/Abilities";
+import { CharacterCreatorLayout } from "@/pages/lobby/character/_layout";
+import { Origin } from "@/pages/lobby/character/Origin";
+import { Race } from "@/pages/lobby/character/Race";
+import { Subrace } from "@/pages/lobby/character/Subrace";
+import { Class } from "@/pages/lobby/character/Class";
+import { Background } from "@/pages/lobby/character/Background";
+import { Abilities } from "@/pages/lobby/character/Abilities";
 
 const router = createBrowserRouter([
     {
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
                         element: <CharacterCreatorLayout />,
                         children: [
                             {
-                                index: true,
+                                path: "origin",
                                 element: <Origin />,
                             },
                             {

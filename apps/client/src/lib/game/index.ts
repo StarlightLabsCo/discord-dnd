@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { User } from "database";
-import discordSdk from "@/discord";
+import discordSdk from "@/lib/discord";
 
 type GameState = {
     readyUserIds: string[];

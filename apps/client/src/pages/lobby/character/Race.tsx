@@ -1,7 +1,7 @@
-import { SelectableGrid } from "./SelectableGrid";
+import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 
 import { races } from "@/assets/images/portraits/races";
-import { useGameStore } from "@/game";
+import { useGameStore } from "@/lib/game";
 
 export function Race() {
     const selected = useGameStore((state) => state.character.race);

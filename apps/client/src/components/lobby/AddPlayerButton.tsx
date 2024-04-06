@@ -1,4 +1,4 @@
-import discordSdk from "@/discord";
+import discordSdk from "@/lib/discord";
 
 export function AddPlayerButton() {
     return (

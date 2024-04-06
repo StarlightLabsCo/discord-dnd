@@ -1,5 +1,5 @@
 import { User } from "database";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwind/utils";
 
 type DiscordAvatarProps = {
     user: User;

@@ -1,22 +1,19 @@
 import { useEffect } from "react";
-import { useGameStore } from "@/game";
-import readySound from "@/assets/sfx/lobby/ready.mp3";
-import clickSound from "@/assets/sfx/lobby/click.mp3";
-import campaignCover from "@/assets/images/game/campaigncover.png";
+import { useGameStore } from "@/lib/game";
 
-import { cn } from "@/lib/utils";
-
-import { CharacterPortrait } from "./CharacterPortrait";
-import { AddPlayerButton } from "./AddPlayerButton";
-import { useMusicStore } from "@/game/music";
-import { sendMessage } from "@/websocket";
 import { GameStateUpdateRequest } from "starlight-api-types/websocket";
 
-type LobbyProps = {
-    className?: string;
-};
+import { sendMessage } from "@/lib/websocket";
+import { useMusicStore } from "@/lib/game/music";
 
-export function Lobby({ className }: LobbyProps) {
+import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
+import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
+
+import campaignCover from "@/assets/images/game/campaigncover.png";
+import clickSound from "@/assets/sfx/lobby/click.mp3";
+import readySound from "@/assets/sfx/lobby/ready.mp3";
+
+export function Lobby() {
     const user = useGameStore((state) => state.user);
 
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
@@ -70,7 +67,7 @@ export function Lobby({ className }: LobbyProps) {
     if (!user) return null; // Invalid state
 
     return (
-        <div className={cn("w-screen h-screen bg-[#01131D]", className)}>
+        <div className='w-screen h-screen bg-[#01131D]'>
             <div className='flex w-full h-full'>
                 <div className='flex relative flex-col justify-end p-[2vw] w-1/2'>
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t to-transparent from-black/50' />

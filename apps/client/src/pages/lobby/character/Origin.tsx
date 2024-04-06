@@ -1,6 +1,6 @@
+import { useGameStore } from "@/lib/game";
 import { characters } from "@/assets/images/portraits";
-import { SelectableGrid } from "./SelectableGrid";
-import { useGameStore } from "@/game";
+import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 
 // TODO: fetch these characters from the server
 const originCharacters = [

@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const human = {
     title: "Human",
+    value: "human",
     baseImage,
     classes: {
         barbarian,

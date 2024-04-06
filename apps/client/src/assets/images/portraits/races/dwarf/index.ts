@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const dwarf = {
     title: "Dwarf",
+    value: "dwarf",
     baseImage,
     classes: {
         barbarian,

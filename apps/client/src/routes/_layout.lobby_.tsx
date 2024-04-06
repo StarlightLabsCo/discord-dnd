@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
@@ -11,7 +11,7 @@ import { useMusicStore } from "@/lib/game/music";
 import { sendMessage } from "@/lib/websocket";
 import { GameStateUpdateRequest } from "starlight-api-types/websocket";
 
-export const Route = createLazyFileRoute("/lobby")({
+export const Route = createFileRoute("/_layout/lobby")({
     component: Lobby,
 });
 

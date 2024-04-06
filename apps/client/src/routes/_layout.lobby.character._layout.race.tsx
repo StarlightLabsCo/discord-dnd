@@ -4,7 +4,7 @@ import { useCharacterContext } from "@/contexts/CharacterContext";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 import { races } from "@/assets/images/portraits/races";
 
-export const Route = createFileRoute("/lobby/character/race")({
+export const Route = createFileRoute("/_layout/lobby/character/_layout/race")({
     component: Race,
 });
 
@@ -15,6 +15,7 @@ function Race() {
         src: race.baseImage,
         title: race.title,
         subtitle: "",
+        value: race.value,
     }));
 
     return (

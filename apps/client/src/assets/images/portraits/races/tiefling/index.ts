@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const tiefling = {
     title: "Tiefling",
+    value: "tiefling",
     baseImage,
     classes: {
         barbarian,

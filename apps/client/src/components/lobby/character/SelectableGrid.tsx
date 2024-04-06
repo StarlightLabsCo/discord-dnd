@@ -4,6 +4,7 @@ interface Item {
     src: string;
     title: string;
     subtitle: string;
+    value: string;
 }
 
 interface SelectableGridProps {
@@ -29,10 +30,10 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
             {items.map((item, index) => (
                 <div key={index} className='flex flex-col items-center'>
                     <div
-                        className={`relative rounded-xl cursor-pointer ${selected === item.title ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
-                        onClick={() => setSelected(item.title)}
+                        className={`relative rounded-xl cursor-pointer ${selected === item.value ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
+                        onClick={() => setSelected(item.value)}
                     >
-                        {selected !== item.title && (
+                        {selected !== item.value && (
                             <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img

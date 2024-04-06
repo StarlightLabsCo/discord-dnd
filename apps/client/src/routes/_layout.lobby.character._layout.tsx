@@ -4,7 +4,7 @@ import { CharacterPreview } from "@/components/lobby/character/CharacterPreview"
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
 import { CharacterProvider } from "@/contexts/CharacterContext";
 
-export const Route = createFileRoute("/lobby/character/_layout")({
+export const Route = createFileRoute("/_layout/lobby/character/_layout")({
     component: Layout,
 });
 

@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const gnome = {
     title: "Gnome",
+    value: "gnome",
     baseImage,
     classes: {
         barbarian,

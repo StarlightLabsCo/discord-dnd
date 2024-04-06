@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const dragonborn = {
     title: "Dragonborn",
+    value: "dragonborn",
     baseImage,
     classes: {
         barbarian,

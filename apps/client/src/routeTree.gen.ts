@@ -14,124 +14,132 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
-import { Route as IndexImport } from './routes/index'
-import { Route as LobbyCharacterSubraceImport } from './routes/lobby.character.subrace'
-import { Route as LobbyCharacterRaceImport } from './routes/lobby.character.race'
-import { Route as LobbyCharacterOriginImport } from './routes/lobby.character.origin'
-import { Route as LobbyCharacterClassImport } from './routes/lobby.character.class'
-import { Route as LobbyCharacterBackgroundImport } from './routes/lobby.character.background'
-import { Route as LobbyCharacterAbilitiesImport } from './routes/lobby.character.abilities'
-import { Route as LobbyCharacterLayoutImport } from './routes/lobby.character._layout'
+import { Route as LayoutIndexImport } from './routes/_layout.index'
+import { Route as LayoutLobbyImport } from './routes/_layout.lobby_'
+import { Route as LayoutLobbyCharacterLayoutImport } from './routes/_layout.lobby.character._layout'
+import { Route as LayoutLobbyCharacterLayoutSubraceImport } from './routes/_layout.lobby.character._layout.subrace'
+import { Route as LayoutLobbyCharacterLayoutRaceImport } from './routes/_layout.lobby.character._layout.race'
+import { Route as LayoutLobbyCharacterLayoutOriginImport } from './routes/_layout.lobby.character._layout.origin'
+import { Route as LayoutLobbyCharacterLayoutClassImport } from './routes/_layout.lobby.character._layout.class'
+import { Route as LayoutLobbyCharacterLayoutBackgroundImport } from './routes/_layout.lobby.character._layout.background'
+import { Route as LayoutLobbyCharacterLayoutAbilitiesImport } from './routes/_layout.lobby.character._layout.abilities'
 
 // Create Virtual Routes
 
-const LobbyLazyImport = createFileRoute('/lobby')()
-const LobbyCharacterImport = createFileRoute('/lobby/character')()
+const LayoutLobbyCharacterImport = createFileRoute('/_layout/lobby/character')()
 
 // Create/Update Routes
-
-const LobbyLazyRoute = LobbyLazyImport.update({
-  path: '/lobby',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/lobby.lazy').then((d) => d.Route))
 
 const LayoutRoute = LayoutImport.update({
   id: '/_layout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const LayoutIndexRoute = LayoutIndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const LobbyCharacterRoute = LobbyCharacterImport.update({
-  path: '/character',
-  getParentRoute: () => LobbyLazyRoute,
+const LayoutLobbyRoute = LayoutLobbyImport.update({
+  path: '/lobby',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const LobbyCharacterSubraceRoute = LobbyCharacterSubraceImport.update({
-  path: '/subrace',
-  getParentRoute: () => LobbyCharacterRoute,
+const LayoutLobbyCharacterRoute = LayoutLobbyCharacterImport.update({
+  path: '/lobby/character',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
-const LobbyCharacterRaceRoute = LobbyCharacterRaceImport.update({
-  path: '/race',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutRoute = LayoutLobbyCharacterLayoutImport.update(
+  {
+    id: '/_layout',
+    getParentRoute: () => LayoutLobbyCharacterRoute,
+  } as any,
+)
 
-const LobbyCharacterOriginRoute = LobbyCharacterOriginImport.update({
-  path: '/origin',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutSubraceRoute =
+  LayoutLobbyCharacterLayoutSubraceImport.update({
+    path: '/subrace',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
 
-const LobbyCharacterClassRoute = LobbyCharacterClassImport.update({
-  path: '/class',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutRaceRoute =
+  LayoutLobbyCharacterLayoutRaceImport.update({
+    path: '/race',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
 
-const LobbyCharacterBackgroundRoute = LobbyCharacterBackgroundImport.update({
-  path: '/background',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutOriginRoute =
+  LayoutLobbyCharacterLayoutOriginImport.update({
+    path: '/origin',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
 
-const LobbyCharacterAbilitiesRoute = LobbyCharacterAbilitiesImport.update({
-  path: '/abilities',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutClassRoute =
+  LayoutLobbyCharacterLayoutClassImport.update({
+    path: '/class',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
 
-const LobbyCharacterLayoutRoute = LobbyCharacterLayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => LobbyCharacterRoute,
-} as any)
+const LayoutLobbyCharacterLayoutBackgroundRoute =
+  LayoutLobbyCharacterLayoutBackgroundImport.update({
+    path: '/background',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
+
+const LayoutLobbyCharacterLayoutAbilitiesRoute =
+  LayoutLobbyCharacterLayoutAbilitiesImport.update({
+    path: '/abilities',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
     '/_layout': {
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
-    '/lobby': {
-      preLoaderRoute: typeof LobbyLazyImport
-      parentRoute: typeof rootRoute
+    '/_layout/lobby': {
+      preLoaderRoute: typeof LayoutLobbyImport
+      parentRoute: typeof LayoutImport
     }
-    '/lobby/character': {
-      preLoaderRoute: typeof LobbyCharacterImport
-      parentRoute: typeof LobbyLazyImport
+    '/_layout/': {
+      preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
     }
-    '/lobby/character/_layout': {
-      preLoaderRoute: typeof LobbyCharacterLayoutImport
-      parentRoute: typeof LobbyCharacterRoute
+    '/_layout/lobby/character': {
+      preLoaderRoute: typeof LayoutLobbyCharacterImport
+      parentRoute: typeof LayoutImport
     }
-    '/lobby/character/abilities': {
-      preLoaderRoute: typeof LobbyCharacterAbilitiesImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutImport
+      parentRoute: typeof LayoutLobbyCharacterRoute
     }
-    '/lobby/character/background': {
-      preLoaderRoute: typeof LobbyCharacterBackgroundImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout/abilities': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutAbilitiesImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
-    '/lobby/character/class': {
-      preLoaderRoute: typeof LobbyCharacterClassImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout/background': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutBackgroundImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
-    '/lobby/character/origin': {
-      preLoaderRoute: typeof LobbyCharacterOriginImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout/class': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutClassImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
-    '/lobby/character/race': {
-      preLoaderRoute: typeof LobbyCharacterRaceImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout/origin': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutOriginImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
-    '/lobby/character/subrace': {
-      preLoaderRoute: typeof LobbyCharacterSubraceImport
-      parentRoute: typeof LobbyCharacterImport
+    '/_layout/lobby/character/_layout/race': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutRaceImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
+    }
+    '/_layout/lobby/character/_layout/subrace': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutSubraceImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
   }
 }
@@ -139,15 +147,18 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  IndexRoute,
-  LobbyLazyRoute.addChildren([
-    LobbyCharacterRoute.addChildren([
-      LobbyCharacterAbilitiesRoute,
-      LobbyCharacterBackgroundRoute,
-      LobbyCharacterClassRoute,
-      LobbyCharacterOriginRoute,
-      LobbyCharacterRaceRoute,
-      LobbyCharacterSubraceRoute,
+  LayoutRoute.addChildren([
+    LayoutLobbyRoute,
+    LayoutIndexRoute,
+    LayoutLobbyCharacterRoute.addChildren([
+      LayoutLobbyCharacterLayoutRoute.addChildren([
+        LayoutLobbyCharacterLayoutAbilitiesRoute,
+        LayoutLobbyCharacterLayoutBackgroundRoute,
+        LayoutLobbyCharacterLayoutClassRoute,
+        LayoutLobbyCharacterLayoutOriginRoute,
+        LayoutLobbyCharacterLayoutRaceRoute,
+        LayoutLobbyCharacterLayoutSubraceRoute,
+      ]),
     ]),
   ]),
 ])

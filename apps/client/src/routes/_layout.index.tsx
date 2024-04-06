@@ -5,7 +5,7 @@ import { useGameStore } from "@/lib/game";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogo.png";
 import starlightlabslogo from "@/assets/images/logos/starlightlabslogo.png";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_layout/")({
     component: LoadingScreen,
 });
 

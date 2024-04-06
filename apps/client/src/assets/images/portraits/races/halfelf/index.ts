@@ -14,6 +14,7 @@ import wizard from "./classes/wizard.png";
 
 export const halfElf = {
     title: "Half-Elf",
+    value: "halfElf",
     baseImage,
     classes: {
         barbarian,

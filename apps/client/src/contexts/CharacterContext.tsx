@@ -34,10 +34,10 @@ interface CharacterProviderProps {
 export const CharacterProvider: React.FC<CharacterProviderProps> = ({
     children,
 }) => {
-    const [origin, setOrigin] = useState<string>("Custom");
-    const [race, setRace] = useState<string>("Dwarf");
+    const [origin, setOrigin] = useState<string>("custom");
+    const [race, setRace] = useState<string>("dwarf");
     const [subrace, setSubrace] = useState<string>("Hill Dwarf");
-    const [archetype, setArchetype] = useState<string>("Rogue");
+    const [archetype, setArchetype] = useState<string>("rogue");
     const [background, setBackground] = useState<string>("");
 
     const value = {

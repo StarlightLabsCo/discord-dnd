@@ -15,29 +15,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as IndexImport } from './routes/index'
+import { Route as LobbyCharacterSubraceImport } from './routes/lobby.character.subrace'
+import { Route as LobbyCharacterRaceImport } from './routes/lobby.character.race'
+import { Route as LobbyCharacterOriginImport } from './routes/lobby.character.origin'
+import { Route as LobbyCharacterClassImport } from './routes/lobby.character.class'
+import { Route as LobbyCharacterBackgroundImport } from './routes/lobby.character.background'
+import { Route as LobbyCharacterAbilitiesImport } from './routes/lobby.character.abilities'
+import { Route as LobbyCharacterLayoutImport } from './routes/lobby.character._layout'
 
 // Create Virtual Routes
 
 const LobbyLazyImport = createFileRoute('/lobby')()
-const LobbyCharacterSubraceLazyImport = createFileRoute(
-  '/lobby/character/subrace',
-)()
-const LobbyCharacterRaceLazyImport = createFileRoute('/lobby/character/race')()
-const LobbyCharacterOriginLazyImport = createFileRoute(
-  '/lobby/character/origin',
-)()
-const LobbyCharacterClassLazyImport = createFileRoute(
-  '/lobby/character/class',
-)()
-const LobbyCharacterBackgroundLazyImport = createFileRoute(
-  '/lobby/character/background',
-)()
-const LobbyCharacterAbilitiesLazyImport = createFileRoute(
-  '/lobby/character/abilities',
-)()
-const LobbyCharacterLayoutLazyImport = createFileRoute(
-  '/lobby/character/_layout',
-)()
+const LobbyCharacterImport = createFileRoute('/lobby/character')()
 
 // Create/Update Routes
 
@@ -56,56 +45,45 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LobbyCharacterSubraceLazyRoute = LobbyCharacterSubraceLazyImport.update({
-  path: '/character/subrace',
+const LobbyCharacterRoute = LobbyCharacterImport.update({
+  path: '/character',
   getParentRoute: () => LobbyLazyRoute,
-} as any).lazy(() =>
-  import('./routes/lobby.character.subrace.lazy').then((d) => d.Route),
-)
+} as any)
 
-const LobbyCharacterRaceLazyRoute = LobbyCharacterRaceLazyImport.update({
-  path: '/character/race',
-  getParentRoute: () => LobbyLazyRoute,
-} as any).lazy(() =>
-  import('./routes/lobby.character.race.lazy').then((d) => d.Route),
-)
+const LobbyCharacterSubraceRoute = LobbyCharacterSubraceImport.update({
+  path: '/subrace',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
-const LobbyCharacterOriginLazyRoute = LobbyCharacterOriginLazyImport.update({
-  path: '/character/origin',
-  getParentRoute: () => LobbyLazyRoute,
-} as any).lazy(() =>
-  import('./routes/lobby.character.origin.lazy').then((d) => d.Route),
-)
+const LobbyCharacterRaceRoute = LobbyCharacterRaceImport.update({
+  path: '/race',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
-const LobbyCharacterClassLazyRoute = LobbyCharacterClassLazyImport.update({
-  path: '/character/class',
-  getParentRoute: () => LobbyLazyRoute,
-} as any).lazy(() =>
-  import('./routes/lobby.character.class.lazy').then((d) => d.Route),
-)
+const LobbyCharacterOriginRoute = LobbyCharacterOriginImport.update({
+  path: '/origin',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
-const LobbyCharacterBackgroundLazyRoute =
-  LobbyCharacterBackgroundLazyImport.update({
-    path: '/character/background',
-    getParentRoute: () => LobbyLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/lobby.character.background.lazy').then((d) => d.Route),
-  )
+const LobbyCharacterClassRoute = LobbyCharacterClassImport.update({
+  path: '/class',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
-const LobbyCharacterAbilitiesLazyRoute =
-  LobbyCharacterAbilitiesLazyImport.update({
-    path: '/character/abilities',
-    getParentRoute: () => LobbyLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/lobby.character.abilities.lazy').then((d) => d.Route),
-  )
+const LobbyCharacterBackgroundRoute = LobbyCharacterBackgroundImport.update({
+  path: '/background',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
-const LobbyCharacterLayoutLazyRoute = LobbyCharacterLayoutLazyImport.update({
-  id: '/character/_layout',
-  getParentRoute: () => LobbyLazyRoute,
-} as any).lazy(() =>
-  import('./routes/lobby.character._layout.lazy').then((d) => d.Route),
-)
+const LobbyCharacterAbilitiesRoute = LobbyCharacterAbilitiesImport.update({
+  path: '/abilities',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
+
+const LobbyCharacterLayoutRoute = LobbyCharacterLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => LobbyCharacterRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -123,33 +101,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LobbyLazyImport
       parentRoute: typeof rootRoute
     }
+    '/lobby/character': {
+      preLoaderRoute: typeof LobbyCharacterImport
+      parentRoute: typeof LobbyLazyImport
+    }
     '/lobby/character/_layout': {
-      preLoaderRoute: typeof LobbyCharacterLayoutLazyImport
-      parentRoute: typeof LobbyLazyRoute
+      preLoaderRoute: typeof LobbyCharacterLayoutImport
+      parentRoute: typeof LobbyCharacterRoute
     }
     '/lobby/character/abilities': {
-      preLoaderRoute: typeof LobbyCharacterAbilitiesLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterAbilitiesImport
+      parentRoute: typeof LobbyCharacterImport
     }
     '/lobby/character/background': {
-      preLoaderRoute: typeof LobbyCharacterBackgroundLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterBackgroundImport
+      parentRoute: typeof LobbyCharacterImport
     }
     '/lobby/character/class': {
-      preLoaderRoute: typeof LobbyCharacterClassLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterClassImport
+      parentRoute: typeof LobbyCharacterImport
     }
     '/lobby/character/origin': {
-      preLoaderRoute: typeof LobbyCharacterOriginLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterOriginImport
+      parentRoute: typeof LobbyCharacterImport
     }
     '/lobby/character/race': {
-      preLoaderRoute: typeof LobbyCharacterRaceLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterRaceImport
+      parentRoute: typeof LobbyCharacterImport
     }
     '/lobby/character/subrace': {
-      preLoaderRoute: typeof LobbyCharacterSubraceLazyImport
-      parentRoute: typeof LobbyLazyImport
+      preLoaderRoute: typeof LobbyCharacterSubraceImport
+      parentRoute: typeof LobbyCharacterImport
     }
   }
 }
@@ -159,12 +141,14 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   LobbyLazyRoute.addChildren([
-    LobbyCharacterAbilitiesLazyRoute,
-    LobbyCharacterBackgroundLazyRoute,
-    LobbyCharacterClassLazyRoute,
-    LobbyCharacterOriginLazyRoute,
-    LobbyCharacterRaceLazyRoute,
-    LobbyCharacterSubraceLazyRoute,
+    LobbyCharacterRoute.addChildren([
+      LobbyCharacterAbilitiesRoute,
+      LobbyCharacterBackgroundRoute,
+      LobbyCharacterClassRoute,
+      LobbyCharacterOriginRoute,
+      LobbyCharacterRaceRoute,
+      LobbyCharacterSubraceRoute,
+    ]),
   ]),
 ])
 

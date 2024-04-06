@@ -1,8 +1,9 @@
 import { cn } from "@/lib/tailwind/utils";
 import { Link } from "@tanstack/react-router";
+import { AppLayoutPaths } from "@/main";
 
 type SidebarLinkProps = {
-    to: string;
+    to: AppLayoutPaths;
     text: string;
     subtext?: string;
     active?: boolean;

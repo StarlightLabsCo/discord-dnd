@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { characters } from "@/assets/images/portraits";
+import { createFileRoute } from "@tanstack/react-router";
+import { useCharacterContext } from "@/contexts/CharacterContext";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
+import { characters } from "@/assets/images/portraits";
 
-export const Route = createLazyFileRoute("/lobby/character/origin")({
+export const Route = createFileRoute("/lobby/character/origin")({
     component: Origin,
 });
 
@@ -42,13 +42,13 @@ const originCharacters = [
 ];
 
 function Origin() {
-    const [selected, setSelected] = useState<number>(0); // TODO: change to lobby store
+    const { origin, setOrigin } = useCharacterContext();
 
     return (
         <SelectableGrid
             items={originCharacters}
-            selected={selected}
-            setSelected={setSelected}
+            selected={origin}
+            setSelected={setOrigin}
             columns={3}
         />
     );

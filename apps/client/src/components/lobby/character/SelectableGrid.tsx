@@ -8,9 +8,9 @@ interface Item {
 
 interface SelectableGridProps {
     items: Item[];
-    selected: number;
-    setSelected: (index: number) => void;
-    columns: number; // Added columns prop
+    selected: string;
+    setSelected: (title: string) => void;
+    columns: number;
 }
 
 export const SelectableGrid: React.FC<SelectableGridProps> = ({
@@ -29,10 +29,10 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
             {items.map((item, index) => (
                 <div key={index} className='flex flex-col items-center'>
                     <div
-                        className={`relative rounded-xl cursor-pointer ${selected === index ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
-                        onClick={() => setSelected(index)}
+                        className={`relative rounded-xl cursor-pointer ${selected === item.title ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
+                        onClick={() => setSelected(item.title)}
                     >
-                        {selected !== index && (
+                        {selected !== item.title && (
                             <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img

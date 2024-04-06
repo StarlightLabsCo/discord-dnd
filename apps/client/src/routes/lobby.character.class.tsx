@@ -1,19 +1,16 @@
-import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
-import { useGameStore } from "@/lib/game";
-import { races } from "@/assets/images/portraits/races";
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute("/lobby/character/class")({
+import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
+import { races } from "@/assets/images/portraits/races";
+import { useCharacterContext } from "@/contexts/CharacterContext";
+
+export const Route = createFileRoute("/lobby/character/class")({
     component: Class,
 });
 
 function Class() {
-    const selectedRaceIndex = useGameStore((state) => state.character.race);
-    const selectedRaceKey = Object.keys(races)[
-        selectedRaceIndex
-    ] as keyof typeof races;
-    const selectedRaceImages = races[selectedRaceKey].classes;
+    const { race, archetype, setArchetype } = useCharacterContext();
+    const selectedRaceImages = races[race as keyof typeof races].classes;
 
     const classes = [
         {
@@ -78,13 +75,11 @@ function Class() {
         },
     ];
 
-    const [selected, setSelected] = useState<number>(0); // TODO: change to lobby store
-
     return (
         <SelectableGrid
             items={classes}
-            selected={selected}
-            setSelected={setSelected}
+            selected={archetype}
+            setSelected={setArchetype}
             columns={4}
         />
     );

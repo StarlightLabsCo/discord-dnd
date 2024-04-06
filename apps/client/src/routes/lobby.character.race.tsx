@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
+import { useCharacterContext } from "@/contexts/CharacterContext";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 import { races } from "@/assets/images/portraits/races";
 
-export const Route = createLazyFileRoute("/lobby/character/race")({
+export const Route = createFileRoute("/lobby/character/race")({
     component: Race,
 });
 
 function Race() {
-    const [selected, setSelected] = useState<number>(0); // TODO: change to lobby store
+    const { race, setRace } = useCharacterContext();
 
     const items = Object.values(races).map((race) => ({
         src: race.baseImage,
@@ -20,8 +20,8 @@ function Race() {
     return (
         <SelectableGrid
             items={items}
-            selected={selected}
-            setSelected={setSelected}
+            selected={race}
+            setSelected={setRace}
             columns={3}
         />
     );

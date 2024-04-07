@@ -21,7 +21,7 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
 }) => {
     return (
         <div
-            className={`grid gap-4 w-[80%]`}
+            className={`grid gap-[1.25vw] w-[80%]`}
             style={{
                 gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
             }}
@@ -29,7 +29,7 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
             {items.map((item, index) => (
                 <div key={index} className='flex flex-col items-center'>
                     <div
-                        className={`relative rounded-[1vw] cursor-pointer ${selected === item.id ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
+                        className={`shrink-0 relative rounded-[1vw] cursor-pointer ${selected === item.id ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
                         onClick={() => setSelected(item.id)}
                     >
                         {selected !== item.id && (
@@ -37,10 +37,9 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
                         )}
                         <img
                             src={item.src}
-                            className={`rounded-[1vw] ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
+                            className={`rounded-[1vw] aspect-square ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
                         />
                     </div>
-
                     <div className='mt-[0.5vw] text-[1.1vw]'>{item.title}</div>
                 </div>
             ))}

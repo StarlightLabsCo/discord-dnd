@@ -82,28 +82,28 @@ export function AbilityScoreSelector({
             <img
                 src={""}
                 alt={`${abilities[id].title} icon`}
-                className='w-6 h-6'
+                className='w-[1.5vw] h-[1.5vw]'
             />
-            <span className='w-48 text-xl text-center'>
+            <span className='w-[20vw] text-xl text-center'>
                 {abilities[id].title}
             </span>
-            <div className='flex flex-col items-center w-12'>
+            <div className='flex flex-col items-center w-[10vw]'>
                 <span className='text-center'>{value}</span>
-                <span className='text-xs font-light text-center text-neutral-400'>{`(${calculateModifier(value)})`}</span>
+                <span className='text-[0.9vw] font-light text-center text-neutral-400'>{`(${calculateModifier(value)})`}</span>
             </div>
             <button
                 onClick={handleIncrement}
                 disabled={isIncrementDisabled}
                 className={`p-1 rounded ${isIncrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
             >
-                <Icons.plus className='w-6 h-6' />
+                <Icons.plus className='w-[1.5vw] h-[1.5vw]' />
             </button>
             <button
                 onClick={handleDecrement}
                 disabled={isDecrementDisabled}
                 className={`p-1 ml-2 rounded ${isDecrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
             >
-                <Icons.minus className='w-6 h-6' />
+                <Icons.minus className='w-[1.5vw] h-[1.5vw]' />
             </button>
         </div>
     );

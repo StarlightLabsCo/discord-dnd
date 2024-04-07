@@ -86,28 +86,28 @@ export function AbilityScoreSelector({
             <img
                 src={""}
                 alt={`${abilities[id].title} icon`}
-                className='w-[1.5vw] h-[1.5vw]'
+                className='w-[1.5vw] h-[1.5vw] aspect-square'
             />
-            <span className='w-[20vw] text-xl text-center'>
+            <span className='w-[15vw] text-[1.25vw] text-center'>
                 {abilities[id].title}
             </span>
             <div className='flex flex-col items-center w-[10vw]'>
-                <span className='text-center'>{value}</span>
+                <span className='text-center text-[1vw] '>{value}</span>
                 <span className='text-[0.9vw] font-light text-center text-neutral-400'>{`(${calculateModifier(value)})`}</span>
             </div>
             <button
-                onClick={handleIncrement}
-                disabled={isIncrementDisabled}
-                className={`p-1 rounded ${isIncrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
-            >
-                <Icons.plus className='w-[1.5vw] h-[1.5vw]' />
-            </button>
-            <button
                 onClick={handleDecrement}
                 disabled={isDecrementDisabled}
-                className={`p-1 ml-2 rounded ${isDecrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
+                className={`p-[0.5vw]  rounded ${isDecrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
             >
-                <Icons.minus className='w-[1.5vw] h-[1.5vw]' />
+                <Icons.minus className='w-[1.5vw] h-[1.5vw] aspect-square' />
+            </button>
+            <button
+                onClick={handleIncrement}
+                disabled={isIncrementDisabled}
+                className={`p-[0.5vw] ml-[0.5vw] rounded ${isIncrementDisabled ? "text-gray-800" : "text-white hover:scale-125"}`}
+            >
+                <Icons.plus className='w-[1.5vw] h-[1.5vw] aspect-square' />
             </button>
         </div>
     );

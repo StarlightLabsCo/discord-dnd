@@ -41,7 +41,7 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
                         />
                     </div>
 
-                    <div className='mt-2 text-[1.1vw]'>{item.title}</div>
+                    <div className='mt-[0.5vw] text-[1.1vw]'>{item.title}</div>
                 </div>
             ))}
         </div>

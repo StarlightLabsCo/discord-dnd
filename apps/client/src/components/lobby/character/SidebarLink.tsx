@@ -21,7 +21,7 @@ export function SidebarLink({
         <Link
             to={to}
             className={cn(
-                "flex gap-x-4 items-center p-2 rounded-[1vw] cursor-pointer hover:bg-[#1A2B3C]",
+                "flex gap-x-4 items-center p-[0.5vw] rounded-[1vw] cursor-pointer hover:bg-[#1A2B3C]",
                 "border border-transparent",
                 active && "border-white",
                 className

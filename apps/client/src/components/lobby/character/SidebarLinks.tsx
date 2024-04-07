@@ -61,7 +61,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
                 className
             )}
         >
-            <div className='flex flex-col gap-y-2 w-3/4'>
+            <div className='flex flex-col gap-y-[1vw] w-3/4'>
                 {sidebarLinks.map(({ to, text, subtext }) => (
                     <SidebarLink
                         key={to}

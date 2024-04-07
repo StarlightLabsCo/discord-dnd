@@ -23,9 +23,9 @@ function App() {
     }, [connect, auth]);
 
     return (
-        <div className='w-screen h-screen bg-gradient-to-t from-[#01131D] to-[#172737]'>
+        <>
             <Outlet />
             <TanStackRouterDevtools />
-        </div>
+        </>
     );
 }

@@ -1,5 +1,4 @@
 import { User } from "database";
-import { characters } from "@/assets/images/portraits";
 import { DiscordAvatar } from "./DiscordAvatar";
 import { Link } from "@tanstack/react-router";
 
@@ -14,8 +13,6 @@ export function CharacterPortrait({
     ready,
     isCurrentUser,
 }: CharacterPortraitProps) {
-    const index = Number(BigInt(user.id) % BigInt(16));
-
     return (
         <div className='relative w-[14vw] h-[14vw] border border-white aspect-square shrink-0 rounded-[1vw]'>
             {ready && (
@@ -25,7 +22,7 @@ export function CharacterPortrait({
             )}
             <div className='relative group'>
                 <img
-                    src={characters[index]}
+                    src={""}
                     className='object-cover w-full h-full rounded-[1vw]'
                     alt='Character Portrait'
                 />

@@ -2,7 +2,7 @@ import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { CharacterPreview } from "@/components/lobby/character/CharacterPreview";
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
-import { CharacterProvider } from "@/contexts/CharacterContext";
+import { CharacterProvider } from "@/components/lobby/character/CharacterContext";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout")({
     component: Layout,

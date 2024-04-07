@@ -1,28 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useCharacterContext } from "@/contexts/CharacterContext";
+import { races } from "@/game/races";
+import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
-import { races } from "@/assets/images/portraits/races";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout/race")({
     component: Race,
 });
 
 function Race() {
-    const { race, setRace } = useCharacterContext();
+    const { raceId, setRaceId } = useCharacterContext();
 
     const items = Object.values(races).map((race) => ({
+        id: race.id,
         src: race.baseImage,
         title: race.title,
         subtitle: "",
-        value: race.value,
     }));
 
     return (
         <SelectableGrid
             items={items}
-            selected={race}
-            setSelected={setRace}
+            selected={raceId}
+            setSelected={setRaceId}
             columns={3}
         />
     );

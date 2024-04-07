@@ -1,6 +1,6 @@
 type CharacterStatProps = {
     label: string;
-    value: string;
+    value: number;
     main?: boolean;
 };
 

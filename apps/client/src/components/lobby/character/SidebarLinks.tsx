@@ -1,7 +1,11 @@
 import { useRouterState } from "@tanstack/react-router";
 
 import { AppLayoutPaths } from "@/main";
-import { useCharacterContext } from "@/contexts/CharacterContext";
+import { origins } from "@/game/origins";
+import { races } from "@/game/races";
+import { classes } from "@/game/classes";
+
+import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 import { cn } from "@/lib/tailwind/utils";
 import { SidebarLink } from "./SidebarLink";
 
@@ -16,8 +20,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         return location.pathname === path;
     };
 
-    const { origin, race, subrace, archetype, background } =
-        useCharacterContext();
+    const { originId, raceId, archetypeId, background } = useCharacterContext(); // archetype = class (changed to avoid keyword conflict)
 
     const sidebarLinks: {
         to: AppLayoutPaths;
@@ -27,18 +30,26 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         {
             to: "/lobby/character/origin",
             text: "Origin",
-            subtext: origin,
+            subtext: origins[originId].title,
         },
-        { to: "/lobby/character/race", text: "Race", subtext: race },
         {
-            to: "/lobby/character/subrace",
-            text: "Subrace",
-            subtext: subrace,
+            to: "/lobby/character/race",
+            text: "Race",
+            subtext: races[raceId].title,
         },
-        { to: "/lobby/character/class", text: "Class", subtext: archetype }, // archetype = class (changed to avoid keyword conflict)
+        {
+            to: "/lobby/character/class",
+            text: "Class",
+            subtext: classes[archetypeId].title,
+        },
+        {
+            to: "/lobby/character/abilities",
+            text: "Abilities",
+            subtext: "",
+        },
         {
             to: "/lobby/character/background",
-            text: "Background",
+            text: "Lore",
             subtext: background,
         },
     ];

@@ -1,10 +1,10 @@
 import React from "react";
 
 interface Item {
-    src: string;
+    id: string;
     title: string;
     subtitle: string;
-    value: string;
+    src: string;
 }
 
 interface SelectableGridProps {
@@ -30,10 +30,10 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
             {items.map((item, index) => (
                 <div key={index} className='flex flex-col items-center'>
                     <div
-                        className={`relative rounded-xl cursor-pointer ${selected === item.value ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
-                        onClick={() => setSelected(item.value)}
+                        className={`relative rounded-xl cursor-pointer ${selected === item.id ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
+                        onClick={() => setSelected(item.id)}
                     >
-                        {selected !== item.value && (
+                        {selected !== item.id && (
                             <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img

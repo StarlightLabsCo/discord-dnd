@@ -69,7 +69,7 @@ function Lobby() {
     if (!user) return null; // Invalid state
 
     return (
-        <div className={"w-screen h-screen bg-[#01131D]"}>
+        <div className={"w-screen h-screen"}>
             <div className='flex w-full h-full'>
                 <div className='flex relative flex-col justify-end p-[2vw] w-1/2'>
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t to-transparent from-black/50' />

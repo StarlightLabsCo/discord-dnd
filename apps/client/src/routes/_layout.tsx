@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_layout")({
 
 function Layout() {
     return (
-        <div className='relative w-screen h-screen'>
+        <div className='relative w-screen h-screen bg-[#01131D]'>
             <div className='absolute flex justify-between items-start z-40 w-full p-[1vw]'>
                 <img
                     src={fantasyforgelogo}

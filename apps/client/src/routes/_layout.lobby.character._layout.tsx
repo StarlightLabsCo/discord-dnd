@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_layout/lobby/character/_layout")({
 function Layout() {
     return (
         <CharacterProvider>
-            <div className='w-screen h-screen bg-[#01131D] flex items-center text-white relative'>
+            <div className='flex relative items-center w-screen h-screen text-white'>
                 <SidebarLinks className='w-1/5' />
                 <div className='flex-1'>
                     <Outlet />

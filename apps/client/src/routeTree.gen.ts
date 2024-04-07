@@ -14,7 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutIndexImport } from './routes/_layout.index'
+import { Route as IndexImport } from './routes/index'
 import { Route as LayoutLobbyImport } from './routes/_layout.lobby_'
 import { Route as LayoutLobbyCharacterLayoutImport } from './routes/_layout.lobby.character._layout'
 import { Route as LayoutLobbyCharacterLayoutSubraceImport } from './routes/_layout.lobby.character._layout.subrace'
@@ -35,9 +35,9 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutIndexRoute = LayoutIndexImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
 const LayoutLobbyRoute = LayoutLobbyImport.update({
@@ -97,16 +97,16 @@ const LayoutLobbyCharacterLayoutAbilitiesRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/_layout': {
       preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
     '/_layout/lobby': {
       preLoaderRoute: typeof LayoutLobbyImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/': {
-      preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/lobby/character': {
@@ -147,9 +147,9 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
+  IndexRoute,
   LayoutRoute.addChildren([
     LayoutLobbyRoute,
-    LayoutIndexRoute,
     LayoutLobbyCharacterRoute.addChildren([
       LayoutLobbyCharacterLayoutRoute.addChildren([
         LayoutLobbyCharacterLayoutAbilitiesRoute,

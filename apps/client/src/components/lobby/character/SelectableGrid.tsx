@@ -3,7 +3,6 @@ import React from "react";
 interface Item {
     id: string;
     title: string;
-    subtitle: string;
     src: string;
 }
 
@@ -38,14 +37,11 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
                         )}
                         <img
                             src={item.src}
-                            className={`rounded-xl ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[12vw] h-[12vw]"}`}
+                            className={`rounded-xl ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
                         />
                     </div>
 
-                    <div className='mt-2'>{item.title}</div>
-                    <div className='text-sm font-light text-gray-500'>
-                        {item.subtitle}
-                    </div>
+                    <div className='mt-2 text-[1.1vw]'>{item.title}</div>
                 </div>
             ))}
         </div>

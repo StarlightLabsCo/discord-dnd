@@ -27,8 +27,8 @@ export function SidebarLink({
                 className
             )}
         >
-            <div className='flex justify-center items-center w-4 h-4 rounded-full border border-white'>
-                <div className='w-3 h-3 bg-white rounded-full' />
+            <div className='flex justify-center items-center w-[1.25vw] h-[1.25vw] rounded-full border border-white'>
+                <div className='w-[.75vw] h-[.75vw] bg-white rounded-full' />
             </div>
             <div className='flex flex-col'>
                 <div className='text-[1vw] font-bold'>{text}</div>

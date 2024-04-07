@@ -18,7 +18,6 @@ function Class() {
         id: characterClass.id,
         src: selectedRaceImages[characterClass.id],
         title: characterClass.title,
-        subtitle: "",
     }));
 
     return (

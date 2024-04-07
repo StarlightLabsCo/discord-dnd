@@ -17,7 +17,6 @@ function Origin() {
         id: origin.id,
         src: origin.src,
         title: origin.title,
-        subtitle: "",
     }));
 
     return (

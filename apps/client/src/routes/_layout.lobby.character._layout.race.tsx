@@ -15,7 +15,6 @@ function Race() {
         id: race.id,
         src: race.baseImage,
         title: race.title,
-        subtitle: "",
     }));
 
     return (

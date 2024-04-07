@@ -1,16 +1,16 @@
-import DreamsOfMagic from "./Dreams of Magic.mp3";
-import FieldsOfDestiny from "./Fields of Destiny.mp3";
-import FluteLullaby from "./Flute Lullaby.mp3";
-import GhostKnightsFury from "./Ghost Knight's Fury.mp3";
-import HymnOfTheAncients from "./Hymn of the Ancients.mp3";
-import JourneyOfHeroes from "./Journey of Heroes.mp3";
-import LegendsOfTheRealm from "./Legends of the Realm.mp3";
-import QuestOfDestiny from "./Quest of Destiny.mp3";
-import SunoSunsetSerenade from "./Suno Sunset Serenade.mp3";
-import TalesOfElvenLove from "./Tales of Elven Love.mp3";
-import TalesOfTheQuest from "./Tales of the Quest.mp3";
-import WarriorsOfValor from "./Warriors of Valor.mp3";
-import WarriorsOfTheArcane from "./Warriors of the Arcane.mp3";
+import DreamsOfMagic from "./songs/Dreams of Magic.mp3";
+import FieldsOfDestiny from "./songs/Fields of Destiny.mp3";
+import FluteLullaby from "./songs/Flute Lullaby.mp3";
+import GhostKnightsFury from "./songs/Ghost Knight's Fury.mp3";
+import HymnOfTheAncients from "./songs/Hymn of the Ancients.mp3";
+import JourneyOfHeroes from "./songs/Journey of Heroes.mp3";
+import LegendsOfTheRealm from "./songs/Legends of the Realm.mp3";
+import QuestOfDestiny from "./songs/Quest of Destiny.mp3";
+import SunoSunsetSerenade from "./songs/Suno Sunset Serenade.mp3";
+import TalesOfElvenLove from "./songs/Tales of Elven Love.mp3";
+import TalesOfTheQuest from "./songs/Tales of the Quest.mp3";
+import WarriorsOfValor from "./songs/Warriors of Valor.mp3";
+import WarriorsOfTheArcane from "./songs/Warriors of the Arcane.mp3";
 
 export type MusicFile = {
     name: string;

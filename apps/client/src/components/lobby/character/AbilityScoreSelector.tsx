@@ -1,6 +1,7 @@
 import { abilities } from "@/game/abilities";
 import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 import { Icons } from "@/components/Icons";
+import clickSound from "@/assets/sfx/lobby/click.mp3";
 
 type AbilityScoreSelectorProps = {
     id: string;
@@ -34,6 +35,9 @@ export function AbilityScoreSelector({
         abilityCosts[newValue] - (abilityCosts[oldValue] || 0);
 
     const handleChange = (newValue: number) => {
+        const audio = new Audio(clickSound);
+        audio.play();
+
         const costDifference = calculateCost(newValue, value);
         if (characterAbilityPoints >= costDifference) {
             setCharacterAbilities((prev) => ({ ...prev, [id]: newValue }));

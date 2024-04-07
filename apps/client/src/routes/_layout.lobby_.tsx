@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
-import clickSound from "@/assets/sfx/lobby/click.mp3";
 import campaignCover from "@/assets/images/campaign/cover.png";
 
 import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
@@ -47,9 +46,6 @@ function Lobby() {
                 } as GameStateUpdateRequest)
             );
         } else {
-            const clickSfx = new Audio(clickSound);
-            clickSfx.play();
-
             const newGameState = {
                 readyUserIds: gameState.readyUserIds.filter(
                     (id) => id !== user.id

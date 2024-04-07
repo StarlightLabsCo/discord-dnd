@@ -1,15 +1,17 @@
 import character1 from "@/assets/images/fullbody/character1.webp";
-import { CharacterStat } from "./CharacterStat";
 import { cn } from "@/lib/tailwind/utils";
+import { races } from "@/game/races";
+import { classes } from "@/game/classes";
 import { abilities } from "@/game/abilities";
 import { useCharacterContext } from "./CharacterContext";
+import { CharacterStat } from "./CharacterStat";
 
 type CharacterPreviewProps = {
     className?: string;
 };
 
 export function CharacterPreview({ className }: CharacterPreviewProps) {
-    const { characterAbilities } = useCharacterContext();
+    const { raceId, archetypeId, characterAbilities } = useCharacterContext();
 
     const highestAbilityKey = Object.keys(characterAbilities).reduce(
         (highest, current) =>
@@ -28,9 +30,9 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
             <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[2vw] items-center pt-[0.5vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>
                 <div className='flex flex-col gap-y-[0.2vw] items-center'>
                     <h2 className='text-[1.5vw] font-bold'>George</h2>
-                    <p className='text-[0.9vw]'>Half-Elf / Half-Human</p>
+                    <p className='text-[0.9vw]'>{races[raceId].title}</p>
                     <p className='mb-[1vw] text-[0.9vw] font-light text-[#A5A5A5]'>
-                        Level 1 Wizard
+                        Level 1 {classes[archetypeId].title}
                     </p>
                 </div>
                 <div className='flex gap-x-[1.5vw]'>

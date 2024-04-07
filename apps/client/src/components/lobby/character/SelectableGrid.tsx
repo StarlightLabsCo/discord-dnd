@@ -29,15 +29,15 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
             {items.map((item, index) => (
                 <div key={index} className='flex flex-col items-center'>
                     <div
-                        className={`relative rounded-xl cursor-pointer ${selected === item.id ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
+                        className={`relative rounded-[1vw] cursor-pointer ${selected === item.id ? "border border-yellow-600" : "border border-white"} hover:scale-105 group`}
                         onClick={() => setSelected(item.id)}
                     >
                         {selected !== item.id && (
-                            <div className='absolute inset-0 w-full h-full rounded-xl bg-black/50 group-hover:bg-transparent' />
+                            <div className='absolute inset-0 w-full h-full rounded-[1vw] bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img
                             src={item.src}
-                            className={`rounded-xl ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
+                            className={`rounded-[1vw] ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
                         />
                     </div>
 

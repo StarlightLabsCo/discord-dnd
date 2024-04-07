@@ -17,7 +17,7 @@ export function DiscordAvatar({ user, className }: DiscordAvatarProps) {
     return (
         <div
             className={cn(
-                "flex relative justify-center items-center rounded-lg aspect-square",
+                "flex relative justify-center items-center aspect-square",
                 className
             )}
         >

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { AbilityScores } from "@/game/abilities";
+import { Item } from "@/game/items";
 
 interface CharacterContextType {
     originId: string;
@@ -14,6 +15,8 @@ interface CharacterContextType {
     setCharacterAbilityPoints: React.Dispatch<React.SetStateAction<number>>;
     characterAbilities: AbilityScores;
     setCharacterAbilities: React.Dispatch<React.SetStateAction<AbilityScores>>;
+    inventory: Item[];
+    setInventory: React.Dispatch<React.SetStateAction<Item[]>>;
     background: string;
     setBackground: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -57,6 +60,8 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         }
     );
 
+    const [inventory, setInventory] = useState<Item[]>([]);
+
     const [background, setBackground] = useState<string>("");
 
     const value = {
@@ -72,6 +77,8 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         setCharacterAbilityPoints,
         characterAbilities,
         setCharacterAbilities,
+        inventory,
+        setInventory,
         background,
         setBackground,
     };

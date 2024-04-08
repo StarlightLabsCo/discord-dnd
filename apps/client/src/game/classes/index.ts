@@ -10,10 +10,12 @@ import { rogue } from "./rogue";
 import { sorcerer } from "./sorcerer";
 import { warlock } from "./warlock";
 import { wizard } from "./wizard";
+import { Item } from "@/game/items";
 
 export type Class = {
     id: string;
     title: string;
+    startingItems: Item[];
 };
 
 export const classes: Record<string, Class> = {

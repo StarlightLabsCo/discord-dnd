@@ -9,7 +9,6 @@ import { bookOfAncestors } from "./bookOfAncestors";
 import { bookOfLore } from "./bookOfLore";
 import { bookOfShadows } from "./bookOfShadows";
 import { cloakOfLeaves } from "./cloakOfLeaves";
-import { cloakOfShadows } from "./cloakOfShadows";
 import { cloakOfTheStars } from "./cloakOfTheStars";
 import { combatManual } from "./combatManual";
 import { compassOfThePathfinder } from "./compassOfThePathfinder";
@@ -57,7 +56,6 @@ export const items = {
     bookOfLore,
     bookOfShadows,
     cloakOfLeaves,
-    cloakOfShadows,
     cloakOfTheStars,
     combatManual,
     compassOfThePathfinder,

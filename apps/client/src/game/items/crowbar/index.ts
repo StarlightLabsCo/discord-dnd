@@ -1,5 +1,5 @@
 import { Item } from "@/game/items";
-import image from "./image.jpeg";
+import image from "./image.webp";
 
 export const crowbar: Item = {
     id: "crowbar",

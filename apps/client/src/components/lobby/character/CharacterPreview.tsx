@@ -5,6 +5,7 @@ import { classes } from "@/game/classes";
 import { abilities } from "@/game/abilities";
 import { useCharacterContext } from "./CharacterContext";
 import { CharacterStat } from "./CharacterStat";
+import { ItemPreview } from "./ItemPreview";
 
 type CharacterPreviewProps = {
     className?: string;
@@ -46,6 +47,16 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                             />
                         )
                     )}
+                </div>
+                <div className='flex flex-col items-center gap-y-[0.5vw]'>
+                    <div className='text-[0.8vw] text-neutral-400'>
+                        Starting Items
+                    </div>
+                    <div className='flex gap-x-[1.5vw]'>
+                        {classes[archetypeId].startingItems.map((item) => (
+                            <ItemPreview key={item.id} item={item} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

@@ -32,7 +32,14 @@ function Abilities() {
 
     return (
         <div className='flex flex-col items-center w-[80%] gap-y-[2.5vw]'>
-            {27 - characterAbilityPoints} / 27
+            <div className='flex flex-col text-[1vw] items-center'>
+                <div>Ability Points</div>
+                <div
+                    className={`${characterAbilityPoints > 0 ? "text-red-500" : ""}`}
+                >
+                    {characterAbilityPoints} / 27
+                </div>
+            </div>
             {Object.entries(characterAbilities).map(([id, value]) => (
                 <AbilityScoreSelector key={id} id={id} value={value} />
             ))}

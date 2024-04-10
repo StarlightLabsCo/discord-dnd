@@ -29,12 +29,7 @@ useDiscordStore.getState().setInstanceId(instanceId);
 
 async function setup() {
     await discordSdk.ready();
-
-    const { enabled } =
-        await discordSdk.commands.encourageHardwareAcceleration();
-    console.log(
-        `Hardware Acceleration is ${enabled === true ? "enabled" : "disabled"}`
-    );
+    await discordSdk.commands.encourageHardwareAcceleration();
 
     const auth = await authenticate();
     useDiscordStore.getState().setAuth(auth);

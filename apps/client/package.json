@@ -15,7 +15,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "starlight-api-types": "workspace:*",
+    "starlight-game-data": "workspace:*",
     "type-fest": "^4.13.1",
+    "vite-tsconfig-paths": "^4.3.2",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

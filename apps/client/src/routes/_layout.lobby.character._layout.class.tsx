@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { races } from "@/game/races";
-import { classes } from "@/game/classes";
+import { races } from "starlight-game-data/races";
+import { classes } from "starlight-game-data/classes";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 

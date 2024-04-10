@@ -1,4 +1,4 @@
-import { abilities } from "@/game/abilities";
+import { abilities } from "starlight-game-data/abilities";
 import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 import { Icons } from "@/components/Icons";
 import clickSound from "@/assets/sfx/lobby/click.mp3";

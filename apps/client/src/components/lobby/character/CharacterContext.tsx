@@ -1,24 +1,40 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import { AbilityScores } from "@/game/abilities";
-import { Item } from "@/game/items";
+import {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useCallback,
+} from "react";
+import { Item } from "starlight-game-data/items";
+import { AbilityScores } from "starlight-game-data/abilities";
+import { CharacterLore } from "starlight-game-data/characterLore";
+import { useDiscordStore } from "@/lib/discord";
 
 interface CharacterContextType {
     originId: string;
     setOriginId: React.Dispatch<React.SetStateAction<string>>;
+
     raceId: string;
     setRaceId: React.Dispatch<React.SetStateAction<string>>;
+
     subraceId: string;
     setSubraceId: React.Dispatch<React.SetStateAction<string>>;
+
     archetypeId: string;
     setArchetypeId: React.Dispatch<React.SetStateAction<string>>;
+
     characterAbilityPoints: number;
     setCharacterAbilityPoints: React.Dispatch<React.SetStateAction<number>>;
     characterAbilities: AbilityScores;
     setCharacterAbilities: React.Dispatch<React.SetStateAction<AbilityScores>>;
+
     inventory: Item[];
     setInventory: React.Dispatch<React.SetStateAction<Item[]>>;
-    background: string;
-    setBackground: React.Dispatch<React.SetStateAction<string>>;
+
+    lore: CharacterLore;
+    setLore: React.Dispatch<React.SetStateAction<CharacterLore>>;
+
+    generateCharacter: () => Promise<void>;
 }
 
 const CharacterContext = createContext<CharacterContextType | undefined>(
@@ -62,25 +78,66 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
 
     const [inventory, setInventory] = useState<Item[]>([]);
 
-    const [background, setBackground] = useState<string>("");
+    const [lore, setLore] = useState<CharacterLore>({
+        name: "",
+        pronouns: "",
+        age: "",
+        voice: "",
+        alignment: "",
+        appearance: "",
+        backstory: "",
+        personality: "",
+        ideals: "",
+        bonds: "",
+        flaws: "",
+    });
+
+    const access_token = useDiscordStore.getState().auth?.access_token;
+    const generateCharacter = useCallback(async () => {
+        const response = await fetch("/api/character/generate", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                raceId,
+                archetypeId,
+                characterAbilities,
+                lore,
+            }),
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+    }, [access_token, lore]);
 
     const value = {
         originId,
         setOriginId,
+
         raceId,
         setRaceId,
+
         subraceId,
         setSubraceId,
+
         archetypeId,
         setArchetypeId,
+
         characterAbilityPoints,
         setCharacterAbilityPoints,
         characterAbilities,
         setCharacterAbilities,
+
         inventory,
         setInventory,
-        background,
-        setBackground,
+
+        lore,
+        setLore,
+
+        generateCharacter,
     };
 
     return (

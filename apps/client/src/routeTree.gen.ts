@@ -20,8 +20,8 @@ import { Route as LayoutLobbyCharacterLayoutImport } from './routes/_layout.lobb
 import { Route as LayoutLobbyCharacterLayoutSubraceImport } from './routes/_layout.lobby.character._layout.subrace'
 import { Route as LayoutLobbyCharacterLayoutRaceImport } from './routes/_layout.lobby.character._layout.race'
 import { Route as LayoutLobbyCharacterLayoutOriginImport } from './routes/_layout.lobby.character._layout.origin'
+import { Route as LayoutLobbyCharacterLayoutLoreImport } from './routes/_layout.lobby.character._layout.lore'
 import { Route as LayoutLobbyCharacterLayoutClassImport } from './routes/_layout.lobby.character._layout.class'
-import { Route as LayoutLobbyCharacterLayoutBackgroundImport } from './routes/_layout.lobby.character._layout.background'
 import { Route as LayoutLobbyCharacterLayoutAbilitiesImport } from './routes/_layout.lobby.character._layout.abilities'
 
 // Create Virtual Routes
@@ -75,15 +75,15 @@ const LayoutLobbyCharacterLayoutOriginRoute =
     getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
   } as any)
 
-const LayoutLobbyCharacterLayoutClassRoute =
-  LayoutLobbyCharacterLayoutClassImport.update({
-    path: '/class',
+const LayoutLobbyCharacterLayoutLoreRoute =
+  LayoutLobbyCharacterLayoutLoreImport.update({
+    path: '/lore',
     getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
   } as any)
 
-const LayoutLobbyCharacterLayoutBackgroundRoute =
-  LayoutLobbyCharacterLayoutBackgroundImport.update({
-    path: '/background',
+const LayoutLobbyCharacterLayoutClassRoute =
+  LayoutLobbyCharacterLayoutClassImport.update({
+    path: '/class',
     getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
   } as any)
 
@@ -121,12 +121,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutLobbyCharacterLayoutAbilitiesImport
       parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
-    '/_layout/lobby/character/_layout/background': {
-      preLoaderRoute: typeof LayoutLobbyCharacterLayoutBackgroundImport
-      parentRoute: typeof LayoutLobbyCharacterLayoutImport
-    }
     '/_layout/lobby/character/_layout/class': {
       preLoaderRoute: typeof LayoutLobbyCharacterLayoutClassImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
+    }
+    '/_layout/lobby/character/_layout/lore': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutLoreImport
       parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
     '/_layout/lobby/character/_layout/origin': {
@@ -153,8 +153,8 @@ export const routeTree = rootRoute.addChildren([
     LayoutLobbyCharacterRoute.addChildren([
       LayoutLobbyCharacterLayoutRoute.addChildren([
         LayoutLobbyCharacterLayoutAbilitiesRoute,
-        LayoutLobbyCharacterLayoutBackgroundRoute,
         LayoutLobbyCharacterLayoutClassRoute,
+        LayoutLobbyCharacterLayoutLoreRoute,
         LayoutLobbyCharacterLayoutOriginRoute,
         LayoutLobbyCharacterLayoutRaceRoute,
         LayoutLobbyCharacterLayoutSubraceRoute,

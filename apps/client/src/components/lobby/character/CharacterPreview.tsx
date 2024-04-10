@@ -1,8 +1,8 @@
 import character1 from "@/assets/images/fullbody/character1.webp";
 import { cn } from "@/lib/tailwind/utils";
-import { races } from "@/game/races";
-import { classes } from "@/game/classes";
-import { abilities } from "@/game/abilities";
+import { races } from "starlight-game-data/races";
+import { classes } from "starlight-game-data/classes";
+import { abilities } from "starlight-game-data/abilities";
 import { useCharacterContext } from "./CharacterContext";
 import { CharacterStat } from "./CharacterStat";
 import { ItemPreview } from "./ItemPreview";

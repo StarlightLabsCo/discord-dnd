@@ -1,4 +1,4 @@
-import { Skill } from "@/game/skills";
+import { Skill } from "starlight-game-data/skills";
 import { cn } from "@/lib/tailwind/utils";
 
 type SkillPreviewProps = {

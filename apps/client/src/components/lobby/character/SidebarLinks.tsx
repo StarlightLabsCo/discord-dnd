@@ -1,9 +1,9 @@
 import { useRouterState } from "@tanstack/react-router";
 
 import { AppLayoutPaths } from "@/main";
-import { origins } from "@/game/origins";
-import { races } from "@/game/races";
-import { classes } from "@/game/classes";
+import { origins } from "starlight-game-data/origins";
+import { races } from "starlight-game-data/races";
+import { classes } from "starlight-game-data/classes";
 
 import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 import { cn } from "@/lib/tailwind/utils";
@@ -20,7 +20,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         return location.pathname === path;
     };
 
-    const { originId, raceId, archetypeId, background } = useCharacterContext(); // archetype = class (changed to avoid keyword conflict)
+    const { originId, raceId, archetypeId } = useCharacterContext(); // archetype = class (changed to avoid keyword conflict)
 
     const sidebarLinks: {
         to: AppLayoutPaths;
@@ -48,9 +48,8 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
             subtext: "",
         },
         {
-            to: "/lobby/character/background",
-            text: "Lore",
-            subtext: background,
+            to: "/lobby/character/lore",
+            text: "Lore & Appearance",
         },
     ];
 

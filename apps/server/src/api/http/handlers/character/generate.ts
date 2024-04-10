@@ -67,7 +67,7 @@ export async function handleGenerateRequest(req: Request) {
             {
                 role: "system",
                 content:
-                    "Craft a concise image description for a character portrait illustration of a Dungeons & Dragons character in a fantasy setting. Highlight the character's class, race, key traits, and equipment, set against a fitting (and slightly blurred) background. The character is level 1, just embarking on their journey. Start with 'Imagine a character in a detailed digital art style, a...' and include their class, race, and a brief mention of their journey's beginning. Keep the description concise and vivid.",
+                    "Craft a concise image description for a character portrait illustration of a Dungeons & Dragons character in a fantasy setting. Highlight the character's class, race, key traits, and equipment, set against a fitting (and slightly blurred) background. The character is level 1, just embarking on their journey. Start with 'Imagine a character in a detailed digital art style, a...' and include their class, race, and a brief mention of their journey's beginning. Keep the description concise and vivid. The image must not contain any text or logos, focusing solely on the character and their surroundings. Avoid overly plastic or cartoonish styles, aiming for an illustration and immersive fantasy aesthetic.",
             },
             {
                 role: "user",
@@ -76,7 +76,7 @@ export async function handleGenerateRequest(req: Request) {
         ],
         openpipe: {
             tags: {
-                prompt_id: "character_generation_0.0.4",
+                prompt_id: "character_generation_0.0.5",
             },
         },
     });

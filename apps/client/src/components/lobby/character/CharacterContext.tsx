@@ -10,7 +10,7 @@ import { Item } from "starlight-game-data/items";
 import { AbilityScores } from "starlight-game-data/abilities";
 import { CharacterLore } from "starlight-game-data/characterLore";
 import { useDiscordStore } from "@/lib/discord";
-
+import character1 from "@/assets/images/fullbody/character1.webp";
 interface CharacterContextType {
     originId: string;
     setOriginId: React.Dispatch<React.SetStateAction<string>>;
@@ -35,7 +35,12 @@ interface CharacterContextType {
     lore: CharacterLore;
     setLore: React.Dispatch<React.SetStateAction<CharacterLore>>;
 
+    characterImageUrl: string;
+    setCharacterImageUrl: React.Dispatch<React.SetStateAction<string>>;
+
     generateCharacter: () => Promise<void>;
+    generatingCharacter: boolean;
+    setGeneratingCharacter: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CharacterContext = createContext<CharacterContextType | undefined>(
@@ -90,8 +95,14 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         flaws: "",
     });
 
+    const [characterImageUrl, setCharacterImageUrl] =
+        useState<string>(character1);
+
+    const [generatingCharacter, setGeneratingCharacter] =
+        useState<boolean>(false);
     const access_token = useDiscordStore.getState().auth?.access_token;
     const generateCharacter = useCallback(async () => {
+        setGeneratingCharacter(true);
         const response = await fetch("/api/character/generate", {
             method: "POST",
             headers: {
@@ -106,9 +117,15 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
             }),
         });
 
-        const data = await response.json();
+        setGeneratingCharacter(false);
 
-        console.log(data);
+        if (!response.ok) {
+            console.error("Failed to generate character");
+            return;
+        }
+
+        const { imageUrl } = await response.json();
+        setCharacterImageUrl(imageUrl);
     }, [access_token, lore]);
 
     const value = {
@@ -135,7 +152,12 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         lore,
         setLore,
 
+        characterImageUrl,
+        setCharacterImageUrl,
+
         generateCharacter,
+        generatingCharacter,
+        setGeneratingCharacter,
     };
 
     return (

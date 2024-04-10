@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export type GenerateCharacterResponse = z.infer<
+    typeof GenerateCharacterResponseZodSchema
+>;
+
 export const GenerateCharacterResponseZodSchema = z.object({
     imageUrl: z.string(),
 });

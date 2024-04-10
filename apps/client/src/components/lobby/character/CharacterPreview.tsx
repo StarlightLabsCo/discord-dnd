@@ -1,4 +1,3 @@
-import character1 from "@/assets/images/fullbody/character1.webp";
 import { cn } from "@/lib/tailwind/utils";
 import { races } from "starlight-game-data/races";
 import { classes } from "starlight-game-data/classes";
@@ -13,13 +12,14 @@ type CharacterPreviewProps = {
 };
 
 export function CharacterPreview({ className }: CharacterPreviewProps) {
-    const { raceId, classId, characterAbilities } = useCharacterContext();
+    const { raceId, classId, characterAbilities, chracaterImageUrl } =
+        useCharacterContext();
 
     return (
         <div className={cn("relative h-full w-[30vw]", className)}>
             <img
                 className='object-cover w-full h-full'
-                src={character1}
+                src={chracaterImageUrl}
                 alt='Character Preview'
             />
             <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[1.5vw] items-center pt-[0.2vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>

@@ -1,8 +1,12 @@
 import { classes } from "starlight-game-data/classes";
 import { races } from "starlight-game-data/races";
-import { GenerateCharacterRequestZodSchema } from "starlight-api-types/rest";
+import {
+    GenerateCharacterRequestZodSchema,
+    type GenerateCharacterResponse,
+} from "starlight-api-types/rest";
 import { getUser } from "@/lib/discord";
 import { openai } from "@/lib/openai";
+import { uploadImageToR2 } from "@/lib/cloudflare";
 
 export async function handleGenerateRequest(req: Request) {
     const authorization = req.headers.get("Authorization");
@@ -41,7 +45,6 @@ export async function handleGenerateRequest(req: Request) {
     const name = lore.name;
     const pronouns = lore.pronouns;
     const age = lore.age;
-    const voice = lore.voice;
 
     const race = races[raceId].title;
     const characterClass = classes[classId].title;
@@ -71,20 +74,18 @@ export async function handleGenerateRequest(req: Request) {
             },
             {
                 role: "user",
-                content: `Name: ${name}\nPronouns: ${pronouns}\nAge: ${age}\nLevel: 1\nClass: ${characterClass}\nRace: ${race}\nTraits: ${personality}, ${ideals}, ${bonds}, ${flaws}\nItems: ${startingItems.join(", ")}\nScores: ${JSON.stringify(abilityScores, null, 2)}`,
+                content: `Name: ${name}\nPronouns: ${pronouns}\nAge: ${age}\nLevel: 1\nClass: ${characterClass}\nRace: ${race}\nBackstory: ${backstory}\nTraits: ${personality}, ${ideals}, ${bonds}, ${flaws}\nItems: ${startingItems.join(", ")}\nScores: ${JSON.stringify(abilityScores, null, 2)}`,
             },
         ],
         openpipe: {
             tags: {
-                prompt_id: "character_generation_0.0.5",
+                prompt_id: "character_generation_0.0.6",
             },
         },
     });
 
-    if (
-        !imagePromptResponse.choices ||
-        !imagePromptResponse.choices[0].message.content
-    ) {
+    if (!imagePromptResponse.choices[0].message.content) {
+        console.error(imagePromptResponse);
         return new Response("Internal Server Error", { status: 500 });
     }
 
@@ -98,13 +99,22 @@ export async function handleGenerateRequest(req: Request) {
         quality: "hd",
     });
 
-    if (!imageResponse) {
+    if (!imageResponse.data[0].url) {
+        console.error(imageResponse);
         return new Response("Internal Server Error", { status: 500 });
     }
 
-    console.log(imageResponse.data[0].url);
-
     // Upload image to cloudflare r2
+    const imageUrl = await uploadImageToR2(imageResponse.data[0].url);
 
-    return new Response();
+    return new Response(
+        JSON.stringify({
+            imageUrl,
+        } as GenerateCharacterResponse),
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
 }

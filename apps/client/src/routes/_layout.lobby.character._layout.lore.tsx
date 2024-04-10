@@ -6,7 +6,8 @@ export const Route = createFileRoute("/_layout/lobby/character/_layout/lore")({
 });
 
 function Lore() {
-    const { lore, setLore, generateCharacter } = useCharacterContext();
+    const { lore, setLore, generateCharacter, generatingCharacter } =
+        useCharacterContext();
     const {
         name,
         pronouns,
@@ -36,7 +37,8 @@ function Lore() {
         personality &&
         ideals &&
         bonds &&
-        flaws;
+        flaws &&
+        !generatingCharacter;
 
     return (
         <div className='flex flex-col gap-y-[0.8vh] w-full h-full justify-start text-[0.8vw] pr-[1vw]'>
@@ -156,7 +158,7 @@ function Lore() {
                 className={`mt-[8vh] self-center px-[1.25vw] py-[0.5vw] w-1/3 rounded border ${generationEnabled ? "text-white border-white hover:scale-105" : "text-neutral-400 border-neutral-400"}`}
                 disabled={!generationEnabled}
             >
-                Generate Character
+                {generatingCharacter ? "Generating..." : "Generate Character"}
             </button>
         </div>
     );

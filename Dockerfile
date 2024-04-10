@@ -18,4 +18,4 @@ RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 
 ENV NODE_ENV=production
 
-CMD ./server
+CMD ./apps/server/server

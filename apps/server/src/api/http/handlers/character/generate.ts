@@ -35,17 +35,22 @@ export async function handleGenerateRequest(req: Request) {
     const { classId, raceId, lore, abilityScores } = parsedRequest.data;
 
     // Generate character
-    const response = await openai.chat.completions.create({
+    const imagePromptResponse = await openai.chat.completions.create({
         model: "gpt-4-turbo",
+        max_tokens: 200,
         messages: [
             {
                 role: "system",
                 content:
-                    "Based on a provided character, please generate a detailed image prompt for a character.",
+                    "Based on a provided character, their stats and other information, please generate a concise detailed image prompt. The image should be in the style of a fantasy Dungeons & Dragons character portrait, with the character looking heroic, ready for adventure and towards the viewer. The style should be digital art. Only output the image prompt, no other information is needed.",
             },
             {
                 role: "user",
                 content: `Character class: ${classes[classId].title}\nRace: ${races[raceId].title}\nLore: ${JSON.stringify(lore, null, 2)}\nAbility scores: ${JSON.stringify(abilityScores, null, 2)}`,
+            },
+            {
+                role: "assistant",
+                content: "Prompt:",
             },
         ],
         openpipe: {
@@ -55,12 +60,28 @@ export async function handleGenerateRequest(req: Request) {
         },
     });
 
-    if (!response.choices) {
+    if (
+        !imagePromptResponse.choices ||
+        !imagePromptResponse.choices[0].message.content
+    ) {
         return new Response("Internal Server Error", { status: 500 });
     }
 
-    console.log(response);
-    console.log(response.choices[0].message.content);
+    console.log(imagePromptResponse.choices[0].message.content);
+
+    const imageResponse = await openai.images.generate({
+        model: "dall-e-3",
+        prompt: imagePromptResponse.choices[0].message.content,
+        n: 1,
+        size: "1024x1792",
+        quality: "hd",
+    });
+
+    if (!imageResponse) {
+        return new Response("Internal Server Error", { status: 500 });
+    }
+
+    console.log(imageResponse.data[0].url);
 
     return new Response();
 }

@@ -67,21 +67,16 @@ export async function handleGenerateRequest(req: Request) {
             {
                 role: "system",
                 content:
-                    "Generate a detailed image description for a fantasy Dungeons & Dragons character portrait. The character should appear heroic, ready for adventure, and looking towards the viewer. The description should incorporate the character's class, race, lore, and ability scores, emphasizing their unique traits, attire, and magical or physical abilities in a style that brings their personality and backstory to life. The character should be depicted in a vertical portrait format, but with their full body visible, focusing on capturing their presence and the fine details of their appearance and equipment, with a slightly blurred background that captures the character's journey. The adventurer is level 1 and has just started their journey.",
+                    "Craft a concise image description for a character portrait illustration of a Dungeons & Dragons character in a fantasy setting. Highlight the character's class, race, key traits, and equipment, set against a fitting (and slightly blurred) background. The character is level 1, just embarking on their journey. Start with 'Imagine a character in a detailed digital art style, a...' and include their class, race, and a brief mention of their journey's beginning. Keep the description concise and vivid.",
             },
             {
                 role: "user",
-                content: `Name: ${name}\nPronouns: ${pronouns}\nAge: ${age}\nLevel: 1\nCharacter class: ${characterClass}\nRace: ${race}\nBackstory: ${backstory}\nPersonality: ${personality}\nIdeals: ${ideals}\nBonds: ${bonds}\nFlaws: ${flaws}\nStarting Items: ${startingItems.join(", ")}\nAbility Scores: ${JSON.stringify(abilityScores, null, 2)}`,
-            },
-            {
-                role: "assistant",
-                content:
-                    "Prompt: Imagine a character you'd find in a Dungeons and Dragons campaign, depicted in a detailed digital art style. This character is",
+                content: `Name: ${name}\nPronouns: ${pronouns}\nAge: ${age}\nLevel: 1\nClass: ${characterClass}\nRace: ${race}\nTraits: ${personality}, ${ideals}, ${bonds}, ${flaws}\nItems: ${startingItems.join(", ")}\nScores: ${JSON.stringify(abilityScores, null, 2)}`,
             },
         ],
         openpipe: {
             tags: {
-                prompt_id: "character_generation_0.0.3",
+                prompt_id: "character_generation_0.0.4",
             },
         },
     });

@@ -5,6 +5,7 @@ import {
     ReactNode,
     useCallback,
 } from "react";
+import { GenerateCharacterResponseZodSchema } from "starlight-api-types/rest";
 import { classes } from "starlight-game-data/classes";
 import { Item } from "starlight-game-data/items";
 import { AbilityScores } from "starlight-game-data/abilities";
@@ -124,8 +125,14 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
             return;
         }
 
-        const { imageUrl } = await response.json();
-        setCharacterImageUrl(imageUrl);
+        const data = await response.json();
+        const parsedData = GenerateCharacterResponseZodSchema.safeParse(data);
+        if (!parsedData.success) {
+            console.error(parsedData.error);
+            return;
+        }
+
+        setCharacterImageUrl(parsedData.data.imageUrl);
     }, [access_token, lore]);
 
     const value = {

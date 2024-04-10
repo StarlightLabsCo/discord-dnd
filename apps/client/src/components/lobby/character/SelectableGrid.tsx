@@ -1,13 +1,13 @@
 import React from "react";
 
-interface Item {
+export interface SelectableGridItem {
     id: string;
     title: string;
     src: string;
 }
 
 interface SelectableGridProps {
-    items: Item[];
+    items: SelectableGridItem[];
     selected: string;
     setSelected: (title: string) => void;
     columns: number;

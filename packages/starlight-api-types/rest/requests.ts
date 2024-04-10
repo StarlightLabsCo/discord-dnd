@@ -7,8 +7,8 @@ export type GenerateCharacterRequest = z.infer<
 >;
 
 export const GenerateCharacterRequestZodSchema = z.object({
-    race: z.string(),
-    class: z.string(),
+    raceId: z.string(),
+    classId: z.string(),
     abilityScores: AbilityScoresZodSchema,
     lore: CharacterLoreZodSchema,
 });

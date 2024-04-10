@@ -20,7 +20,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         return location.pathname === path;
     };
 
-    const { originId, raceId, archetypeId } = useCharacterContext(); // archetype = class (changed to avoid keyword conflict)
+    const { originId, raceId, classId } = useCharacterContext();
 
     const sidebarLinks: {
         to: AppLayoutPaths;
@@ -40,7 +40,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         {
             to: "/lobby/character/class",
             text: "Class",
-            subtext: classes[archetypeId].title,
+            subtext: classes[classId].title,
         },
         {
             to: "/lobby/character/abilities",

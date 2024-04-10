@@ -13,7 +13,7 @@ type CharacterPreviewProps = {
 };
 
 export function CharacterPreview({ className }: CharacterPreviewProps) {
-    const { raceId, archetypeId, characterAbilities } = useCharacterContext();
+    const { raceId, classId, characterAbilities } = useCharacterContext();
 
     return (
         <div className={cn("relative h-full w-[30vw]", className)}>
@@ -27,7 +27,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                     <h2 className='text-[1.5vw] font-bold'>George</h2>
                     <p className='text-[0.9vw]'>{races[raceId].title}</p>
                     <p className='text-[0.9vw] font-light text-[#A5A5A5]'>
-                        Level 1 {classes[archetypeId].title}
+                        Level 1 {classes[classId].title}
                     </p>
                 </div>
                 <div className='flex gap-x-[1.5vw]'>
@@ -38,8 +38,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                                 label={abilities[ability].label}
                                 value={value}
                                 main={
-                                    ability ===
-                                    classes[archetypeId].mainAbility.id
+                                    ability === classes[classId].mainAbility.id
                                 }
                             />
                         )
@@ -51,14 +50,9 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                             Starting Skills
                         </div>
                         <div className='flex gap-x-[1.5vw]'>
-                            {classes[archetypeId].startingSkills.map(
-                                (skill) => (
-                                    <SkillPreview
-                                        key={skill.id}
-                                        skill={skill}
-                                    />
-                                )
-                            )}
+                            {classes[classId].startingSkills?.map((skill) => (
+                                <SkillPreview key={skill.id} skill={skill} />
+                            ))}
                         </div>
                     </div>
                     <div className='flex flex-col items-center gap-y-[0.5vw]'>
@@ -66,7 +60,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                             Starting Items
                         </div>
                         <div className='flex gap-x-[1.5vw]'>
-                            {classes[archetypeId].startingItems.map((item) => (
+                            {classes[classId].startingItems?.map((item) => (
                                 <ItemPreview key={item.id} item={item} />
                             ))}
                         </div>

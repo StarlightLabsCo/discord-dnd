@@ -5,6 +5,7 @@ import {
     ReactNode,
     useCallback,
 } from "react";
+import { classes } from "starlight-game-data/classes";
 import { Item } from "starlight-game-data/items";
 import { AbilityScores } from "starlight-game-data/abilities";
 import { CharacterLore } from "starlight-game-data/characterLore";
@@ -20,8 +21,8 @@ interface CharacterContextType {
     subraceId: string;
     setSubraceId: React.Dispatch<React.SetStateAction<string>>;
 
-    archetypeId: string;
-    setArchetypeId: React.Dispatch<React.SetStateAction<string>>;
+    classId: keyof typeof classes;
+    setClassId: React.Dispatch<React.SetStateAction<keyof typeof classes>>;
 
     characterAbilityPoints: number;
     setCharacterAbilityPoints: React.Dispatch<React.SetStateAction<number>>;
@@ -61,7 +62,7 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
     const [originId, setOriginId] = useState<string>("custom");
     const [raceId, setRaceId] = useState<string>("dwarf");
     const [subraceId, setSubraceId] = useState<string>("Hill Dwarf");
-    const [archetypeId, setArchetypeId] = useState<string>("rogue");
+    const [classId, setClassId] = useState<keyof typeof classes>("rogue");
 
     const [characterAbilityPoints, setCharacterAbilityPoints] =
         useState<number>(27);
@@ -102,7 +103,7 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
             },
             body: JSON.stringify({
                 raceId,
-                archetypeId,
+                classId,
                 characterAbilities,
                 lore,
             }),
@@ -123,8 +124,8 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         subraceId,
         setSubraceId,
 
-        archetypeId,
-        setArchetypeId,
+        classId,
+        setClassId,
 
         characterAbilityPoints,
         setCharacterAbilityPoints,

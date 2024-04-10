@@ -1,6 +1,8 @@
+import { classes } from "starlight-game-data/classes";
+import { races } from "starlight-game-data/races";
+import { GenerateCharacterRequestZodSchema } from "starlight-api-types/rest";
 import { getUser } from "@/lib/discord";
 import { openai } from "@/lib/openai";
-import { GenerateCharacterRequestZodSchema } from "starlight-api-types/rest";
 
 export async function handleGenerateRequest(req: Request) {
     const authorization = req.headers.get("Authorization");
@@ -25,15 +27,12 @@ export async function handleGenerateRequest(req: Request) {
 
     const parsedRequest = GenerateCharacterRequestZodSchema.safeParse(body);
     if (!parsedRequest.success) {
-        return new Response("Bad Request", { status: 400 });
+        return new Response(JSON.stringify(parsedRequest.error), {
+            status: 400,
+        });
     }
 
-    const {
-        class: characterClass,
-        race,
-        lore,
-        abilityScores,
-    } = parsedRequest.data;
+    const { classId, raceId, lore, abilityScores } = parsedRequest.data;
 
     // Generate character
     const response = await openai.chat.completions.create({
@@ -46,7 +45,7 @@ export async function handleGenerateRequest(req: Request) {
             },
             {
                 role: "user",
-                content: `Character class: ${characterClass}\nRace: ${race}\nLore: ${JSON.stringify(lore, null, 2)}\nAbility scores: ${JSON.stringify(abilityScores, null, 2)}`,
+                content: `Character class: ${classes[classId].title}\nRace: ${races[raceId].title}\nLore: ${JSON.stringify(lore, null, 2)}\nAbility scores: ${JSON.stringify(abilityScores, null, 2)}`,
             },
         ],
         openpipe: {

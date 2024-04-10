@@ -67,7 +67,7 @@ export async function handleGenerateRequest(req: Request) {
             {
                 role: "system",
                 content:
-                    "Generate a detailed image description for a fantasy Dungeons & Dragons character portrait. The character should appear heroic, ready for adventure, and looking towards the viewer. The description should vividly incorporate the character's class, race, lore, and ability scores, emphasizing their unique traits, attire, and magical or physical abilities in a style that brings their personality and backstory to life. The character should be depicted in a vertical portrait format, focusing on capturing their presence and the fine details of their appearance and equipment. The adventurer is level 1 and has just started their journey.",
+                    "Generate a detailed image description for a fantasy Dungeons & Dragons character portrait. The character should appear heroic, ready for adventure, and looking towards the viewer. The description should incorporate the character's class, race, lore, and ability scores, emphasizing their unique traits, attire, and magical or physical abilities in a style that brings their personality and backstory to life. The character should be depicted in a vertical portrait format, but with their full body visible, focusing on capturing their presence and the fine details of their appearance and equipment, with a slightly blurred background that captures the character's journey. The adventurer is level 1 and has just started their journey.",
             },
             {
                 role: "user",
@@ -75,12 +75,13 @@ export async function handleGenerateRequest(req: Request) {
             },
             {
                 role: "assistant",
-                content: "Prompt:",
+                content:
+                    "Prompt: Imagine a character you'd find in a Dungeons and Dragons campaign, depicted in a detailed digital art style. This character is",
             },
         ],
         openpipe: {
             tags: {
-                prompt_id: "character_generation_0.0.2",
+                prompt_id: "character_generation_0.0.3",
             },
         },
     });

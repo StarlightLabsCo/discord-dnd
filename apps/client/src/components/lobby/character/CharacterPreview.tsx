@@ -22,7 +22,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                 src={character1}
                 alt='Character Preview'
             />
-            <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[1.8vw] items-center pt-[0.2vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>
+            <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[1.5vw] items-center pt-[0.2vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>
                 <div className='flex flex-col gap-y-[0.2vw] items-center'>
                     <h2 className='text-[1.5vw] font-bold'>George</h2>
                     <p className='text-[0.9vw]'>{races[raceId].title}</p>

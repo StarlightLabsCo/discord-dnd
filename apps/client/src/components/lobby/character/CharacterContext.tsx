@@ -64,18 +64,15 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
     const [subraceId, setSubraceId] = useState<string>("Hill Dwarf");
     const [classId, setClassId] = useState<keyof typeof classes>("rogue");
 
-    const [characterAbilityPoints, setCharacterAbilityPoints] =
-        useState<number>(27);
-    const [characterAbilities, setCharacterAbilities] = useState<AbilityScores>(
-        {
-            strength: 8,
-            dexterity: 8,
-            constitution: 8,
-            intelligence: 8,
-            wisdom: 8,
-            charisma: 8,
-        }
-    );
+    const [abilityPoints, setCharacterAbilityPoints] = useState<number>(27);
+    const [abilityScores, setAbilityScores] = useState<AbilityScores>({
+        strength: 8,
+        dexterity: 8,
+        constitution: 8,
+        intelligence: 8,
+        wisdom: 8,
+        charisma: 8,
+    });
 
     const [inventory, setInventory] = useState<Item[]>([]);
 
@@ -104,7 +101,7 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
             body: JSON.stringify({
                 raceId,
                 classId,
-                characterAbilities,
+                abilityScores,
                 lore,
             }),
         });
@@ -127,10 +124,10 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         classId,
         setClassId,
 
-        characterAbilityPoints,
+        characterAbilityPoints: abilityPoints,
         setCharacterAbilityPoints,
-        characterAbilities,
-        setCharacterAbilities,
+        characterAbilities: abilityScores,
+        setCharacterAbilities: setAbilityScores,
 
         inventory,
         setInventory,

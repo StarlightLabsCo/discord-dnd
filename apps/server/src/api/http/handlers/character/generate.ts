@@ -34,7 +34,32 @@ export async function handleGenerateRequest(req: Request) {
 
     const { classId, raceId, lore, abilityScores } = parsedRequest.data;
 
+    // --- Example Prompt ---
+    // Imagine a character you'd find in a Dungeons and Dragons campaign, depicted in a detailed digital art style. This character is a stoic High Elf Wizard, draped in elegant, arcane-infused robes that shimmer with a faint, ethereal light. Around his waist is a belt with various pouches containing scrolls, potions, and arcane trinkets. In one hand, he holds a gnarled wooden staff, topped with a crystal that pulses with magical energy. His other hand is raised, fingers splayed, as if he's about to cast a spell. The background is a blurred mix of ancient library shelves filled with spellbooks and arcane artifacts. His hair is long, silver, and slightly windswept, and his eyes glow with a knowledge of ancient magic. The portrait is vertical, focusing on capturing the character's imposing presence and the fine details of his attire and magical items, emphasizing his role as a powerful and wise adventurer.
+
     // Generate character
+    const name = lore.name;
+    const pronouns = lore.pronouns;
+    const age = lore.age;
+    const voice = lore.voice;
+
+    const race = races[raceId].title;
+    const characterClass = classes[classId].title;
+
+    const backstory = lore.backstory;
+    const personality = lore.personality;
+    const ideals = lore.ideals;
+    const bonds = lore.bonds;
+    const flaws = lore.flaws;
+
+    const startingItems = classes[classId].startingItems?.reduce(
+        (acc, item) => {
+            acc.push(item.title);
+            return acc;
+        },
+        [] as string[]
+    );
+
     const imagePromptResponse = await openai.chat.completions.create({
         model: "gpt-4-turbo",
         max_tokens: 200,
@@ -42,11 +67,11 @@ export async function handleGenerateRequest(req: Request) {
             {
                 role: "system",
                 content:
-                    "Based on a provided character, their stats and other information, please generate a concise detailed image prompt. The image should be in the style of a fantasy Dungeons & Dragons character portrait, with the character looking heroic, ready for adventure and towards the viewer. The style should be digital art. Only output the image prompt, no other information is needed.",
+                    "Generate a detailed image description for a fantasy Dungeons & Dragons character portrait. The character should appear heroic, ready for adventure, and looking towards the viewer. The description should vividly incorporate the character's class, race, lore, and ability scores, emphasizing their unique traits, attire, and magical or physical abilities in a style that brings their personality and backstory to life. The character should be depicted in a vertical portrait format, focusing on capturing their presence and the fine details of their appearance and equipment. The adventurer is level 1 and has just started their journey.",
             },
             {
                 role: "user",
-                content: `Character class: ${classes[classId].title}\nRace: ${races[raceId].title}\nLore: ${JSON.stringify(lore, null, 2)}\nAbility scores: ${JSON.stringify(abilityScores, null, 2)}`,
+                content: `Name: ${name}\nPronouns: ${pronouns}\nAge: ${age}\nLevel: 1\nCharacter class: ${characterClass}\nRace: ${race}\nBackstory: ${backstory}\nPersonality: ${personality}\nIdeals: ${ideals}\nBonds: ${bonds}\nFlaws: ${flaws}\nStarting Items: ${startingItems.join(", ")}\nAbility Scores: ${JSON.stringify(abilityScores, null, 2)}`,
             },
             {
                 role: "assistant",
@@ -55,7 +80,7 @@ export async function handleGenerateRequest(req: Request) {
         ],
         openpipe: {
             tags: {
-                prompt_id: "character_generation_0.0.0",
+                prompt_id: "character_generation_0.0.2",
             },
         },
     });

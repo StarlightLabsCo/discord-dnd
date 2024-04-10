@@ -12,7 +12,7 @@ type CharacterPreviewProps = {
 };
 
 export function CharacterPreview({ className }: CharacterPreviewProps) {
-    const { raceId, classId, characterAbilities, characterImageUrl } =
+    const { raceId, classId, characterAbilities, characterImageUrl, lore } =
         useCharacterContext();
 
     return (
@@ -24,7 +24,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
             />
             <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[1.5vw] items-center pt-[0.2vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>
                 <div className='flex flex-col gap-y-[0.2vw] items-center'>
-                    <h2 className='text-[1.5vw] font-bold'>George</h2>
+                    <h2 className='text-[1.5vw] font-bold'>{lore.name}</h2>
                     <p className='text-[0.9vw]'>{races[raceId].title}</p>
                     <p className='text-[0.9vw] font-light text-[#A5A5A5]'>
                         Level 1 {classes[classId].title}

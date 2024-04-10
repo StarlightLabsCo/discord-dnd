@@ -104,5 +104,7 @@ export async function handleGenerateRequest(req: Request) {
 
     console.log(imageResponse.data[0].url);
 
+    // Upload image to cloudflare r2
+
     return new Response();
 }

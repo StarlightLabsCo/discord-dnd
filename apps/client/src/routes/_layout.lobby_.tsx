@@ -8,7 +8,7 @@ import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
 import { useMusicStore } from "@/lib/game/music";
 import { sendMessage } from "@/lib/websocket";
-import { GameStateUpdateRequest } from "starlight-api-types/websocket";
+import { useCampaignStore } from "@/lib/game/campaign";
 
 export const Route = createFileRoute("/_layout/lobby")({
     component: Lobby,
@@ -19,8 +19,8 @@ function Lobby() {
 
     const connectedPlayers = useGameStore((state) => state.connectedPlayers);
 
-    const gameState = useGameStore((state) => state.gameState);
-    const setGameState = useGameStore((state) => state.setGameState);
+    const title = useCampaignStore((state) => state.title);
+    const description = useCampaignStore((state) => state.description);
 
     const play = useMusicStore((state) => state.play);
 
@@ -30,36 +30,36 @@ function Lobby() {
 
     const toggleReady = () => {
         if (!user) return;
-        if (!gameState.readyUserIds.includes(user.id)) {
-            const readySfx = new Audio(readySound);
-            readySfx.play();
+        // if (!gameState.readyUserIds.includes(user.id)) {
+        //     const readySfx = new Audio(readySound);
+        //     readySfx.play();
 
-            const newGameState = {
-                readyUserIds: [...gameState.readyUserIds, user.id],
-            };
+        //     const newGameState = {
+        //         readyUserIds: [...gameState.readyUserIds, user.id],
+        //     };
 
-            setGameState(newGameState);
-            sendMessage(
-                JSON.stringify({
-                    type: "GameStateUpdateRequest",
-                    data: newGameState,
-                } as GameStateUpdateRequest)
-            );
-        } else {
-            const newGameState = {
-                readyUserIds: gameState.readyUserIds.filter(
-                    (id) => id !== user.id
-                ),
-            };
+        //     setGameState(newGameState);
+        //     sendMessage(
+        //         JSON.stringify({
+        //             type: "GameStateUpdateRequest",
+        //             data: newGameState,
+        //         } as GameStateUpdateRequest)
+        //     );
+        // } else {
+        //     const newGameState = {
+        //         readyUserIds: gameState.readyUserIds.filter(
+        //             (id) => id !== user.id
+        //         ),
+        //     };
 
-            setGameState(newGameState);
-            sendMessage(
-                JSON.stringify({
-                    type: "GameStateUpdateRequest",
-                    data: newGameState,
-                } as GameStateUpdateRequest)
-            );
-        }
+        //     setGameState(newGameState);
+        //     sendMessage(
+        //         JSON.stringify({
+        //             type: "GameStateUpdateRequest",
+        //             data: newGameState,
+        //         } as GameStateUpdateRequest)
+        //     );
+        // }
     };
 
     if (!user) return null; // Invalid state
@@ -77,13 +77,10 @@ function Lobby() {
                     />
                     <div className='flex z-20 flex-col gap-y-[1vw]'>
                         <div className='font-sans text-[3.5vw] leading-none font-bold text-white drop-shadow-xl max-w-[85%]'>
-                            The Forbidden Tower
+                            {title}
                         </div>
                         <div className='font-sans text-[1.2vw] font-light text-neutral-300 drop-shadow-xl max-w-[80%]'>
-                            Ancient power awakens as a legendary tower, steeped
-                            in forbidden magic, emerges from the mists,
-                            promising untold riches and arcane knowledge to
-                            those brave enough to face its dark mysteries.
+                            {description}
                         </div>
                     </div>
                 </div>
@@ -91,18 +88,15 @@ function Lobby() {
                     <div />
                     <div className='grid grid-cols-3 gap-[2vw] place-items-center w-full'>
                         {connectedPlayers.map((connectedPlayer) => {
-                            const ready = gameState.readyUserIds.includes(
-                                connectedPlayer.id
-                            );
-
                             return (
                                 <CharacterPortrait
-                                    key={connectedPlayer.id}
-                                    user={connectedPlayer}
+                                    key={connectedPlayer.user.id}
+                                    user={connectedPlayer.user}
+                                    character={connectedPlayer.character}
                                     isCurrentUser={
-                                        connectedPlayer.id === user.id
+                                        connectedPlayer.user.id === user.id
                                     }
-                                    ready={ready}
+                                    ready={connectedPlayer.ready}
                                 />
                             );
                         })}
@@ -113,9 +107,11 @@ function Lobby() {
                             className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer hover:scale-105'
                             onClick={toggleReady}
                         >
-                            {gameState.readyUserIds.includes(user.id)
-                                ? "Unready"
-                                : "Ready"}
+                            {/* {connectedPlayers.find((p) => p.user.id === user.id)
+                                .ready
+                                ? "Ready"
+                                : "Unready"} */}
+                            Ready
                         </div>
                     </div>
                 </div>

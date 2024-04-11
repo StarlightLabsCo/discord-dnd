@@ -5,10 +5,12 @@ import {
     ReactNode,
     useCallback,
 } from "react";
-import { GenerateCharacterResponseZodSchema } from "starlight-api-types/rest";
+import {
+    PostCharacterRequest,
+    PostImageResponseZodSchema,
+} from "starlight-api-types/rest";
 import { classes } from "starlight-game-data/classes";
 import { Item } from "starlight-game-data/items";
-import { AbilityScores } from "starlight-game-data/abilities";
 import { CharacterLore } from "starlight-game-data/characterLore";
 import { useDiscordStore } from "@/lib/discord";
 import character1 from "@/assets/images/fullbody/character1.webp";
@@ -27,8 +29,19 @@ interface CharacterContextType {
 
     characterAbilityPoints: number;
     setCharacterAbilityPoints: React.Dispatch<React.SetStateAction<number>>;
-    characterAbilities: AbilityScores;
-    setCharacterAbilities: React.Dispatch<React.SetStateAction<AbilityScores>>;
+
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+
+    setStrength: React.Dispatch<React.SetStateAction<number>>;
+    setDexterity: React.Dispatch<React.SetStateAction<number>>;
+    setConstitution: React.Dispatch<React.SetStateAction<number>>;
+    setIntelligence: React.Dispatch<React.SetStateAction<number>>;
+    setWisdom: React.Dispatch<React.SetStateAction<number>>;
 
     inventory: Item[];
     setInventory: React.Dispatch<React.SetStateAction<Item[]>>;
@@ -36,12 +49,14 @@ interface CharacterContextType {
     lore: CharacterLore;
     setLore: React.Dispatch<React.SetStateAction<CharacterLore>>;
 
-    characterImageUrl: string;
-    setCharacterImageUrl: React.Dispatch<React.SetStateAction<string>>;
+    imageUrl: string;
+    setImageUrl: React.Dispatch<React.SetStateAction<string>>;
 
     generateCharacter: () => Promise<void>;
     generatingCharacter: boolean;
     setGeneratingCharacter: React.Dispatch<React.SetStateAction<boolean>>;
+
+    createCharacter: () => Promise<void>;
 }
 
 const CharacterContext = createContext<CharacterContextType | undefined>(
@@ -71,14 +86,12 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
     const [classId, setClassId] = useState<keyof typeof classes>("rogue");
 
     const [abilityPoints, setCharacterAbilityPoints] = useState<number>(27);
-    const [abilityScores, setAbilityScores] = useState<AbilityScores>({
-        strength: 8,
-        dexterity: 8,
-        constitution: 8,
-        intelligence: 8,
-        wisdom: 8,
-        charisma: 8,
-    });
+    const [strength, setStrength] = useState<number>(8);
+    const [dexterity, setDexterity] = useState<number>(8);
+    const [constitution, setConstitution] = useState<number>(8);
+    const [intelligence, setIntelligence] = useState<number>(8);
+    const [wisdom, setWisdom] = useState<number>(8);
+    const [charisma, setCharisma] = useState<number>(8);
 
     const [inventory, setInventory] = useState<Item[]>([]);
 
@@ -96,8 +109,7 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         flaws: "",
     });
 
-    const [characterImageUrl, setCharacterImageUrl] =
-        useState<string>(character1);
+    const [imageUrl, setImageUrl] = useState<string>(character1);
 
     const [generatingCharacter, setGeneratingCharacter] =
         useState<boolean>(false);
@@ -113,7 +125,11 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
             body: JSON.stringify({
                 raceId,
                 classId,
-                abilityScores,
+                strength,
+                dexterity,
+                constitution,
+                intelligence,
+                wisdom,
                 lore,
             }),
         });
@@ -126,14 +142,46 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         }
 
         const data = await response.json();
-        const parsedData = GenerateCharacterResponseZodSchema.safeParse(data);
+        const parsedData = PostImageResponseZodSchema.safeParse(data);
         if (!parsedData.success) {
             console.error(parsedData.error);
             return;
         }
 
-        setCharacterImageUrl(parsedData.data.imageUrl);
+        setImageUrl(parsedData.data.imageUrl);
     }, [access_token, lore]);
+
+    const createCharacter = useCallback(async () => {
+        const response = await fetch("/api/character/create", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                originId,
+                raceId,
+                subraceId: "",
+                classId,
+                strength,
+                dexterity,
+                constitution,
+                intelligence,
+                wisdom,
+                charisma,
+                lore,
+                inventory,
+                imageUrl,
+            } as PostCharacterRequest),
+        });
+
+        if (!response.ok) {
+            console.error("Failed to create character");
+            return;
+        }
+
+        const data = await response.json();
+    }, [access_token]);
 
     const value = {
         originId,
@@ -150,8 +198,18 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
 
         characterAbilityPoints: abilityPoints,
         setCharacterAbilityPoints,
-        characterAbilities: abilityScores,
-        setCharacterAbilities: setAbilityScores,
+
+        strength,
+        dexterity,
+        constitution,
+        intelligence,
+        wisdom,
+
+        setStrength,
+        setDexterity,
+        setConstitution,
+        setIntelligence,
+        setWisdom,
 
         inventory,
         setInventory,
@@ -159,12 +217,14 @@ export const CharacterProvider: React.FC<CharacterProviderProps> = ({
         lore,
         setLore,
 
-        characterImageUrl,
-        setCharacterImageUrl,
+        imageUrl,
+        setImageUrl,
 
         generateCharacter,
         generatingCharacter,
         setGeneratingCharacter,
+
+        createCharacter,
     };
 
     return (

@@ -1,24 +1,31 @@
-import { abilities } from "starlight-game-data/abilities";
-import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
+import { useCharacterStore } from "@/lib/game/character";
 import { Icons } from "@/components/Icons";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
 
 type AbilityScoreSelectorProps = {
     id: string;
+    title: string;
     value: number;
     className?: string;
 };
 
 export function AbilityScoreSelector({
     id,
+    title,
     value,
     className,
 }: AbilityScoreSelectorProps) {
     const {
-        setCharacterAbilities,
-        setCharacterAbilityPoints,
+        setStrength,
+        setDexterity,
+        setConstitution,
+        setIntelligence,
+        setWisdom,
+        setCharisma,
+
         characterAbilityPoints,
-    } = useCharacterContext();
+        setCharacterAbilityPoints,
+    } = useCharacterStore();
 
     const abilityCosts: { [key: number]: number } = {
         8: 0,
@@ -40,8 +47,27 @@ export function AbilityScoreSelector({
 
         const costDifference = calculateCost(newValue, value);
         if (characterAbilityPoints >= costDifference) {
-            setCharacterAbilities((prev) => ({ ...prev, [id]: newValue }));
-            setCharacterAbilityPoints((prev) => prev - costDifference);
+            switch (id) {
+                case "strength":
+                    setStrength(newValue);
+                    break;
+                case "dexterity":
+                    setDexterity(newValue);
+                    break;
+                case "constitution":
+                    setConstitution(newValue);
+                    break;
+                case "intelligence":
+                    setIntelligence(newValue);
+                    break;
+                case "wisdom":
+                    setWisdom(newValue);
+                    break;
+                case "charisma":
+                    setCharisma(newValue);
+                    break;
+            }
+            setCharacterAbilityPoints(characterAbilityPoints - costDifference);
         }
     };
 
@@ -85,12 +111,10 @@ export function AbilityScoreSelector({
         <div className={`flex items-center ${className}`}>
             <img
                 src={""}
-                alt={`${abilities[id].title} icon`}
+                alt={`${title} icon`}
                 className='w-[1.5vw] h-[1.5vw] aspect-square'
             />
-            <span className='w-[15vw] text-[1.25vw] text-center'>
-                {abilities[id].title}
-            </span>
+            <span className='w-[15vw] text-[1.25vw] text-center'>{title}</span>
             <div className='flex flex-col items-center w-[10vw]'>
                 <span className='text-center text-[1vw] '>{value}</span>
                 <span className='text-[0.9vw] font-light text-center text-neutral-400'>{`(${calculateModifier(value)})`}</span>

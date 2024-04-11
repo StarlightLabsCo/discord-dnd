@@ -23,5 +23,359 @@ model User {
 
     locale String?
 
+    campaigns  CampaignInstance[] // campaigns instances that the user is a part of
+    characters CharacterInstance[] // character instances that the user has created
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum Dice {
+    D4
+    D6
+    D8
+    D10
+    D12
+    D20
+}
+
+// ---- Models that we create as game developers (via admin panel or script) ----
+// Any model that doesn't have Instance in the name is either a template to be used to create instances
+// or a permanent model that doesn't have instances (and is used as a reference in other models)
+
+// - World - (Static)
+// World is the top level model that contains all the other models
+// It is not meant to be altered by the players but by the game developers
+model World {
+    id String @id @default(cuid())
+
+    name        String
+    description String
+
+    races       Race[]
+    languages   Language[]
+    classes     Class[]
+    backgrounds Background[]
+    campaigns   Campaign[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// - Campaign - (Instance Template)
+// Campaign is a model that contains all the information about a campaign
+// The beats, the characters, events, etc. are all part of the campaign 
+// This model is used to create instances of campaigns (which are the actual campaigns that players play in)
+model Campaign {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    title       String
+    description String
+
+    locations  Location[]
+    characters Character[]
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    campaignInstances CampaignInstance[]
+}
+
+// - Location - (Static)
+model Location {
+    id String @id @default(cuid())
+
+    campaignId String
+    campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// - Race - (Static)
+model Race {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    subraces Subrace[]
+
+    // racial increase 
+    strengthIncrease     Int @default(0)
+    dexterityIncrease    Int @default(0)
+    constitutionIncrease Int @default(0)
+    intelligenceIncrease Int @default(0)
+    wisdomIncrease       Int @default(0)
+    charismaIncrease     Int @default(0)
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    character          Character[]
+    characterInstances CharacterInstance[]
+}
+
+// - Subrace - (Static)
+model Subrace {
+    id String @id @default(cuid())
+
+    parentRaceId String
+    parent       Race   @relation(fields: [parentRaceId], references: [id])
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    character          Character[]
+    characterInstances CharacterInstance[]
+}
+
+// - Language - (Static)
+model Language {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// - Class - (Static)
+model Class {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    character          Character[]
+    characterInstances CharacterInstance[]
+}
+
+// - Background - (Static)
+model Background {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    // TODO
+    skills Skill[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    character          Character[]
+    characterInstances CharacterInstance[]
+}
+
+// - Skill - (Static)
+model Skill {
+    id String @id @default(cuid())
+
+    // TODO
+    backgrounds Background[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// - Feat - (Static)
+model Feat {
+    id String @id @default(cuid())
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// - Character - (Instance Template)
+// Character is a model that contains all the information about a character
+// It is used to create instances of characters (which are the actual characters that players have)
+// This is mainly for premade characters that players can choose from or for NPCs
+enum CharacterSize {
+    SMALL
+    MEDIUM
+}
+
+model Character {
+    id String @id @default(cuid())
+
+    campaignId String
+    campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+    raceId String
+    race   Race   @relation(fields: [raceId], references: [id])
+
+    subraceId String?
+    subrace   Subrace? @relation(fields: [subraceId], references: [id])
+
+    classes Class[]
+
+    backgroundId String
+    background   Background @relation(fields: [backgroundId], references: [id])
+
+    name        String
+    pronouns    String
+    age         Int
+    voice       String
+    alignment   String
+    appearance  String
+    backstory   String
+    personality String
+    ideals      String
+    bonds       String
+    flaws       String
+
+    level      Int @default(1)
+    experience Int @default(0)
+
+    strength     Int @default(8)
+    dexterity    Int @default(8)
+    constitution Int @default(8)
+    intelligence Int @default(8)
+    wisdom       Int @default(8)
+    charisma     Int @default(8)
+
+    hitDieCount Int  @default(1)
+    hitDieType  Dice @default(D6)
+
+    size CharacterSize @default(MEDIUM)
+
+    speed Int @default(25)
+
+    imageUrl String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // instances using this model
+    characterInstances CharacterInstance[]
+}
+
+// - Item - (Static)
+enum ItemRarity {
+    COMMON
+    UNCOMMON
+    RARE
+    VERY_RARE
+    LEGENDARY
+}
+
+model Item {
+    id String @id @default(cuid())
+
+    name        String
+    description String
+    imageUrl    String
+    weight      Int
+    value       Int
+
+    rarity ItemRarity @default(COMMON)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// ---- Things the player will create ---- 
+// These are the instances of the models above, which will be instantiated by the players and modified during their playthrough
+
+model CampaignInstance {
+    id String @id @default(cuid())
+
+    campaignId String
+    campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+    users              User[] // users that are part of the campaign
+    characterInstances CharacterInstance[] // characters that are part of the campaign
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model CharacterInstance {
+    id String @id @default(cuid())
+
+    userId String?
+    user   User?   @relation(fields: [userId], references: [id]) // no user means it's an NPC or AI character
+
+    // ---- Character Template Info (was this character created from a template?) ---
+    characterId String?
+    character   Character? @relation(fields: [characterId], references: [id])
+
+    // ---- Character Instance Info ---
+    campaignInstanceId String
+    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id])
+
+    raceId String
+    race   Race   @relation(fields: [raceId], references: [id])
+
+    subraceId String?
+    subrace   Subrace? @relation(fields: [subraceId], references: [id])
+
+    classes Class[]
+
+    backgroundId String
+    background   Background @relation(fields: [backgroundId], references: [id])
+
+    name        String
+    pronouns    String
+    age         Int
+    voice       String
+    alignment   String
+    appearance  String
+    backstory   String
+    personality String
+    ideals      String
+    bonds       String
+    flaws       String
+
+    level      Int @default(1)
+    experience Int @default(0)
+
+    strength     Int @default(8)
+    dexterity    Int @default(8)
+    constitution Int @default(8)
+    intelligence Int @default(8)
+    wisdom       Int @default(8)
+    charisma     Int @default(8)
+
+    hitDieCount  Int  @default(1)
+    hitDieType   Dice @default(D6)
+    healthPoints Int  @default(0) // hitDieCount * hitDieType + constitution modifier
+
+    size CharacterSize @default(MEDIUM)
+
+    speed Int @default(25)
+
+    imageUrl String
+
+    createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

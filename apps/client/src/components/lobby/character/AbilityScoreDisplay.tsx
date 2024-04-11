@@ -1,10 +1,14 @@
-type CharacterStatProps = {
+type ChAbilityScoreDisplayProps = {
     label: string;
     value: number;
     main?: boolean;
 };
 
-export function CharacterStat({ label, value, main }: CharacterStatProps) {
+export function AbilityScoreDisplay({
+    label,
+    value,
+    main,
+}: ChAbilityScoreDisplayProps) {
     return (
         <div className='flex flex-col items-center'>
             <div

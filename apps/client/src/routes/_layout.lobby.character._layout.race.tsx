@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { races } from "starlight-game-data/races";
-import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
+import { useCharacterStore } from "@/lib/game/character";
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout/race")({
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_layout/lobby/character/_layout/race")({
 });
 
 function Race() {
-    const { raceId, setRaceId } = useCharacterContext();
+    const { raceId, setRaceId } = useCharacterStore();
 
     const items = Object.values(races).map((race) => ({
         id: race.id,

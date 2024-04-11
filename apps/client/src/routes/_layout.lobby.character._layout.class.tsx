@@ -2,18 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { races } from "starlight-game-data/races";
 import { classes } from "starlight-game-data/classes";
+import { useCharacterStore } from "@/lib/game/character";
 import {
     SelectableGrid,
     SelectableGridItem,
 } from "@/components/lobby/character/SelectableGrid";
-import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout/class")({
     component: Class,
 });
 
 function Class() {
-    const { raceId, classId, setClassId } = useCharacterContext();
+    const { raceId, classId, setClassId } = useCharacterStore();
     const selectedRaceImages =
         races[raceId as keyof typeof races].classPortraitImages;
 

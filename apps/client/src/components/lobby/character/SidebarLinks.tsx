@@ -5,7 +5,7 @@ import { origins } from "starlight-game-data/origins";
 import { races } from "starlight-game-data/races";
 import { classes } from "starlight-game-data/classes";
 
-import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
+import { useCharacterStore } from "@/lib/game/character";
 import { cn } from "@/lib/tailwind/utils";
 import { SidebarLink } from "./SidebarLink";
 
@@ -20,7 +20,7 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         return location.pathname === path;
     };
 
-    const { originId, raceId, classId } = useCharacterContext();
+    const { originId, raceId, classId } = useCharacterStore();
 
     const sidebarLinks: {
         to: AppLayoutPaths;

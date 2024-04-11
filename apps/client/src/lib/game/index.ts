@@ -1,20 +1,19 @@
 import { create } from "zustand";
-import { User } from "database";
+import { Character, User } from "database";
 import discordSdk from "@/lib/discord";
 
-type GameState = {
-    readyUserIds: string[];
+type LobbyPlayer = {
+    user: User;
+    character: Character | null;
+    ready: boolean;
 };
 
 type GameStore = {
     user: User | null;
     setUser: (user: User) => void;
 
-    connectedPlayers: User[];
-    setConnectedPlayers: (players: User[]) => void;
-
-    gameState: GameState;
-    setGameState: (gameState: GameState) => void;
+    connectedPlayers: LobbyPlayer[];
+    setConnectedPlayers: (players: LobbyPlayer[]) => void;
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -22,7 +21,7 @@ export const useGameStore = create<GameStore>((set) => ({
     setUser: (user: User) => set({ user }),
 
     connectedPlayers: [],
-    setConnectedPlayers: (players: User[]) => {
+    setConnectedPlayers: (players: LobbyPlayer[]) => {
         set({ connectedPlayers: players });
 
         discordSdk.commands.setActivity({
@@ -43,14 +42,8 @@ export const useGameStore = create<GameStore>((set) => ({
             },
         });
     },
-
-    gameState: {
-        readyUserIds: [],
-    },
-    setGameState: (gameState: GameState) => set({ gameState }),
 }));
 
-// TODO: remove debug flag
 if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
     useGameStore.getState().setUser({
         id: "1234",
@@ -60,49 +53,40 @@ if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
         global_name: "TestUser",
         avatar_decoration: "avatar_decoration",
         locale: "en-US",
+        createdAt: new Date(),
         updatedAt: new Date(),
     });
 
     useGameStore.getState().setConnectedPlayers([
         {
-            id: "1234",
-            username: "TestUser",
-            discriminator: "0000",
-            avatar: "avatar",
-            global_name: "TestUser",
-            avatar_decoration: "avatar_decoration",
-            locale: "en-US",
-            updatedAt: new Date(),
+            user: {
+                id: "1234",
+                username: "TestUser",
+                discriminator: "0000",
+                avatar: "avatar",
+                global_name: "TestUser",
+                avatar_decoration: "avatar_decoration",
+                locale: "en-US",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            character: null,
+            ready: false,
         },
         {
-            id: "5678",
-            username: "TestUser2",
-            discriminator: "0001",
-            avatar: "avatar2",
-            global_name: "TestUser2",
-            avatar_decoration: "avatar_decoration2",
-            locale: "en-US",
-            updatedAt: new Date(),
-        },
-        {
-            id: "91011",
-            username: "TestUser3",
-            discriminator: "0002",
-            avatar: "avatar3",
-            global_name: "TestUser3",
-            avatar_decoration: "avatar_decoration3",
-            locale: "en-US",
-            updatedAt: new Date(),
-        },
-        {
-            id: "121314",
-            username: "TestUser4",
-            discriminator: "0003",
-            avatar: "avatar4",
-            global_name: "TestUser4",
-            avatar_decoration: "avatar_decoration4",
-            locale: "en-US",
-            updatedAt: new Date(),
+            user: {
+                id: "5678",
+                username: "TestUser2",
+                discriminator: "0001",
+                avatar: "avatar2",
+                global_name: "TestUser2",
+                avatar_decoration: "avatar_decoration2",
+                locale: "en-US",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            character: null,
+            ready: false,
         },
     ]);
 }

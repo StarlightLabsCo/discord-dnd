@@ -1,15 +1,13 @@
 import { z } from "zod";
 
-export type GenerateCharacterResponse = z.infer<
-    typeof GenerateCharacterResponseZodSchema
->;
+export type PostImageResponse = z.infer<typeof PostImageResponseZodSchema>;
 
-export const GenerateCharacterResponseZodSchema = z.object({
+export const PostImageResponseZodSchema = z.object({
     imageUrl: z.string(),
 });
 
 const responseTypeToSchema = {
-    GenerateCharacterResponse: GenerateCharacterResponseZodSchema,
+    PostImageResponseZodSchema,
 };
 
 export function getResponseSchema(type: keyof typeof responseTypeToSchema) {

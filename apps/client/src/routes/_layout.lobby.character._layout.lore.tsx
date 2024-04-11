@@ -1,4 +1,4 @@
-import { useCharacterContext } from "@/components/lobby/character/CharacterContext";
+import { useCharacterStore } from "@/lib/game/character";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout/lore")({
@@ -7,7 +7,8 @@ export const Route = createFileRoute("/_layout/lobby/character/_layout/lore")({
 
 function Lore() {
     const { lore, setLore, generateCharacter, generatingCharacter } =
-        useCharacterContext();
+        useCharacterStore();
+    
     const {
         name,
         pronouns,

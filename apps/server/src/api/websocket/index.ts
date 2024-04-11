@@ -1,8 +1,9 @@
 import type { ServerWebSocket, WebSocketHandler } from "bun";
 import { validateWebSocketRequest } from "starlight-api-types/websocket";
-import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 import type { User } from "database";
-import { handleGameStateUpdateRequest } from "./handlers/gameStateUpdate";
+
+import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
+import { handleLobbyReadyRequest } from "./handlers/LobbyReady";
 
 export type WebSocketData = {
     user: User;
@@ -42,5 +43,5 @@ async function handleWebSocketMessage(
 }
 
 const handlers = {
-    GameStateUpdateRequest: handleGameStateUpdateRequest,
+    LobbyReadyRequest: handleLobbyReadyRequest,
 };

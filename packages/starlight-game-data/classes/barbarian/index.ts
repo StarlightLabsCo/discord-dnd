@@ -1,13 +1,12 @@
 import { Class } from "..";
 
-import { abilities } from "@/abilities";
 import { items } from "@/items";
 import { skills } from "@/skills";
 
 export const barbarian: Class = {
     id: "barbarian",
     title: "Barbarian",
-    mainAbility: abilities.strength,
+    mainAbility: "strength",
     startingItems: [
         items.totemNecklace,
         items.ruggedCloak,

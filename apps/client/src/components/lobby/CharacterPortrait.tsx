@@ -1,15 +1,17 @@
-import { User } from "database";
+import { Character, User } from "database";
 import { DiscordAvatar } from "./DiscordAvatar";
 import { Link } from "@tanstack/react-router";
 
 type CharacterPortraitProps = {
     user: User;
+    character: Character | null;
     ready?: boolean;
     isCurrentUser?: boolean;
 };
 
 export function CharacterPortrait({
     user,
+    character,
     ready,
     isCurrentUser,
 }: CharacterPortraitProps) {
@@ -21,11 +23,20 @@ export function CharacterPortrait({
                 </div>
             )}
             <div className='relative group'>
-                <img
-                    src={""}
-                    className='object-cover w-full h-full rounded-[1vw]'
-                    alt='Character Portrait'
-                />
+                {character && (
+                    <img
+                        src={character.imageUrl}
+                        className='object-cover w-full h-full rounded-[1vw]'
+                        alt='Character Portrait'
+                    />
+                )}
+                {!character && (
+                    <div className='flex justify-center items-center w-[14vw] h-[14vw] rounded-[1vw] bg-black/50'>
+                        <div className='text-white text-[2vw] font-bold opacity-100'>
+                            No character
+                        </div>
+                    </div>
+                )}
                 {isCurrentUser && (
                     <div className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 bg-black/30 group-hover:opacity-100'>
                         <Link

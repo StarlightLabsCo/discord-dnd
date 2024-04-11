@@ -1,18 +1,16 @@
 import z from "zod";
 
-export type GameStateUpdateRequest = z.infer<
-    typeof GameStateUpdateRequestZodSchema
->;
+export type LobbyReadyRequest = z.infer<typeof LobbyReadyRequestZodSchema>;
 
-export const GameStateUpdateRequestZodSchema = z.object({
-    type: z.literal("GameStateUpdateRequest"),
+export const LobbyReadyRequestZodSchema = z.object({
+    type: z.literal("LobbyReadyRequest"),
     data: z.object({
-        readyUserIds: z.array(z.string()),
+        ready: z.boolean(),
     }),
 });
 
 const requestTypeToSchema = {
-    GameStateUpdateRequest: GameStateUpdateRequestZodSchema,
+    LobbyReadyRequest: LobbyReadyRequestZodSchema,
 };
 
 export function getRequestSchema(type: keyof typeof requestTypeToSchema) {

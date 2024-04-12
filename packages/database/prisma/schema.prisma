@@ -51,12 +51,16 @@ model World {
 
     name        String
     description String
+    imageUrl    String
 
     races       Race[]
-    languages   Language[]
     classes     Class[]
     backgrounds Background[]
-    campaigns   Campaign[]
+    languages   Language[]
+    locations   Location[]
+    items       Item[]
+
+    campaigns Campaign[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -72,13 +76,13 @@ model Campaign {
     worldId String
     world   World  @relation(fields: [worldId], references: [id])
 
-    title       String
+    name        String
     description String
+    imageUrl    String
 
-    locations  Location[]
-    characters Character[]
+    characters Character[] // character templates for the story
 
-    // TODO
+    // TODO: add beats, events, etc
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -91,13 +95,23 @@ model Campaign {
 model Location {
     id String @id @default(cuid())
 
-    campaignId String
-    campaign   Campaign @relation(fields: [campaignId], references: [id])
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
 
-    // TODO
+    name        String
+    description String
+    imageUrl    String
+
+    parentId     String?
+    parent       Location?  @relation("ParentLocation", fields: [parentId], references: [id])
+    subLocations Location[] @relation("ParentLocation")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // models referencing this location
+    characters         Character[]
+    characterInstances CharacterInstance[]
 }
 
 // - Race - (Static)
@@ -107,17 +121,25 @@ model Race {
     worldId String
     world   World  @relation(fields: [worldId], references: [id])
 
+    name        String
+    description String
+    imageUrl    String
+
+    strengthModifier     Int @default(0)
+    dexterityModifier    Int @default(0)
+    constitutionModifier Int @default(0)
+    intelligenceModifier Int @default(0)
+    wisdomModifier       Int @default(0)
+    charismaModifier     Int @default(0)
+
+    size  CharacterSize @default(MEDIUM)
+    speed Int           @default(25)
+
+    languages Language[]
+
+    racialTraits RacialTrait[]
+
     subraces Subrace[]
-
-    // racial increase 
-    strengthIncrease     Int @default(0)
-    dexterityIncrease    Int @default(0)
-    constitutionIncrease Int @default(0)
-    intelligenceIncrease Int @default(0)
-    wisdomIncrease       Int @default(0)
-    charismaIncrease     Int @default(0)
-
-    // TODO
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -134,7 +156,21 @@ model Subrace {
     parentRaceId String
     parent       Race   @relation(fields: [parentRaceId], references: [id])
 
-    // TODO
+    name        String
+    description String
+    imageUrl    String
+
+    strengthModifier     Int @default(0)
+    dexterityModifier    Int @default(0)
+    constitutionModifier Int @default(0)
+    intelligenceModifier Int @default(0)
+    wisdomModifier       Int @default(0)
+    charismaModifier     Int @default(0)
+
+    size  CharacterSize @default(MEDIUM)
+    speed Int           @default(25)
+
+    racialTraits RacialTrait[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -142,6 +178,21 @@ model Subrace {
     // instances using this model
     character          Character[]
     characterInstances CharacterInstance[]
+}
+
+// - Racial Trait - (Static)
+model RacialTrait {
+    id String @id @default(cuid())
+
+    races    Race[]
+    subraces Subrace[]
+
+    name        String
+    description String
+    imageUrl    String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // - Language - (Static)
@@ -151,10 +202,17 @@ model Language {
     worldId String
     world   World  @relation(fields: [worldId], references: [id])
 
+    name        String
+    description String
+    imageUrl    String
+
     // TODO
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // models referencing this language
+    races Race[]
 }
 
 // - Class - (Static)
@@ -164,7 +222,11 @@ model Class {
     worldId String
     world   World  @relation(fields: [worldId], references: [id])
 
-    // TODO
+    name        String
+    description String
+    imageUrl    String
+
+    classFeatures ClassFeature[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -172,6 +234,21 @@ model Class {
     // instances using this model
     character          Character[]
     characterInstances CharacterInstance[]
+}
+
+// - Class Feature - (Static)
+model ClassFeature {
+    id String @id @default(cuid())
+
+    classId String
+    class   Class  @relation(fields: [classId], references: [id])
+
+    name        String
+    description String
+    imageUrl    String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // - Background - (Static)
@@ -181,8 +258,17 @@ model Background {
     worldId String
     world   World  @relation(fields: [worldId], references: [id])
 
-    // TODO
-    skills Skill[]
+    name        String
+    description String
+    imageUrl    String
+
+    proficiencies Proficiency[] // proficiencies that the background gives
+    equipment     Item[] // equipment that the background gives
+
+    personalityTraits String[] // personality traits to pick from (2)
+    ideals            String[] // ideals to pick from (1)
+    bonds             String[] // bonds to pick from (1)
+    flaws             String[] // flaws to pick from (1)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -192,25 +278,55 @@ model Background {
     characterInstances CharacterInstance[]
 }
 
-// - Skill - (Static)
-model Skill {
+// - Proficiency - (Static)
+// Proficiencies modify the character's stats during dice rolls
+// They can be weapon proficiencies, armor proficiencies, tool proficiencies, or skill proficiencies
+// If the player has a proficiency in a certain area, they get a bonus to their roll (their proficiency bonus)
+// alongside their existing ability score modifier
+enum ProficiencyType {
+    WEAPON
+    ARMOR
+    TOOL
+    SKILL
+}
+
+model Proficiency {
     id String @id @default(cuid())
 
-    // TODO
-    backgrounds Background[]
+    type ProficiencyType
+
+    name        String
+    description String
+    imageUrl    String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // models referencing this proficiency
+    backgrounds        Background[]
+    characters         Character[]
+    characterInstances CharacterInstance[]
 }
 
 // - Feat - (Static)
+// Feats are special abilities that characters can have that are not tied to their class
+// Players can choose to take a feat instead of an ability score improvement (ASI), which
+// usually happens every 4 levels
 model Feat {
     id String @id @default(cuid())
 
-    // TODO
+    prerequisites String
+
+    name        String
+    description String
+    imageUrl    String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // instances using this model
+    character          Character[]
+    characterInstances CharacterInstance[]
 }
 
 // - Character - (Instance Template)
@@ -220,6 +336,18 @@ model Feat {
 enum CharacterSize {
     SMALL
     MEDIUM
+}
+
+enum CharacterAlignment {
+    LAWFUL_GOOD
+    NEUTRAL_GOOD
+    CHAOTIC_GOOD
+    LAWFUL_NEUTRAL
+    TRUE_NEUTRAL
+    CHAOTIC_NEUTRAL
+    LAWFUL_EVIL
+    NEUTRAL_EVIL
+    CHAOTIC_EVIL
 }
 
 model Character {
@@ -243,16 +371,23 @@ model Character {
     pronouns    String
     age         Int
     voice       String
-    alignment   String
+    alignment   CharacterAlignment
     appearance  String
     backstory   String
-    personality String
-    ideals      String
-    bonds       String
-    flaws       String
+    personality String[]
+    ideals      String[]
+    bonds       String[]
+    flaws       String[]
 
-    level      Int @default(1)
-    experience Int @default(0)
+    imageUrl String
+
+    currentLocationId String?
+    currentLocation   Location? @relation(fields: [currentLocationId], references: [id])
+
+    level            Int           @default(1)
+    experience       Int           @default(0)
+    proficiencyBonus Int           @default(2)
+    proficiencies    Proficiency[]
 
     strength     Int @default(8)
     dexterity    Int @default(8)
@@ -268,7 +403,20 @@ model Character {
 
     speed Int @default(25)
 
-    imageUrl String
+    feats Feat[]
+
+    inventory Item[]
+
+    spells              Spell[]
+    maxLevel1SpellSlots Int     @default(0)
+    maxLevel2SpellSlots Int     @default(0)
+    maxLevel3SpellSlots Int     @default(0)
+    maxLevel4SpellSlots Int     @default(0)
+    maxLevel5SpellSlots Int     @default(0)
+    maxLevel6SpellSlots Int     @default(0)
+    maxLevel7SpellSlots Int     @default(0)
+    maxLevel8SpellSlots Int     @default(0)
+    maxLevel9SpellSlots Int     @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -286,19 +434,86 @@ enum ItemRarity {
     LEGENDARY
 }
 
+enum DamageType {
+    BLUDGEONING
+    PIERCING
+    SLASHING
+    FIRE
+    COLD
+    LIGHTNING
+    THUNDER
+    FORCE
+    NECROTIC
+    RADIANT
+    POISON
+    PSYCHIC
+    ACID
+}
+
 model Item {
+    id String @id @default(cuid())
+
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id])
+
+    name        String
+    description String
+    imageUrl    String
+
+    weight Int
+    value  Int
+    rarity ItemRarity @default(COMMON)
+
+    // if the item is a weapon
+    damageDice  Dice?
+    damageType  DamageType?
+    damageBonus Int?
+    properties  String[] // properties of the weapon (finesse, light, heavy, etc.)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // model/instances who have this item
+    backgrounds        Background[]
+    characters         Character[]
+    characterInstances CharacterInstance[]
+}
+
+// - Spell - (Static)
+enum SpellSchool {
+    ABJURATION
+    CONJURATION
+    DIVINATION
+    ENCHANTMENT
+    EVOCATION
+    ILLUSION
+    NECROMANCY
+    TRANSMUTATION
+}
+
+model Spell {
     id String @id @default(cuid())
 
     name        String
     description String
     imageUrl    String
-    weight      Int
-    value       Int
 
-    rarity ItemRarity @default(COMMON)
+    level       Int         @default(0) // 0 means cantrip, 1-9 are spell levels
+    school      SpellSchool
+    castingTime String
+
+    range      Int
+    components String[]
+    duration   String
+
+    ritual Boolean @default(false)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // models referencing this spell
+    characters         Character[]
+    characterInstances CharacterInstance[]
 }
 
 // ---- Things the player will create ---- 
@@ -351,13 +566,20 @@ model CharacterInstance {
     alignment   String
     appearance  String
     backstory   String
-    personality String
-    ideals      String
-    bonds       String
-    flaws       String
+    personality String[]
+    ideals      String[]
+    bonds       String[]
+    flaws       String[]
 
-    level      Int @default(1)
-    experience Int @default(0)
+    imageUrl String
+
+    currentLocationId String?
+    currentLocation   Location? @relation(fields: [currentLocationId], references: [id])
+
+    level            Int           @default(1)
+    experience       Int           @default(0)
+    proficiencyBonus Int           @default(2)
+    proficiencies    Proficiency[]
 
     strength     Int @default(8)
     dexterity    Int @default(8)
@@ -374,7 +596,29 @@ model CharacterInstance {
 
     speed Int @default(25)
 
-    imageUrl String
+    feats Feat[]
+
+    inventory                 Item[]
+    spells                    Spell[]
+    availableLevel1SpellSlots Int     @default(0) // will be set to maxLevel1SpellSlots when the character is created or long rested
+    availableLevel2SpellSlots Int     @default(0)
+    availableLevel3SpellSlots Int     @default(0)
+    availableLevel4SpellSlots Int     @default(0)
+    availableLevel5SpellSlots Int     @default(0)
+    availableLevel6SpellSlots Int     @default(0)
+    availableLevel7SpellSlots Int     @default(0)
+    availableLevel8SpellSlots Int     @default(0)
+    availableLevel9SpellSlots Int     @default(0)
+
+    maxLevel1SpellSlots Int @default(0)
+    maxLevel2SpellSlots Int @default(0)
+    maxLevel3SpellSlots Int @default(0)
+    maxLevel4SpellSlots Int @default(0)
+    maxLevel5SpellSlots Int @default(0)
+    maxLevel6SpellSlots Int @default(0)
+    maxLevel7SpellSlots Int @default(0)
+    maxLevel8SpellSlots Int @default(0)
+    maxLevel9SpellSlots Int @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

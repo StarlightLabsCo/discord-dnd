@@ -82,6 +82,7 @@ model Campaign {
 
     characters Character[] // character templates for the story
 
+    acts Act[]
     // TODO: add beats, events, etc
 
     createdAt DateTime @default(now())
@@ -89,6 +90,57 @@ model Campaign {
 
     // instances using this model
     campaignInstances CampaignInstance[]
+}
+
+model Act {
+    id String @id @default(cuid())
+
+    campaignId String
+    campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+    name        String
+    description String
+    imageUrl    String
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    adventures Adventure[]
+}
+
+model Adventure {
+    id String @id @default(cuid())
+
+    actId String
+    act   Act    @relation(fields: [actId], references: [id])
+
+    name        String
+    description String
+    imageUrl    String
+
+    // TODO
+    encounters Encounter[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Encounter {
+    id String @id @default(cuid())
+
+    adventureId String
+    adventure   Adventure @relation(fields: [adventureId], references: [id])
+
+    name        String
+    description String
+    imageUrl    String
+
+    // TODO
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // - Location - (Static)

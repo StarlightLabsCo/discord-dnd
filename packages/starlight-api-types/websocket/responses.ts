@@ -1,5 +1,5 @@
 import z from "zod";
-import { UserSchema } from "database";
+import { UserSchema } from "database/prisma/generated/zod";
 
 // ----- UserInfoResponse -----
 export type UserInfoResponse = z.infer<typeof UserInfoResponseZodSchema>;

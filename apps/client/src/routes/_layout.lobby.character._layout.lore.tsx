@@ -6,26 +6,32 @@ export const Route = createFileRoute("/_layout/lobby/character/_layout/lore")({
 });
 
 function Lore() {
-    const { lore, setLore, generateCharacter, generatingCharacter } =
-        useCharacterStore();
-    
     const {
         name,
+        setName,
         pronouns,
+        setPronouns,
         age,
+        setAge,
         voice,
+        setVoice,
         alignment,
+        setAlignment,
         appearance,
+        setAppearance,
         backstory,
+        setBackstory,
         personality,
+        setPersonality,
         ideals,
+        setIdeals,
         bonds,
+        setBonds,
         flaws,
-    } = lore;
-
-    const updateLore = (key: string, value: string) => {
-        setLore({ ...lore, [key]: value });
-    };
+        setFlaws,
+        generateCharacter,
+        generatingCharacter,
+    } = useCharacterStore();
 
     const generationEnabled =
         name &&
@@ -49,7 +55,7 @@ function Lore() {
                     <input
                         type='text'
                         value={name}
-                        onChange={(e) => updateLore("name", e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw]'
                     />
                 </div>
@@ -60,7 +66,7 @@ function Lore() {
                     <input
                         type='text'
                         value={pronouns}
-                        onChange={(e) => updateLore("pronouns", e.target.value)}
+                        onChange={(e) => setPronouns(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full'
                     />
                 </div>
@@ -69,7 +75,7 @@ function Lore() {
                     <input
                         type='text'
                         value={age}
-                        onChange={(e) => updateLore("age", e.target.value)}
+                        onChange={(e) => setAge(Number(e.target.value))}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full'
                     />
                 </div>
@@ -78,7 +84,7 @@ function Lore() {
                     <input
                         type='text'
                         value={voice}
-                        onChange={(e) => updateLore("voice", e.target.value)}
+                        onChange={(e) => setVoice(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full'
                     />
                 </div>
@@ -87,9 +93,7 @@ function Lore() {
                     <input
                         type='text'
                         value={alignment}
-                        onChange={(e) =>
-                            updateLore("alignment", e.target.value)
-                        }
+                        onChange={(e) => setAlignment(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full'
                     />
                 </div>
@@ -99,9 +103,7 @@ function Lore() {
                     <label>Appearance</label>
                     <textarea
                         value={appearance}
-                        onChange={(e) =>
-                            updateLore("appearance", e.target.value)
-                        }
+                        onChange={(e) => setAppearance(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full h-[10vh]'
                     />
                 </div>
@@ -109,9 +111,7 @@ function Lore() {
                     <label>Backstory</label>
                     <textarea
                         value={backstory}
-                        onChange={(e) =>
-                            updateLore("backstory", e.target.value)
-                        }
+                        onChange={(e) => setBackstory(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full h-[10vh]'
                     />
                 </div>
@@ -121,9 +121,7 @@ function Lore() {
                     <label>Personality Traits</label>
                     <textarea
                         value={personality}
-                        onChange={(e) =>
-                            updateLore("personality", e.target.value)
-                        }
+                        onChange={(e) => setPersonality(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-3/5 h-[10vh]'
                     />
                 </div>
@@ -133,7 +131,7 @@ function Lore() {
                     <label>Ideals</label>
                     <textarea
                         value={ideals}
-                        onChange={(e) => updateLore("ideals", e.target.value)}
+                        onChange={(e) => setIdeals(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full h-[5vh]'
                     />
                 </div>
@@ -141,7 +139,7 @@ function Lore() {
                     <label>Bonds</label>
                     <textarea
                         value={bonds}
-                        onChange={(e) => updateLore("bonds", e.target.value)}
+                        onChange={(e) => setBonds(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full h-[5vh]'
                     />
                 </div>
@@ -149,7 +147,7 @@ function Lore() {
                     <label>Flaws</label>
                     <textarea
                         value={flaws}
-                        onChange={(e) => updateLore("flaws", e.target.value)}
+                        onChange={(e) => setFlaws(e.target.value)}
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-full h-[5vh]'
                     />
                 </div>

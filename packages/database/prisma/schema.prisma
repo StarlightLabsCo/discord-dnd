@@ -56,9 +56,11 @@ model World {
     races       Race[]
     classes     Class[]
     backgrounds Background[]
+    feats       Feat[]
     languages   Language[]
     locations   Location[]
     items       Item[]
+    spells      Spell[]
 
     campaigns Campaign[]
 
@@ -74,7 +76,7 @@ model Campaign {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -96,42 +98,52 @@ model Act {
     id String @id @default(cuid())
 
     campaignId String
-    campaign   Campaign @relation(fields: [campaignId], references: [id])
+    campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
     name        String
     description String
     imageUrl    String
 
     // TODO
+    adventures Adventure[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    adventures Adventure[]
 }
 
 model Adventure {
     id String @id @default(cuid())
 
     actId String
-    act   Act    @relation(fields: [actId], references: [id])
+    act   Act    @relation(fields: [actId], references: [id], onDelete: Cascade)
 
     name        String
     description String
     imageUrl    String
 
     // TODO
-    encounters Encounter[]
+    beats Beat[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model Encounter {
+enum BeatType {
+    ENCOUNTER
+    ROLEPLAY
+    LOOT
+    QUEST
+    SHOP
+    REST
+}
+
+model Beat {
     id String @id @default(cuid())
 
     adventureId String
-    adventure   Adventure @relation(fields: [adventureId], references: [id])
+    adventure   Adventure @relation(fields: [adventureId], references: [id], onDelete: Cascade)
+
+    type BeatType
 
     name        String
     description String
@@ -148,14 +160,14 @@ model Location {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
     imageUrl    String
 
     parentId     String?
-    parent       Location?  @relation("ParentLocation", fields: [parentId], references: [id])
+    parent       Location?  @relation("ParentLocation", fields: [parentId], references: [id], onDelete: Cascade)
     subLocations Location[] @relation("ParentLocation")
 
     createdAt DateTime @default(now())
@@ -171,7 +183,7 @@ model Race {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -206,7 +218,7 @@ model Subrace {
     id String @id @default(cuid())
 
     parentRaceId String
-    parent       Race   @relation(fields: [parentRaceId], references: [id])
+    parent       Race   @relation(fields: [parentRaceId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -236,8 +248,11 @@ model Subrace {
 model RacialTrait {
     id String @id @default(cuid())
 
-    races    Race[]
-    subraces Subrace[]
+    raceId String?
+    race   Race?   @relation(fields: [raceId], references: [id], onDelete: Cascade)
+
+    subraceId String?
+    subrace   Subrace? @relation(fields: [subraceId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -252,7 +267,7 @@ model Language {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -272,7 +287,7 @@ model Class {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -293,7 +308,7 @@ model ClassFeature {
     id String @id @default(cuid())
 
     classId String
-    class   Class  @relation(fields: [classId], references: [id])
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -308,7 +323,7 @@ model Background {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -367,6 +382,9 @@ model Proficiency {
 model Feat {
     id String @id @default(cuid())
 
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
     prerequisites String
 
     name        String
@@ -406,20 +424,23 @@ model Character {
     id String @id @default(cuid())
 
     campaignId String
-    campaign   Campaign @relation(fields: [campaignId], references: [id])
+    campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
     raceId String
-    race   Race   @relation(fields: [raceId], references: [id])
+    race   Race   @relation(fields: [raceId], references: [id], onDelete: Cascade)
 
     subraceId String?
-    subrace   Subrace? @relation(fields: [subraceId], references: [id])
+    subrace   Subrace? @relation(fields: [subraceId], references: [id], onDelete: SetNull)
 
     classes Class[]
 
     backgroundId String
-    background   Background @relation(fields: [backgroundId], references: [id])
+    background   Background @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
 
     name        String
+    description String
+    imageUrl    String
+
     pronouns    String
     age         Int
     voice       String
@@ -431,10 +452,8 @@ model Character {
     bonds       String[]
     flaws       String[]
 
-    imageUrl String
-
     currentLocationId String?
-    currentLocation   Location? @relation(fields: [currentLocationId], references: [id])
+    currentLocation   Location? @relation(fields: [currentLocationId], references: [id], onDelete: SetNull)
 
     level            Int           @default(1)
     experience       Int           @default(0)
@@ -506,7 +525,7 @@ model Item {
     id String @id @default(cuid())
 
     worldId String
-    world   World  @relation(fields: [worldId], references: [id])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -546,6 +565,9 @@ enum SpellSchool {
 model Spell {
     id String @id @default(cuid())
 
+    worldId String
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
     name        String
     description String
     imageUrl    String
@@ -575,7 +597,7 @@ model CampaignInstance {
     id String @id @default(cuid())
 
     campaignId String
-    campaign   Campaign @relation(fields: [campaignId], references: [id])
+    campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Restrict)
 
     users              User[] // users that are part of the campaign
     characterInstances CharacterInstance[] // characters that are part of the campaign
@@ -590,28 +612,31 @@ model CharacterInstance {
     id String @id @default(cuid())
 
     userId String?
-    user   User?   @relation(fields: [userId], references: [id]) // no user means it's an NPC or AI character
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade) // no user means it's an NPC or AI character
 
     // ---- Character Template Info (was this character created from a template?) ---
     characterId String?
-    character   Character? @relation(fields: [characterId], references: [id])
+    character   Character? @relation(fields: [characterId], references: [id], onDelete: Restrict)
 
     // ---- Character Instance Info ---
     campaignInstanceId String
-    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id])
+    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id], onDelete: Restrict)
 
     raceId String
-    race   Race   @relation(fields: [raceId], references: [id])
+    race   Race   @relation(fields: [raceId], references: [id], onDelete: Restrict)
 
     subraceId String?
-    subrace   Subrace? @relation(fields: [subraceId], references: [id])
+    subrace   Subrace? @relation(fields: [subraceId], references: [id], onDelete: Restrict)
 
     classes Class[]
 
     backgroundId String
-    background   Background @relation(fields: [backgroundId], references: [id])
+    background   Background @relation(fields: [backgroundId], references: [id], onDelete: Restrict)
 
     name        String
+    description String
+    imageUrl    String
+
     pronouns    String
     age         Int
     voice       String
@@ -623,10 +648,8 @@ model CharacterInstance {
     bonds       String[]
     flaws       String[]
 
-    imageUrl String
-
     currentLocationId String?
-    currentLocation   Location? @relation(fields: [currentLocationId], references: [id])
+    currentLocation   Location? @relation(fields: [currentLocationId], references: [id], onDelete: Restrict)
 
     level            Int           @default(1)
     experience       Int           @default(0)

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ export function GenericCard({
     const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [formData, setFormData] = useState({});
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         const newFormData = inputFields.reduce<Record<string, any>>(
@@ -46,7 +48,12 @@ export function GenericCard({
             {}
         );
         setFormData(newFormData);
-    }, [data, inputFields]);
+
+        const urlId = searchParams.get("id");
+        if (urlId === id) {
+            setIsDetailDialogOpen(true);
+        }
+    }, [data, inputFields, searchParams, id]);
 
     return (
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>

@@ -5,26 +5,13 @@ import { toast } from "sonner";
 import { GenericCard } from "./GenericCard";
 import { GenericCreateNewCard } from "./GenericCreateNewCard";
 import { InputField } from "./InputFieldMapper";
+import { pluralize } from "@/lib/utils";
 
 type Props = {
     data: any[];
     dataType: string;
     inputFields: InputField[];
 };
-
-function pluralize(word: string): string {
-    if (word.endsWith("s")) {
-        return word + "es";
-    } else if (word.endsWith("y")) {
-        return word.slice(0, -1) + "ies";
-    } else if (word.endsWith("sh") || word.endsWith("ch")) {
-        return word + "es";
-    } else if (word.endsWith("class")) {
-        return word + "es";
-    } else {
-        return word + "s";
-    }
-}
 
 export function GenericCardDisplay({ data, dataType, inputFields }: Props) {
     const [items, setItems] = useState(data);

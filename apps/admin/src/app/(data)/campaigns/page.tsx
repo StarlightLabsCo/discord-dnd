@@ -1,29 +1,56 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-    InputField,
-} from "@/components/GenericCardDisplay";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
+        type: "foreignkey",
+        dataType: "world",
         name: "worldId",
         label: "World ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "text",
         name: "name",
         label: "Name",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "description",
         label: "Description",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "imageUrl",
         label: "Image URL",
-        type: "text",
+        required: true,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        foreignKeyField: "campaignId",
+        name: "characters",
+        label: "Characters",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "act",
+        foreignKeyField: "campaignId",
+        name: "acts",
+        label: "Acts",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "campaignInstance",
+        foreignKeyField: "campaignId",
+        name: "campaignInstances",
+        label: "Campaign Instances",
+        required: false,
     },
 ];
 

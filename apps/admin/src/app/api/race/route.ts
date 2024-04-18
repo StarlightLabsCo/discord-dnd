@@ -1,8 +1,19 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const races = await db.race.findMany();
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const worldId = url.searchParams.get("worldId");
+
+    const races = await db.race.findMany({
+        where: worldId ? { worldId } : {},
+        include: {
+            languages: true,
+            racialTraits: true,
+            subraces: true,
+            characters: true,
+        },
+    });
 
     return new Response(JSON.stringify(races), {
         headers: {
@@ -55,6 +66,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(race), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing race ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.race.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

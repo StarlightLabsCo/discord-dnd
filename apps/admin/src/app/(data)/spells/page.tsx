@@ -1,84 +1,76 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-    InputField,
-} from "@/components/GenericCardDisplay";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { SpellSchool } from "database";
+import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
+        type: "foreignkey",
+        dataType: "world",
         name: "worldId",
         label: "World ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "text",
         name: "name",
         label: "Name",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "description",
         label: "Description",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "imageUrl",
         label: "Image URL",
-        type: "text",
+        required: true,
     },
     {
+        type: "number",
         name: "level",
         label: "Level",
-        type: "number",
+        required: true,
     },
     {
+        type: "enum",
+        enumObject: SpellSchool,
         name: "school",
         label: "School",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "castingTime",
         label: "Casting Time",
-        type: "text",
+        required: true,
     },
     {
+        type: "number",
         name: "range",
         label: "Range",
-        type: "text",
+        required: true,
     },
     {
+        type: "textarray",
         name: "components",
         label: "Components",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "duration",
         label: "Duration",
-        type: "text",
+        required: true,
     },
     {
-        name: "description",
-        label: "Description",
-        type: "text",
-    },
-    {
-        name: "classes",
-        label: "Classes",
-        type: "text",
-    },
-    {
-        name: "higherLevel",
-        label: "Higher Level",
-        type: "text",
-    },
-    {
-        name: "material",
-        label: "Material",
-        type: "text",
-    },
-    {
+        type: "checkbox",
         name: "ritual",
         label: "Ritual",
-        type: "boolean",
+        required: true,
     },
 ];
 

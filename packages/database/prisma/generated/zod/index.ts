@@ -24,7 +24,7 @@ export const AdventureScalarFieldEnumSchema = z.enum(['id','actId','name','descr
 
 export const BeatScalarFieldEnumSchema = z.enum(['id','adventureId','type','name','description','imageUrl','createdAt','updatedAt']);
 
-export const LocationScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','parentId','createdAt','updatedAt']);
+export const LocationScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','parentLocationId','createdAt','updatedAt']);
 
 export const RaceScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','strengthModifier','dexterityModifier','constitutionModifier','intelligenceModifier','wisdomModifier','charismaModifier','size','speed','createdAt','updatedAt']);
 
@@ -44,7 +44,7 @@ export const ProficiencyScalarFieldEnumSchema = z.enum(['id','type','name','desc
 
 export const FeatScalarFieldEnumSchema = z.enum(['id','worldId','prerequisites','name','description','imageUrl','createdAt','updatedAt']);
 
-export const CharacterScalarFieldEnumSchema = z.enum(['id','campaignId','raceId','subraceId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personality','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','size','speed','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
+export const CharacterScalarFieldEnumSchema = z.enum(['id','campaignId','raceId','subraceId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','size','speed','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
 export const ItemScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','weight','value','rarity','damageDice','damageType','damageBonus','properties','createdAt','updatedAt']);
 
@@ -204,7 +204,7 @@ export const LocationSchema = z.object({
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),
-  parentId: z.string().nullable(),
+  parentLocationId: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -398,7 +398,7 @@ export const CharacterSchema = z.object({
   voice: z.string(),
   appearance: z.string(),
   backstory: z.string(),
-  personality: z.string().array(),
+  personalityTraits: z.string().array(),
   ideals: z.string().array(),
   bonds: z.string().array(),
   flaws: z.string().array(),

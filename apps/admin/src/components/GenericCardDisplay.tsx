@@ -4,12 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { GenericCard } from "./GenericCard";
 import { GenericCreateNewCard } from "./GenericCreateNewCard";
-
-export type InputField = {
-    name: string;
-    type: string;
-    label: string;
-};
+import { InputField } from "./InputFieldMapper";
 
 type Props = {
     data: any[];
@@ -59,12 +54,9 @@ export function GenericCardDisplay({ data, dataType, inputFields }: Props) {
                     <GenericCard
                         key={item.id}
                         id={item.id}
+                        inputFields={inputFields}
                         dataType={dataType}
-                        metadata={{
-                            name: item.name,
-                            description: item.description,
-                            imageUrl: item.imageUrl,
-                        }}
+                        data={item}
                         onDelete={refreshDisplay}
                     />
                 ))}

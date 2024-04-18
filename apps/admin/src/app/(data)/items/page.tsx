@@ -1,64 +1,78 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-    InputField,
-} from "@/components/GenericCardDisplay";
+import { DamageType, Dice, ItemRarity } from "database";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
+        type: "foreignkey",
+        dataType: "world",
         name: "worldId",
         label: "World ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "text",
         name: "name",
         label: "Name",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "description",
         label: "Description",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "imageUrl",
         label: "Image URL",
-        type: "text",
+        required: true,
     },
     {
+        type: "number",
         name: "weight",
         label: "Weight",
-        type: "number",
+        required: true,
     },
     {
+        type: "number",
         name: "value",
         label: "Value",
-        type: "number",
+        required: true,
     },
     {
+        type: "enum",
+        enumObject: ItemRarity,
         name: "rarity",
         label: "Rarity",
-        type: "text",
+        required: true,
     },
     {
+        type: "enum",
+        enumObject: Dice,
         name: "damageDice",
         label: "Damage Dice",
-        type: "text",
+        required: false,
     },
     {
+        type: "enum",
+        enumObject: DamageType,
         name: "damageType",
         label: "Damage Type",
-        type: "text",
+        required: false,
     },
     {
+        type: "number",
         name: "damageBonus",
-        type: "text",
         label: "Damage Bonus",
+        required: false,
     },
     {
+        type: "text",
         name: "properties",
         label: "Properties",
-        type: "text",
+        required: true,
     },
 ];
 

@@ -1,34 +1,39 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-    InputField,
-} from "@/components/GenericCardDisplay";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
+        type: "foreignkey",
+        dataType: "race",
         name: "raceId",
         label: "Race ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "foreignkey",
+        dataType: "subrace",
         name: "subraceId",
         label: "Subrace ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "text",
         name: "name",
         label: "Name",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "description",
         label: "Description",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "imageUrl",
         label: "Image URL",
-        type: "text",
+        required: true,
     },
 ];
 

@@ -1,8 +1,17 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const campaigns = await db.campaign.findMany();
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const worldId = url.searchParams.get("worldId");
+
+    const campaigns = await db.campaign.findMany({
+        where: worldId ? { worldId } : {},
+        include: {
+            characters: true,
+            campaignInstances: true,
+        },
+    });
 
     return new Response(JSON.stringify(campaigns), {
         headers: {
@@ -10,7 +19,6 @@ export async function GET() {
         },
     });
 }
-
 export async function POST(request: NextRequest) {
     const body = await request.json();
 
@@ -34,6 +42,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(campaign), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing campaign ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.campaign.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

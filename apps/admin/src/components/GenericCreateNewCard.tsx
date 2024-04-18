@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
     Dialog,
@@ -13,12 +12,10 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { InputField } from "./GenericCardDisplay";
-import { GenericDataDropdown } from "./GenericDataDropdown";
 import { Icons } from "./Icons";
+import { InputField, InputFieldMapper } from "./InputFieldMapper";
 
 type Props = {
     dataType: string;
@@ -35,13 +32,24 @@ export function GenericCreateNewCard({
 }: Props) {
     const [formData, setFormData] = useState(
         inputFields.reduce<Record<string, any>>((acc, field) => {
-            acc[field.name] = "";
+            if (
+                field.type === "enum" &&
+                Object.keys(field.enumObject).length > 0
+            ) {
+                acc[field.name] = Object.keys(field.enumObject)[0];
+            } else {
+                acc[field.name] = "";
+            }
             return acc;
         }, {})
     );
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [createMoreToggle, setCreateMoreToggle] = useState(false);
+
+    const formattedDataType = dataType
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/^\w/, (c) => c.toUpperCase());
 
     const handleSubmit = async () => {
         const response = await fetch(`/api/${dataType}`, {
@@ -53,17 +61,17 @@ export function GenericCreateNewCard({
         });
 
         if (!response.ok) {
-            toast.error(`Failed to create ${dataType}`);
+            toast.error(`Failed to create ${formattedDataType}`);
         } else {
             onSuccessfulSubmit?.();
-            toast.success(`${dataType} created successfully`);
+            toast.success(`${formattedDataType} created successfully`);
 
-            setFormData({
-                campaignId: "",
-                name: "",
-                description: "",
-                imageUrl: "",
-            });
+            setFormData(
+                inputFields.reduce<Record<string, any>>((acc, field) => {
+                    acc[field.name] = "";
+                    return acc;
+                }, {})
+            );
 
             if (!createMoreToggle) {
                 setIsDialogOpen(false);
@@ -81,61 +89,24 @@ export function GenericCreateNewCard({
                     )}
                 >
                     <div className='absolute top-1 mx-auto text-xs font-light'>
-                        new {dataType}
+                        New {formattedDataType}
                     </div>
                     <Icons.plus className='w-6 h-6 transition group-hover:scale-[130%]' />
                 </div>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
                 <DialogHeader className='mb-6'>
-                    <DialogTitle>Create New {dataType}</DialogTitle>
+                    <DialogTitle>Create New {formattedDataType}</DialogTitle>
                     <DialogDescription>
-                        Enter the details of the new act.
+                        Enter the details of the new {formattedDataType}.
                     </DialogDescription>
                 </DialogHeader>
-
-                {inputFields.map((field: InputField) => {
-                    if (field.type === "dropdown") {
-                        return (
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='text-xs font-light'>
-                                    {field.label}
-                                </div>
-                                <GenericDataDropdown
-                                    key={field.name}
-                                    name={field.label}
-                                    dataType={field.name.split("Id")[0]}
-                                    selectedId={formData[field.name]}
-                                    setSelectedId={(id) =>
-                                        setFormData({
-                                            ...formData,
-                                            [field.name]: id,
-                                        })
-                                    }
-                                />
-                            </div>
-                        );
-                    } else {
-                        return (
-                            <div className='flex flex-col gap-y-1'>
-                                <div className='text-xs font-light'>
-                                    {field.label}
-                                </div>
-                                <Input
-                                    type={field.type}
-                                    value={formData[field.name]}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            [field.name]: e.target.value,
-                                        })
-                                    }
-                                    className='mb-2'
-                                />
-                            </div>
-                        );
-                    }
-                })}
+                <InputFieldMapper
+                    parentId={null}
+                    inputFields={inputFields}
+                    formData={formData}
+                    setFormData={setFormData}
+                />
                 <DialogFooter className='flex gap-x-4 items-center'>
                     <div className='flex items-center'>
                         <Switch

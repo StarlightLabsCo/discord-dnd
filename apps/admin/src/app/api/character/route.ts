@@ -1,8 +1,31 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const characters = await db.character.findMany();
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const campaignId = url.searchParams.get("campaignId");
+    const raceId = url.searchParams.get("raceId");
+    const subraceId = url.searchParams.get("subraceId");
+    const backgroundId = url.searchParams.get("backgroundId");
+    const currentLocationId = url.searchParams.get("currentLocationId");
+
+    const characters = await db.character.findMany({
+        where: {
+            ...(campaignId && { campaignId }),
+            ...(raceId && { raceId }),
+            ...(subraceId && { subraceId }),
+            ...(backgroundId && { backgroundId }),
+            ...(currentLocationId && { currentLocationId }),
+        },
+        include: {
+            classes: true,
+            background: true,
+            proficiencies: true,
+            feats: true,
+            inventory: true,
+            spells: true,
+        },
+    });
 
     return new Response(JSON.stringify(characters), {
         headers: {
@@ -25,7 +48,7 @@ export async function POST(request: NextRequest) {
         !body.alignment ||
         !body.appearance ||
         !body.backstory ||
-        !body.personality ||
+        !body.personalityTraits ||
         !body.ideals ||
         !body.bonds ||
         !body.flaws ||
@@ -64,18 +87,21 @@ export async function POST(request: NextRequest) {
                     id: body.backgroundId,
                 },
             },
+
             name: body.name,
+            description: "Character Template: " + body.name,
+            imageUrl: body.imageUrl,
+
             pronouns: body.pronouns,
             age: body.age,
             voice: body.voice,
             alignment: body.alignment,
             appearance: body.appearance,
             backstory: body.backstory,
-            personality: body.personality,
+            personalityTraits: body.personalityTraits,
             ideals: body.ideals,
             bonds: body.bonds,
             flaws: body.flaws,
-            imageUrl: body.imageUrl,
             level: body.level,
             experience: body.experience,
             proficiencyBonus: body.proficiencyBonus,
@@ -91,6 +117,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(character), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing character ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.character.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

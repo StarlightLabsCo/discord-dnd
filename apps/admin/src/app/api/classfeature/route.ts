@@ -1,8 +1,13 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const classfeatures = await db.classFeature.findMany();
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const classId = url.searchParams.get("classId");
+
+    const classfeatures = await db.classFeature.findMany({
+        where: classId ? { classId } : {},
+    });
 
     return new Response(JSON.stringify(classfeatures), {
         headers: {
@@ -34,6 +39,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(classFeature), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing class feature ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.classFeature.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

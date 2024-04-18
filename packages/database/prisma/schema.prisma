@@ -166,9 +166,9 @@ model Location {
     description String
     imageUrl    String
 
-    parentId     String?
-    parent       Location?  @relation("ParentLocation", fields: [parentId], references: [id], onDelete: Cascade)
-    subLocations Location[] @relation("ParentLocation")
+    parentLocationId String?    @map("parentId")
+    parentLocation   Location?  @relation("ParentLocation", fields: [parentLocationId], references: [id], onDelete: Cascade)
+    subLocations     Location[] @relation("ParentLocation")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -209,7 +209,7 @@ model Race {
     updatedAt DateTime @updatedAt
 
     // instances using this model
-    character          Character[]
+    characters         Character[]
     characterInstances CharacterInstance[]
 }
 
@@ -218,7 +218,7 @@ model Subrace {
     id String @id @default(cuid())
 
     parentRaceId String
-    parent       Race   @relation(fields: [parentRaceId], references: [id], onDelete: Cascade)
+    parentRace   Race   @relation(fields: [parentRaceId], references: [id], onDelete: Cascade)
 
     name        String
     description String
@@ -240,7 +240,7 @@ model Subrace {
     updatedAt DateTime @updatedAt
 
     // instances using this model
-    character          Character[]
+    characters         Character[]
     characterInstances CharacterInstance[]
 }
 
@@ -299,7 +299,7 @@ model Class {
     updatedAt DateTime @updatedAt
 
     // instances using this model
-    character          Character[]
+    characters         Character[]
     characterInstances CharacterInstance[]
 }
 
@@ -341,7 +341,7 @@ model Background {
     updatedAt DateTime @updatedAt
 
     // instances using this model
-    character          Character[]
+    characters         Character[]
     characterInstances CharacterInstance[]
 }
 
@@ -395,7 +395,7 @@ model Feat {
     updatedAt DateTime @updatedAt
 
     // instances using this model
-    character          Character[]
+    characters         Character[]
     characterInstances CharacterInstance[]
 }
 
@@ -441,16 +441,16 @@ model Character {
     description String
     imageUrl    String
 
-    pronouns    String
-    age         Int
-    voice       String
-    alignment   CharacterAlignment
-    appearance  String
-    backstory   String
-    personality String[]
-    ideals      String[]
-    bonds       String[]
-    flaws       String[]
+    pronouns          String
+    age               Int
+    voice             String
+    alignment         CharacterAlignment
+    appearance        String
+    backstory         String
+    personalityTraits String[]
+    ideals            String[]
+    bonds             String[]
+    flaws             String[]
 
     currentLocationId String?
     currentLocation   Location? @relation(fields: [currentLocationId], references: [id], onDelete: SetNull)

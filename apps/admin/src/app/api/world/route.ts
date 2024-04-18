@@ -2,7 +2,19 @@ import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
 export async function GET() {
-    const worlds = await db.world.findMany();
+    const worlds = await db.world.findMany({
+        include: {
+            races: true,
+            classes: true,
+            backgrounds: true,
+            feats: true,
+            languages: true,
+            locations: true,
+            items: true,
+            spells: true,
+            campaigns: true,
+        },
+    });
 
     return new Response(JSON.stringify(worlds), {
         headers: {
@@ -29,6 +41,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(world), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing world ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.world.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

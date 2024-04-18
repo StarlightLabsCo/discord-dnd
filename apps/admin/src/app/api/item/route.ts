@@ -1,8 +1,17 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const items = await db.item.findMany();
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const worldId = url.searchParams.get("worldId");
+
+    const items = await db.item.findMany({
+        where: worldId ? { worldId } : {},
+        include: {
+            backgrounds: true,
+            characters: true,
+        },
+    });
 
     return new Response(JSON.stringify(items), {
         headers: {
@@ -49,6 +58,28 @@ export async function POST(request: NextRequest) {
     });
 
     return new Response(JSON.stringify(item), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function PATCH(request: NextRequest) {
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+        return new Response("Missing item ID", {
+            status: 400,
+        });
+    }
+
+    const updated = await db.item.update({
+        where: { id },
+        data: updates,
+    });
+
+    return new Response(JSON.stringify(updated), {
         headers: {
             "Content-Type": "application/json",
         },

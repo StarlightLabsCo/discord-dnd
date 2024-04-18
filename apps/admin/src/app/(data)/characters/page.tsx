@@ -1,94 +1,115 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-    InputField,
-} from "@/components/GenericCardDisplay";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { CharacterAlignment } from "database";
+import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
+        type: "foreignkey",
+        dataType: "campaign",
         name: "campaignId",
         label: "Campaign ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "foreignkey",
+        dataType: "race",
         name: "raceId",
         label: "Race ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "foreignkey",
+        dataType: "subrace",
         name: "subraceId",
         label: "Subrace ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "foreignkey",
+        dataType: "background",
         name: "backgroundId",
         label: "Background ID",
-        type: "dropdown",
+        required: true,
     },
     {
+        type: "text",
         name: "name",
         label: "Name",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "description",
         label: "Description",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "imageUrl",
         label: "Image URL",
-        type: "text",
+        required: true,
     },
     {
+        type: "text",
         name: "pronouns",
         label: "Pronouns",
-        type: "text",
+        required: true,
     },
     {
+        type: "number",
         name: "age",
         label: "Age",
-        type: "number",
+        required: true,
     },
     {
+        type: "text",
         name: "voice",
         label: "Voice",
-        type: "text",
+        required: true,
     },
     {
+        type: "enum",
+        enumObject: CharacterAlignment,
         name: "alignment",
         label: "Alignment",
-        type: "text", // TODO: make dropdown
+        required: true,
     },
     {
+        type: "text",
         name: "appearance",
         label: "Appearance",
-        type: "text",
+        required: true,
     },
     {
+        type: "textarea",
         name: "backstory",
         label: "Backstory",
-        type: "textarea",
+        required: true,
     },
     {
-        name: "personality",
-        label: "Personality",
-        type: "textarea",
+        type: "textarray",
+        name: "personalityTraits",
+        label: "Personality Traits",
+        required: true,
     },
     {
+        type: "textarray",
         name: "ideals",
         label: "Ideals",
-        type: "textarea",
+        required: true,
     },
     {
+        type: "textarray",
         name: "bonds",
         label: "Bonds",
-        type: "textarea",
+        required: true,
     },
     {
+        type: "textarray",
         name: "flaws",
         label: "Flaws",
-        type: "textarea",
+        required: true,
     },
 ];
 

@@ -52,7 +52,7 @@ export function GenericCreateNewCard({
         .replace(/^\w/, (c) => c.toUpperCase());
 
     const handleSubmit = async () => {
-        const response = await fetch(`/api/${dataType}`, {
+        const response = await fetch(`/api/data/${dataType}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export function GenericCreateNewCard({
                     </DialogDescription>
                 </DialogHeader>
                 <InputFieldMapper
-                    parentId={null}
+                    data={[]}
                     inputFields={inputFields}
                     formData={formData}
                     setFormData={setFormData}

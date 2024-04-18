@@ -34,7 +34,7 @@ export function GenericDataDropdown({
 
     useEffect(() => {
         const fetchOptions = async () => {
-            const response = await fetch(`/api/${dataType}`);
+            const response = await fetch(`/api/data/${dataType}`);
             if (!response.ok) {
                 console.error(`Failed to fetch ${dataType}s`);
                 return;

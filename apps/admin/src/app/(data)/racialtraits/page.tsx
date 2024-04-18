@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import { GenericCardDisplay } from "@/components/GenericCardDisplay";
 import { InputField } from "@/components/InputFieldMapper";
+import { CharacterSize } from "database";
 
 const inputFields: InputField[] = [
     {
@@ -30,9 +31,58 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
+        required: true,
+    },
+    {
+        type: "number",
+        name: "strengthModifier",
+        label: "Strength Modifier",
+        required: false,
+    },
+    {
+        type: "number",
+        name: "dexterityModifier",
+        label: "Dexterity Modifier",
+        required: false,
+    },
+    {
+        type: "number",
+        name: "constitutionModifier",
+        label: "Constitution Modifier",
+        required: false,
+    },
+    {
+        type: "number",
+        name: "intelligenceModifier",
+        label: "Intelligence Modifier",
+        required: false,
+    },
+    {
+        type: "number",
+        name: "wisdomModifier",
+        label: "Wisdom Modifier",
+        required: false,
+    },
+    {
+        type: "number",
+        name: "charismaModifier",
+        label: "Charisma Modifier",
+        required: false,
+    },
+    {
+        type: "enum",
+        enumObject: CharacterSize,
+        name: "size",
+        label: "Size",
+        required: true,
+    },
+    {
+        type: "number",
+        name: "speed",
+        label: "Speed",
         required: true,
     },
 ];

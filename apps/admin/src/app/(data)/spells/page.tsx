@@ -24,7 +24,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -72,10 +72,29 @@ const inputFields: InputField[] = [
         label: "Ritual",
         required: true,
     },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        name: "characters",
+        label: "Characters",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "characterInstance",
+        name: "characterInstances",
+        label: "Character Instances",
+        required: false,
+    },
 ];
 
 export default async function Spells() {
-    const spells = await db.spell.findMany();
+    const spells = await db.spell.findMany({
+        include: {
+            characters: true,
+            characterInstances: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

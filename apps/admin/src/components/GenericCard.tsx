@@ -71,7 +71,7 @@ export function GenericCard({
                     <DialogDescription>{data.description}</DialogDescription>
                 </DialogHeader>
                 <InputFieldMapper
-                    parentId={data.id}
+                    data={data}
                     inputFields={inputFields}
                     formData={formData}
                     setFormData={setFormData}

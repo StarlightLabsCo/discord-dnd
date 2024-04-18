@@ -23,24 +23,26 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
     },
-    // TODO: Uh oh, I don't know how to do many-to-many relationships yet
-    // {
-    //     type: "foreignkeyarray",
-    //     dataType: "race",
-    //     foreignKeyField: "languageId",
-    //     name: "races",
-    //     label: "Races",
-    //     required: false,
-    // },
+    {
+        type: "foreignkeyarray",
+        dataType: "race",
+        name: "races",
+        label: "Races",
+        required: false,
+    },
 ];
 
 export default async function Languages() {
-    const languages = await db.language.findMany();
+    const languages = await db.language.findMany({
+        include: {
+            races: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

@@ -23,7 +23,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -31,7 +31,11 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Classfeatures() {
-    const classFeatures = await db.classFeature.findMany();
+    const classFeatures = await db.classFeature.findMany({
+        include: {
+            class: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

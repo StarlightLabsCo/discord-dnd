@@ -23,7 +23,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -80,7 +80,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "language",
-        foreignKeyField: "raceId",
         name: "languages",
         label: "Languages",
         required: false,
@@ -88,7 +87,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "racialTrait",
-        foreignKeyField: "raceId",
         name: "racialTraits",
         label: "Racial Traits",
         required: false,
@@ -96,15 +94,28 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "subrace",
-        foreignKeyField: "parentRaceId",
         name: "subraces",
         label: "Subraces",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        name: "characters",
+        label: "Characters",
         required: false,
     },
 ];
 
 export default async function Races() {
-    const races = await db.race.findMany();
+    const races = await db.race.findMany({
+        include: {
+            languages: true,
+            racialTraits: true,
+            subraces: true,
+            characters: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

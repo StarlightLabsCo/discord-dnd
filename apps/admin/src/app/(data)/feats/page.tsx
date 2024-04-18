@@ -1,7 +1,5 @@
 import db from "@/lib/db";
-import {
-    GenericCardDisplay,
-} from "@/components/GenericCardDisplay";
+import { GenericCardDisplay } from "@/components/GenericCardDisplay";
 import { InputField } from "@/components/InputFieldMapper";
 
 const inputFields: InputField[] = [
@@ -25,15 +23,40 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
     },
+    {
+        type: "text",
+        name: "prerequisites",
+        label: "Prerequisites",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        name: "characters",
+        label: "Characters",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "characterInstance",
+        name: "characterInstances",
+        label: "Character Instances",
+        required: false,
+    },
 ];
 
 export default async function Feats() {
-    const feats = await db.feat.findMany();
+    const feats = await db.feat.findMany({
+        include: {
+            characters: true,
+            characterInstances: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

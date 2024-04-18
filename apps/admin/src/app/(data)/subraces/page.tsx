@@ -1,13 +1,14 @@
 import db from "@/lib/db";
 import { GenericCardDisplay } from "@/components/GenericCardDisplay";
 import { InputField } from "@/components/InputFieldMapper";
+import { CharacterSize } from "database";
 
 const inputFields: InputField[] = [
     {
         type: "foreignkey",
         dataType: "race",
         name: "parentRaceId",
-        label: "Race ID",
+        label: "Parent Race ID",
         required: true,
     },
     {
@@ -23,7 +24,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -65,7 +66,8 @@ const inputFields: InputField[] = [
         required: false,
     },
     {
-        type: "number",
+        type: "enum",
+        enumObject: CharacterSize,
         name: "size",
         label: "Size",
         required: false,
@@ -79,7 +81,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "racialTrait",
-        foreignKeyField: "subraceId",
         name: "racialTraits",
         label: "Racial Traits",
         required: false,
@@ -87,7 +88,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "character",
-        foreignKeyField: "subraceId",
         name: "characters",
         label: "Characters",
         required: false,
@@ -95,7 +95,13 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Subraces() {
-    const subraces = await db.subrace.findMany();
+    const subraces = await db.subrace.findMany({
+        include: {
+            parentRace: true,
+            racialTraits: true,
+            characters: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

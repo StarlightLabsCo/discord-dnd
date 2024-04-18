@@ -16,7 +16,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -24,7 +24,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "race",
-        foreignKeyField: "worldId",
         name: "races",
         label: "Races",
         required: false,
@@ -32,7 +31,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "class",
-        foreignKeyField: "worldId",
         name: "classes",
         label: "Classes",
         required: false,
@@ -40,7 +38,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "background",
-        foreignKeyField: "worldId",
         name: "backgrounds",
         label: "Backgrounds",
         required: false,
@@ -48,7 +45,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "feat",
-        foreignKeyField: "worldId",
         name: "feats",
         label: "Feats",
         required: false,
@@ -56,7 +52,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "language",
-        foreignKeyField: "worldId",
         name: "languages",
         label: "Languages",
         required: false,
@@ -64,7 +59,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "location",
-        foreignKeyField: "worldId",
         name: "locations",
         label: "Locations",
         required: false,
@@ -72,7 +66,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "item",
-        foreignKeyField: "worldId",
         name: "items",
         label: "Items",
         required: false,
@@ -80,7 +73,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "spell",
-        foreignKeyField: "worldId",
         name: "spells",
         label: "Spells",
         required: false,
@@ -88,7 +80,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "campaign",
-        foreignKeyField: "worldId",
         name: "campaigns",
         label: "Campaigns",
         required: false,
@@ -96,7 +87,19 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Worlds() {
-    const worlds = await db.world.findMany();
+    const worlds = await db.world.findMany({
+        include: {
+            races: true,
+            classes: true,
+            backgrounds: true,
+            feats: true,
+            languages: true,
+            locations: true,
+            items: true,
+            spells: true,
+            campaigns: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

@@ -23,7 +23,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -52,10 +52,38 @@ const inputFields: InputField[] = [
         label: "Flaws",
         required: true,
     },
+    {
+        type: "foreignkeyarray",
+        dataType: "proficiency",
+        name: "proficiencies",
+        label: "Proficiencies",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "item",
+        name: "equipment",
+        label: "Equipment",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        name: "characters",
+        label: "Characters",
+        required: false,
+    },
 ];
 
 export default async function Backgrounds() {
-    const backgrounds = await db.background.findMany();
+    const backgrounds = await db.background.findMany({
+        include: {
+            world: true,
+            proficiencies: true,
+            equipment: true,
+            characters: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

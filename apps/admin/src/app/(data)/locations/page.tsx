@@ -11,13 +11,6 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "foreignkey",
-        dataType: "location",
-        name: "parentLocationId",
-        label: "Parent Location ID",
-        required: false,
-    },
-    {
         type: "text",
         name: "name",
         label: "Name",
@@ -30,23 +23,49 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
     },
     {
+        type: "foreignkey",
+        dataType: "location",
+        name: "parentLocationId",
+        label: "Parent Location ID",
+        required: false,
+    },
+    {
         type: "foreignkeyarray",
-        foreignKeyField: "parentLocationId",
         dataType: "location",
         name: "subLocations",
         label: "Sub Locations",
         required: false,
     },
+    {
+        type: "foreignkeyarray",
+        dataType: "character",
+        name: "characters",
+        label: "Characters",
+        required: false,
+    },
+    {
+        type: "foreignkeyarray",
+        dataType: "characterInstance",
+        name: "characterInstances",
+        label: "Character Instances",
+        required: false,
+    },
 ];
 
 export default async function Locations() {
-    const locations = await db.location.findMany();
+    const locations = await db.location.findMany({
+        include: {
+            subLocations: true,
+            characters: true,
+            characterInstances: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

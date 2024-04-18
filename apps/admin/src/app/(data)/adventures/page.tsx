@@ -23,14 +23,13 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
     },
     {
         type: "foreignkeyarray",
-        foreignKeyField: "adventureId",
         dataType: "beat",
         name: "beats",
         label: "Beats",
@@ -39,7 +38,12 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Adventures() {
-    const adventures = await db.adventure.findMany();
+    const adventures = await db.adventure.findMany({
+        include: {
+            act: true,
+            beats: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

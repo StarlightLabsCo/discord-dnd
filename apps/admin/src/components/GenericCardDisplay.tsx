@@ -30,7 +30,7 @@ export function GenericCardDisplay({ data, dataType, inputFields }: Props) {
     const [items, setItems] = useState(data);
 
     const refreshDisplay = async () => {
-        const response = await fetch(`/api/${dataType}`, {
+        const response = await fetch(`/api/data/${dataType}`, {
             method: "GET",
         });
 

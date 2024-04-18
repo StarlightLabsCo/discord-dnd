@@ -23,7 +23,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -31,7 +31,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "character",
-        foreignKeyField: "campaignId",
         name: "characters",
         label: "Characters",
         required: false,
@@ -39,7 +38,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "act",
-        foreignKeyField: "campaignId",
         name: "acts",
         label: "Acts",
         required: false,
@@ -47,7 +45,6 @@ const inputFields: InputField[] = [
     {
         type: "foreignkeyarray",
         dataType: "campaignInstance",
-        foreignKeyField: "campaignId",
         name: "campaignInstances",
         label: "Campaign Instances",
         required: false,
@@ -55,7 +52,14 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Campaigns() {
-    const campaigns = await db.campaign.findMany();
+    const campaigns = await db.campaign.findMany({
+        include: {
+            world: true,
+            characters: true,
+            acts: true,
+            campaignInstances: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

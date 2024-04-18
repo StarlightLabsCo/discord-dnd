@@ -31,7 +31,7 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
@@ -39,7 +39,11 @@ const inputFields: InputField[] = [
 ];
 
 export default async function Beats() {
-    const beats = await db.beat.findMany();
+    const beats = await db.beat.findMany({
+        include: {
+            adventure: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

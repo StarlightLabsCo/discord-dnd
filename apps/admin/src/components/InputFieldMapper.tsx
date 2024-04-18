@@ -4,6 +4,7 @@ import { GenericEnumDropdown } from "./GenericEnumDropdown";
 import { TextArrayInput } from "./TextArrayInput";
 import { Input } from "@/components/ui/input";
 import { ForeignKeyArray } from "./ForeignKeyArray";
+import { ImageUrlSelector } from "./ImageUrlSelector";
 
 export type InputField =
     | {
@@ -22,7 +23,6 @@ export type InputField =
     | {
           type: "foreignkeyarray";
           dataType: string;
-          foreignKeyField: string;
           name: string;
           label: string;
           required: boolean;
@@ -33,17 +33,23 @@ export type InputField =
           name: string;
           label: string;
           required: boolean;
+      }
+    | {
+          type: "imageUrl";
+          name: string;
+          label: string;
+          required: boolean;
       };
 
 type Props = {
-    parentId: string | null; // if this is a create new form, parentId will be null
+    data: any[];
     inputFields: InputField[];
     formData: { [key: string]: any };
     setFormData: (data: { [key: string]: any }) => void;
 };
 
 export function InputFieldMapper({
-    parentId,
+    data,
     inputFields,
     formData,
     setFormData,
@@ -82,23 +88,22 @@ export function InputFieldMapper({
                             </div>
                         );
                     case "foreignkeyarray":
-                        if (parentId) {
-                            return (
-                                <div
-                                    className='flex flex-col gap-y-1'
-                                    key={field.name}
-                                >
-                                    {labelWithAsterisk}
-                                    <ForeignKeyArray
-                                        parentId={parentId}
-                                        foreignKeyField={field.foreignKeyField}
-                                        dataType={field.dataType}
-                                    />
-                                </div>
-                            );
-                        } else {
-                            return null;
-                        }
+                        console.log(data[field.name as keyof typeof data]);
+                        return (
+                            <div
+                                className='flex flex-col gap-y-1'
+                                key={field.name}
+                            >
+                                {labelWithAsterisk}
+                                <ForeignKeyArray
+                                    items={
+                                        data[field.name as keyof typeof data] ||
+                                        []
+                                    }
+                                    dataType={field.dataType}
+                                />
+                            </div>
+                        );
                     case "enum":
                         return (
                             <div
@@ -134,6 +139,25 @@ export function InputFieldMapper({
                                             [field.name]: newValues,
                                         })
                                     }
+                                />
+                            </div>
+                        );
+                    case "imageUrl":
+                        return (
+                            <div
+                                className='flex flex-col gap-y-1'
+                                key={field.name}
+                            >
+                                {labelWithAsterisk}
+                                <ImageUrlSelector
+                                    imageUrl={formData[field.name]}
+                                    setImageUrl={(url) =>
+                                        setFormData({
+                                            ...formData,
+                                            [field.name]: url,
+                                        })
+                                    }
+                                    className='mb-2'
                                 />
                             </div>
                         );

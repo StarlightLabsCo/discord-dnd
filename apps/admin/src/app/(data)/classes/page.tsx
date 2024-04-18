@@ -23,23 +23,26 @@ const inputFields: InputField[] = [
         required: true,
     },
     {
-        type: "text",
+        type: "imageUrl",
         name: "imageUrl",
         label: "Image URL",
         required: true,
     },
     {
         type: "foreignkeyarray",
-        foreignKeyField: "classId",
         dataType: "classFeature",
         name: "classFeatures",
         label: "Class Features",
         required: false,
-    }
+    },
 ];
 
 export default async function Classes() {
-    const classes = await db.class.findMany();
+    const classes = await db.class.findMany({
+        include: {
+            classFeatures: true,
+        },
+    });
 
     return (
         <GenericCardDisplay

@@ -2,19 +2,7 @@ import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
 export async function GET() {
-    const worlds = await db.world.findMany({
-        include: {
-            races: true,
-            classes: true,
-            backgrounds: true,
-            feats: true,
-            languages: true,
-            locations: true,
-            items: true,
-            spells: true,
-            campaigns: true,
-        },
-    });
+    const worlds = await db.world.findMany({});
 
     return new Response(JSON.stringify(worlds), {
         headers: {

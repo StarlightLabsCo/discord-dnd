@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
-import { DataCard } from "./DataCard";
-import { InputField } from "./InputFieldMapper";
 import { pluralize } from "@/lib/utils";
+import { DataDialog } from "./DataDialog";
+import { Card } from "../ui/card";
+import { Icons } from "../Icons";
 
 type Props = {
     data: any[];
     dataType: string;
-    inputFields: InputField[];
 };
 
-export function DataCardDisplay({ data, dataType, inputFields }: Props) {
+export function DataCardDisplay({ data, dataType }: Props) {
+    console.log(`DataCardDisplay: ${dataType}`);
     const [items, setItems] = useState(data);
 
     const refreshDisplay = async () => {
@@ -28,6 +29,10 @@ export function DataCardDisplay({ data, dataType, inputFields }: Props) {
         }
     };
 
+    const formattedDataType = dataType
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/^\w/, (c) => c.toUpperCase());
+
     return (
         <div className='w-full h-full'>
             <div className='mb-20 text-xl'>
@@ -37,21 +42,39 @@ export function DataCardDisplay({ data, dataType, inputFields }: Props) {
             </div>
             <div className='flex flex-wrap gap-2 w-full'>
                 {items.map((item) => (
-                    <DataCard
-                        key={item.id}
-                        inputFields={inputFields}
+                    <Suspense key={item.id} fallback='Loading...'>
+                        <DataDialog
+                            dataType={dataType}
+                            data={item}
+                            onSuccessfulSubmit={refreshDisplay}
+                            onDelete={refreshDisplay}
+                        >
+                            <Card className='w-48 h-48 rounded-lg cursor-pointer hover:scale-[102%]'>
+                                <img
+                                    src={item.imageUrl}
+                                    alt={item.name}
+                                    className='object-cover w-full h-36 rounded-t-lg'
+                                />
+                                <div className='p-1 text-sm'>{item.name}</div>
+                            </Card>
+                        </DataDialog>
+                    </Suspense>
+                ))}
+                <Suspense fallback='Loading...'>
+                    <DataDialog
                         dataType={dataType}
-                        data={item}
+                        data={null}
                         onSuccessfulSubmit={refreshDisplay}
                         onDelete={refreshDisplay}
-                    />
-                ))}
-                <DataCard
-                    dataType={dataType}
-                    data={null} // Create new mode
-                    inputFields={inputFields}
-                    onSuccessfulSubmit={refreshDisplay}
-                />
+                    >
+                        <div className='flex relative justify-center items-center w-48 h-48 rounded-lg border-dashed cursor-pointer border-[1px] border-neutral-400 group'>
+                            <div className='absolute top-1 mx-auto text-xs font-light'>
+                                New {formattedDataType}
+                            </div>
+                            <Icons.plus className='w-6 h-6 transition group-hover:scale-[130%]' />
+                        </div>
+                    </DataDialog>
+                </Suspense>
             </div>
         </div>
     );

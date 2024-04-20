@@ -18,6 +18,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { DataDialog } from "@/components/data/DataDialog";
+import { Icons } from "../Icons";
 
 type Option = {
     value: string;
@@ -26,6 +28,7 @@ type Option = {
 
 type ComboboxProps = {
     name: string;
+    dataType?: string; // for creating new data
     options: Option[];
     selectedValue: string;
     setSelectedValue: (value: string) => void;
@@ -36,6 +39,7 @@ type ComboboxProps = {
 
 export function Combobox({
     name,
+    dataType,
     options = [],
     selectedValue,
     setSelectedValue,
@@ -51,7 +55,7 @@ export function Combobox({
     };
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={setOpen} modal>
             <PopoverTrigger asChild>
                 <Button
                     variant='outline'
@@ -72,7 +76,8 @@ export function Combobox({
                 <Command>
                     <CommandInput placeholder={`Search ${name}...`} />
                     <CommandEmpty>No {name} found.</CommandEmpty>
-                    <CommandGroup>
+
+                    <CommandGroup className='max-h-[300px] overflow-y-auto'>
                         <CommandList>
                             {!required && (
                                 <CommandItem
@@ -104,6 +109,23 @@ export function Combobox({
                                     {option.label}
                                 </CommandItem>
                             ))}
+
+                            {dataType && (
+                                <DataDialog
+                                    dataType={dataType}
+                                    data={null}
+                                    onSuccessfulSubmit={handleSelect}
+                                    className='w-full max-w-none mt-2'
+                                >
+                                    <CommandItem
+                                        key='new'
+                                        className='flex gap-x-2 items-center justify-center  w-full max-w-none border border-dashed hover:bg-[hsl(var(--accent))] cursor-pointer text-left'
+                                    >
+                                        Create New{" "}
+                                        <Icons.plus className='w-4 h-4' />
+                                    </CommandItem>
+                                </DataDialog>
+                            )}
                         </CommandList>
                     </CommandGroup>
                 </Command>

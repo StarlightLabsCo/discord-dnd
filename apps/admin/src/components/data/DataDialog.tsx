@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-import { cn } from "@/lib/utils";
 import {
     Dialog,
     DialogTrigger,
@@ -16,30 +15,28 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Icons } from "@/components/Icons";
-import {
-    InputField,
-    InputFieldMapper,
-} from "@/components/data/InputFieldMapper";
-import { Card } from "../ui/card";
+
+import { InputFieldMapper } from "@/components/data/InputFieldMapper";
+
 import { DeleteDialog } from "./DeleteDialog";
+import { inputFieldDictionary } from "./InputFieldDictionary";
 
 type Props = {
-    dataType: string;
-    inputFields: InputField[];
+    children: React.ReactNode;
 
+    dataType: string;
     data?: any; // if data is not provided, we are in create new mode
 
-    onSuccessfulSubmit?: () => void; // create, edit
+    onSuccessfulSubmit?: (id: string) => void; // create, edit
     onDelete?: () => void;
 
     className?: string;
 };
 
-export function DataCard({
-    dataType,
-    inputFields,
+export function DataDialog({
+    children,
 
+    dataType,
     data,
 
     onSuccessfulSubmit,
@@ -61,6 +58,11 @@ export function DataCard({
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     // Initialize the form data
+    const inputFields = inputFieldDictionary[dataType];
+    if (!inputFields) {
+        console.log(`Data type: ${dataType}`);
+        throw new Error(`No input field dictionary found for ${dataType}`);
+    }
     const [formData, setFormData] = useState<Record<string, any>>(
         () =>
             data ??
@@ -89,7 +91,9 @@ export function DataCard({
         if (!response.ok) {
             toast.error(`Failed to create ${formattedDataType}`);
         } else {
-            onSuccessfulSubmit?.();
+            const { id } = await response.json();
+
+            onSuccessfulSubmit?.(id);
             toast.success(`${formattedDataType} created successfully`);
 
             setFormData(
@@ -142,7 +146,7 @@ export function DataCard({
                 `Failed to update ${formattedDataType} (${data.name}).`
             );
         } else {
-            onSuccessfulSubmit();
+            onSuccessfulSubmit(data.id);
             toast.success(
                 `${formattedDataType} (${data.name}) updated successfully.`
             );
@@ -177,36 +181,8 @@ export function DataCard({
     };
 
     return (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-                {data ? (
-                    <Card
-                        className={cn(
-                            "w-48 h-48 rounded-lg cursor-pointer hover:scale-[102%]",
-                            className
-                        )}
-                    >
-                        <img
-                            src={data.imageUrl}
-                            alt={data.name}
-                            className='object-cover w-full h-36 rounded-t-lg'
-                        />
-                        <div className='p-1 text-sm'>{data.name}</div>
-                    </Card>
-                ) : (
-                    <div
-                        className={cn(
-                            "flex relative justify-center items-center w-48 h-48 rounded-lg border-dashed cursor-pointer border-[1px] border-neutral-400 group",
-                            className
-                        )}
-                    >
-                        <div className='absolute top-1 mx-auto text-xs font-light'>
-                            New {formattedDataType}
-                        </div>
-                        <Icons.plus className='w-6 h-6 transition group-hover:scale-[130%]' />
-                    </div>
-                )}
-            </DialogTrigger>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} modal={true}>
+            <DialogTrigger className={className}>{children}</DialogTrigger>
             <DialogContent
                 {...(data
                     ? {
@@ -215,6 +191,7 @@ export function DataCard({
                       }
                     : {})}
                 onPointerDownOutside={(e) => e.preventDefault()}
+                onOpenAutoFocus={(e) => e.preventDefault()}
             >
                 {data ? (
                     <DialogHeader>
@@ -234,8 +211,8 @@ export function DataCard({
                     </DialogHeader>
                 )}
                 <InputFieldMapper
-                    data={[]}
-                    inputFields={inputFields}
+                    dataType={dataType}
+                    data={data}
                     formData={formData}
                     setFormData={setFormData}
                     disabled={!editing}

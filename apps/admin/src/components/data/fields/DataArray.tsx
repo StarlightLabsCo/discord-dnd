@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Combobox } from "@/components/ui/combobox";
 import { Icons } from "@/components/Icons";
 import { useRouter } from "next/navigation";
 import { pluralize } from "@/lib/utils";
 import {
     Dialog,
-    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -41,6 +40,7 @@ export function DataArray({ items, dataType, disabled }: Props) {
                     (selectedItem) => selectedItem.id === fetchedItem.id
                 )
         );
+        console.log(filteredItems);
         setPotentialItems(filteredItems);
     };
 
@@ -48,11 +48,38 @@ export function DataArray({ items, dataType, disabled }: Props) {
         fetchPotentialItems();
     }, [dataType, selectedItems]);
 
-    const handleSelectItem = (item: any) => {
-        if (
-            !selectedItems.some((selectedItem) => selectedItem.id === item.id)
-        ) {
-            setSelectedItems((prevItems) => [...prevItems, item]);
+    const handleSelectItem = async (selectedItemId: string) => {
+        if (!selectedItems.some((item) => item.id === selectedItemId)) {
+            const foundItem = potentialItems.find(
+                (item) => item.id === selectedItemId
+            );
+
+            if (foundItem) {
+                setSelectedItems((prevItems) => [...prevItems, foundItem]);
+            } else {
+                const response = await fetch(`/api/data/${dataType}`);
+                const fetchedItems = await response.json();
+                const newPotentialItems = fetchedItems.filter(
+                    (fetchedItem: any) =>
+                        !selectedItems.some(
+                            (selectedItem) => selectedItem.id === fetchedItem.id
+                        )
+                );
+
+                const newFoundItem = newPotentialItems.find(
+                    (item: any) => item.id === selectedItemId
+                );
+                if (newFoundItem) {
+                    setSelectedItems((prevItems) => [
+                        ...prevItems,
+                        newFoundItem,
+                    ]);
+                } else {
+                    console.error(
+                        `Item with id ${selectedItemId} still not found`
+                    );
+                }
+            }
         }
     };
 
@@ -67,15 +94,13 @@ export function DataArray({ items, dataType, disabled }: Props) {
         }
     };
 
-    const comboboxOptions = potentialItems.map((item) => ({
-        value: item.id,
-        label: item.name,
-    }));
-
     return (
         <div className='flex flex-wrap gap-2 p-1 w-full h-24 rounded-lg border '>
             {selectedItems.map((item) => (
-                <div className='h-8 flex items-center justify-between px-4 py-2 rounded-lg border w-40'>
+                <div
+                    key={item.id}
+                    className='h-8 flex items-center justify-between px-4 py-2 rounded-lg border w-40'
+                >
                     <div className='grow text-sm font-light'>{item.name}</div>
                     <div className='flex gap-x-2 items-center'>
                         <Icons.arrowTopRightOnSquare
@@ -94,14 +119,13 @@ export function DataArray({ items, dataType, disabled }: Props) {
             ))}
             <Combobox
                 name={dataType}
-                options={comboboxOptions}
+                dataType={dataType}
+                options={potentialItems.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                }))}
                 selectedValue=''
-                setSelectedValue={(selectedId) => {
-                    const item = potentialItems.find(
-                        (item) => item.id === selectedId
-                    );
-                    if (item) handleSelectItem(item);
-                }}
+                setSelectedValue={handleSelectItem}
                 required={false}
                 disabled={disabled}
                 className='h-8'

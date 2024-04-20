@@ -49,10 +49,10 @@ export async function POST(request: NextRequest) {
             name: body.name,
             description: body.description,
             imageUrl: body.imageUrl,
-            level: body.level,
+            level: Number.parseInt(body.level),
             school: body.school,
             castingTime: body.castingTime,
-            range: body.range,
+            range: Number.parseInt(body.range),
             components: body.components,
             duration: body.duration,
             ritual: body.ritual || false, // Optional field with a default value

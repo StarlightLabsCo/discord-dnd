@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { DataArray } from "./fields/DataArray";
 import { ImageUrlSelector } from "./fields/ImageUrlSelector";
 
+import { inputFieldDictionary } from "./InputFieldDictionary";
+
 export type InputField =
     | {
           type: "text" | "textarea" | "number" | "textarray" | "checkbox";
@@ -42,20 +44,22 @@ export type InputField =
       };
 
 type Props = {
+    dataType: string;
     data: any[];
-    inputFields: InputField[];
     formData: { [key: string]: any };
     setFormData: (data: { [key: string]: any }) => void;
     disabled?: boolean;
 };
 
 export function InputFieldMapper({
+    dataType,
     data,
-    inputFields,
     formData,
     setFormData,
     disabled,
 }: Props) {
+    const inputFields = inputFieldDictionary[dataType];
+
     return (
         <>
             {inputFields.map((field) => {
@@ -92,7 +96,6 @@ export function InputFieldMapper({
                             </div>
                         );
                     case "foreignkeyarray":
-                        console.log(data[field.name as keyof typeof data]);
                         return (
                             <div
                                 className='flex flex-col gap-y-1'
@@ -101,8 +104,11 @@ export function InputFieldMapper({
                                 {labelWithAsterisk}
                                 <DataArray
                                     items={
-                                        data[field.name as keyof typeof data] ||
-                                        []
+                                        data
+                                            ? data[
+                                                  field.name as keyof typeof data
+                                              ]
+                                            : []
                                     }
                                     dataType={field.dataType}
                                     disabled={disabled}
@@ -117,7 +123,7 @@ export function InputFieldMapper({
                             >
                                 {labelWithAsterisk}
                                 <EnumDropdown
-                                    name={field.label}
+                                    name={field.name}
                                     enumObject={field.enumObject}
                                     selectedValue={formData[field.name]}
                                     setSelectedValue={(value) =>

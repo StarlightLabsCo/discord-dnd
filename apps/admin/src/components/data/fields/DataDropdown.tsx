@@ -4,11 +4,6 @@ import { useEffect, useState } from "react";
 import { Combobox } from "@/components/ui/combobox";
 import { DataPreview } from "@/components/data/fields/DataPreview";
 
-type Option = {
-    value: string;
-    label: string;
-};
-
 type Item = {
     id: string;
     name: string;
@@ -32,7 +27,6 @@ export function DataDropdown({
     disabled,
     required,
 }: Props) {
-    const [options, setOptions] = useState<Option[]>([]);
     const [items, setItems] = useState<Item[]>([]);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
@@ -44,27 +38,25 @@ export function DataDropdown({
                 return;
             }
             const fetchedItems = await response.json();
-            const newOptions = fetchedItems.map((item: Item) => ({
-                value: item.id,
-                label: item.name,
-            }));
-            setOptions(newOptions);
             setItems(fetchedItems);
+            setSelectedItem(
+                fetchedItems.find((item: Item) => item.id === selectedId) ||
+                    null
+            );
         };
 
         fetchOptions();
-    }, [dataType]);
-
-    useEffect(() => {
-        const foundItem = items.find((item) => item.id === selectedId);
-        setSelectedItem(foundItem || null);
-    }, [selectedId, items]);
+    }, [dataType, selectedId]);
 
     return (
         <>
             <Combobox
                 name={name}
-                options={options}
+                dataType={dataType}
+                options={items.map((item: Item) => ({
+                    value: item.id,
+                    label: item.name,
+                }))}
                 selectedValue={selectedId}
                 setSelectedValue={setSelectedId}
                 disabled={disabled}

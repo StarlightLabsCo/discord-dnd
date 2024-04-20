@@ -44,14 +44,16 @@ export async function POST(request: NextRequest) {
             name: body.name,
             description: body.description,
             imageUrl: body.imageUrl,
-            strengthModifier: body.strengthModifier || 0,
-            dexterityModifier: body.dexterityModifier || 0,
-            constitutionModifier: body.constitutionModifier || 0,
-            intelligenceModifier: body.intelligenceModifier || 0,
-            wisdomModifier: body.wisdomModifier || 0,
-            charismaModifier: body.charismaModifier || 0,
+            strengthModifier: Number.parseInt(body.strengthModifier) || 0,
+            dexterityModifier: Number.parseInt(body.dexterityModifier) || 0,
+            constitutionModifier:
+                Number.parseInt(body.constitutionModifier) || 0,
+            intelligenceModifier:
+                Number.parseInt(body.intelligenceModifier) || 0,
+            wisdomModifier: Number.parseInt(body.wisdomModifier) || 0,
+            charismaModifier: Number.parseInt(body.charismaModifier) || 0,
             size: body.size || "MEDIUM",
-            speed: body.speed || 25,
+            speed: Number.parseInt(body.speed) || 25,
         },
     });
 

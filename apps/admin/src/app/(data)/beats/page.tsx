@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { BeatType } from "database";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
@@ -46,7 +46,7 @@ export default async function Beats() {
     });
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={beats}
             dataType='beat'
             inputFields={inputFields}

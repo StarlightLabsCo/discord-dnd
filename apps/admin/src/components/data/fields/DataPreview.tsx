@@ -24,7 +24,7 @@ type Props = {
     className?: string;
 };
 
-export const ForeignKeyPreview = ({ item, dataType, className }: Props) => {
+export const DataPreview = ({ item, dataType, className }: Props) => {
     const [isNavigateDialogOpen, setIsNavigateDialogOpen] = useState(false);
     const router = useRouter();
 
@@ -36,7 +36,7 @@ export const ForeignKeyPreview = ({ item, dataType, className }: Props) => {
         <>
             <div
                 className={cn(
-                    "flex relative flex-col items-center cursor-pointer group",
+                    "flex relative flex-col items-center cursor-pointer group max-w-[240px]",
                     className
                 )}
                 onClick={() => setIsNavigateDialogOpen(true)}
@@ -44,7 +44,7 @@ export const ForeignKeyPreview = ({ item, dataType, className }: Props) => {
                 <img
                     src={item.imageUrl}
                     alt={item.name}
-                    className='object-cover w-full rounded-lg'
+                    className='object-cover w-full h-full rounded-lg'
                 />
                 <div className='absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-black to-transparent rounded-b-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
                 <div className='absolute bottom-1 left-2 w-full text-sm font-light text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100'>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Combobox } from "@/components/ui/combobox";
-import { ForeignKeyPreview } from "./ForeignKeyPreview";
+import { DataPreview } from "@/components/data/fields/DataPreview";
 
 type Option = {
     value: string;
@@ -20,13 +20,17 @@ type Props = {
     dataType: string;
     selectedId: string;
     setSelectedId: (actId: string) => void;
+    disabled?: boolean;
+    required?: boolean;
 };
 
-export function GenericDataDropdown({
+export function DataDropdown({
     name,
     dataType,
     selectedId,
     setSelectedId,
+    disabled,
+    required,
 }: Props) {
     const [options, setOptions] = useState<Option[]>([]);
     const [items, setItems] = useState<Item[]>([]);
@@ -63,9 +67,15 @@ export function GenericDataDropdown({
                 options={options}
                 selectedValue={selectedId}
                 setSelectedValue={setSelectedId}
+                disabled={disabled}
+                required={required}
             />
             {selectedItem && (
-                <ForeignKeyPreview item={selectedItem} dataType={dataType} />
+                <DataPreview
+                    item={selectedItem}
+                    dataType={dataType}
+                    className='h-32'
+                />
             )}
         </>
     );

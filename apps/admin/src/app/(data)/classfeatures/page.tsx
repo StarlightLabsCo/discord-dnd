@@ -1,6 +1,6 @@
 import db from "@/lib/db";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
@@ -38,7 +38,7 @@ export default async function Classfeatures() {
     });
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={classFeatures}
             dataType='classFeature'
             inputFields={inputFields}

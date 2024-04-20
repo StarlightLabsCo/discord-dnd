@@ -1,7 +1,7 @@
 import db from "@/lib/db";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
 import { CharacterAlignment, CharacterSize, Dice } from "database";
-import { InputField } from "@/components/InputFieldMapper";
+import { InputField } from "@/components/data/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
@@ -238,7 +238,7 @@ export default async function Characters() {
     const characters = await db.character.findMany();
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={characters}
             dataType='character'
             inputFields={inputFields}

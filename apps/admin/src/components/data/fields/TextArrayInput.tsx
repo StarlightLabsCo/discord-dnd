@@ -5,46 +5,33 @@ import { Icons } from "@/components/Icons";
 type TextArrayInputProps = {
     values: string[];
     onChange: (newValues: string[]) => void;
+    disabled?: boolean;
 };
 
 export const TextArrayInput: React.FC<TextArrayInputProps> = ({
     values,
     onChange,
+    disabled = false,
 }) => {
     const [inputValue, setInputValue] = useState("");
-    const [editToggles, setEditToggles] = useState<boolean[]>(
-        new Array(values.length).fill(false)
-    );
 
     const handleAdd = () => {
         if (inputValue.trim() !== "") {
             onChange([...values, inputValue]);
-            setEditToggles([...editToggles, false]);
             setInputValue("");
         }
     };
 
     const handleDelete = (index: number) => {
         const newValues = values.filter((_, i) => i !== index);
-        const newToggles = editToggles.filter((_, i) => i !== index);
         onChange(newValues);
-        setEditToggles(newToggles);
     };
 
     const handleEdit = (index: number, newValue: string) => {
-        if (editToggles[index]) {
-            const newValues = values.map((value, i) =>
-                i === index ? newValue : value
-            );
-            onChange(newValues);
-        }
-    };
-
-    const toggleEdit = (index: number) => {
-        const newToggles = editToggles.map((toggle, i) =>
-            i === index ? !toggle : toggle
+        const newValues = values.map((value, i) =>
+            i === index ? newValue : value
         );
-        setEditToggles(newToggles);
+        onChange(newValues);
     };
 
     useEffect(() => {
@@ -81,20 +68,9 @@ export const TextArrayInput: React.FC<TextArrayInputProps> = ({
                                     handleEdit(index, values[index]);
                                 }
                             }}
-                            disabled={!editToggles[index]}
+                            disabled={disabled}
                             className='flex-1 font-light border-0 border-none shadow-none drop-shadow-none focus:outline-none focus:ring-0 focus:border-0 focus-visible:border-0 focus-visible:ring-0'
                         />
-                        {editToggles[index] ? (
-                            <Icons.lockOpen
-                                className='mr-3 w-4 h-4 transition cursor-pointer text-neutral-500 hover:scale-110'
-                                onClick={() => toggleEdit(index)}
-                            />
-                        ) : (
-                            <Icons.lockClosed
-                                className='mr-3 w-4 h-4 transition cursor-pointer text-neutral-500 hover:scale-110'
-                                onClick={() => toggleEdit(index)}
-                            />
-                        )}
                         <Icons.x
                             className='mr-3 w-4 h-4 transition cursor-pointer text-neutral-500 hover:scale-110 hover:text-red-500'
                             onClick={() => handleDelete(index)}
@@ -117,6 +93,7 @@ export const TextArrayInput: React.FC<TextArrayInputProps> = ({
                             handleAdd();
                         }
                     }}
+                    disabled={disabled}
                     className='font-light'
                 />
             </div>

@@ -47,12 +47,12 @@ export async function POST(request: NextRequest) {
             name: body.name,
             description: body.description,
             imageUrl: body.imageUrl,
-            weight: body.weight,
-            value: body.value,
+            weight: parseInt(body.weight),
+            value: parseInt(body.value),
             rarity: body.rarity,
             damageDice: body.damageDice,
             damageType: body.damageType,
-            damageBonus: body.damageBonus,
+            damageBonus: body.damageBonus ? parseInt(body.damageBonus) : null,
             properties: body.properties,
         },
     });
@@ -73,6 +73,12 @@ export async function PATCH(request: NextRequest) {
             status: 400,
         });
     }
+
+    // Convert necessary fields to integers
+    if (updates.weight) updates.weight = parseInt(updates.weight);
+    if (updates.value) updates.value = parseInt(updates.value);
+    if (updates.damageBonus)
+        updates.damageBonus = parseInt(updates.damageBonus);
 
     const updated = await db.item.update({
         where: { id },

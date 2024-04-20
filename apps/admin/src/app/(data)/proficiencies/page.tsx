@@ -1,6 +1,6 @@
 import db from "@/lib/db";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 import { ProficiencyType } from "database";
 
 const inputFields: InputField[] = [
@@ -62,7 +62,7 @@ export default async function Proficiencies() {
     });
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={proficiencies}
             dataType='proficiency'
             inputFields={inputFields}

@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { DamageType, Dice, ItemRarity } from "database";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
@@ -108,7 +108,7 @@ export default async function Items() {
     });
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={items}
             dataType='item'
             inputFields={inputFields}

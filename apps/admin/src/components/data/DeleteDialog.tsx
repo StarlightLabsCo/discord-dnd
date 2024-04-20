@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import {
     Dialog,
     DialogContent,
@@ -10,40 +9,18 @@ import {
 } from "@/components/ui/dialog";
 
 type DeleteDialogProps = {
-    itemId: string;
     itemName: string;
-    endpoint: string;
     isOpen: boolean;
     onClose: () => void;
     onDelete: () => void;
 };
 
 export function DeleteDialog({
-    itemId,
     itemName,
-    endpoint,
     isOpen,
     onClose,
     onDelete,
 }: DeleteDialogProps) {
-    const handleDelete = async () => {
-        const response = await fetch(endpoint, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: itemId }),
-        });
-
-        onClose();
-        if (response.ok) {
-            toast.success(`${itemName} deleted successfully`);
-            onDelete();
-        } else {
-            toast.error(`Failed to delete ${itemName}`);
-        }
-    };
-
     return (
         <Dialog open={isOpen}>
             <DialogContent>
@@ -56,7 +33,7 @@ export function DeleteDialog({
                 <DialogFooter>
                     <button
                         className='px-4 py-2 text-white bg-red-600 rounded hover:bg-red-800'
-                        onClick={handleDelete}
+                        onClick={onDelete}
                     >
                         Confirm
                     </button>

@@ -1,6 +1,6 @@
 import db from "@/lib/db";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 import { CharacterSize } from "database";
 
 const inputFields: InputField[] = [
@@ -91,7 +91,7 @@ export default async function Racialtraits() {
     const racialTraits = await db.racialTrait.findMany();
 
     return (
-        <GenericCardDisplay
+        <DataCardDisplay
             data={racialTraits}
             dataType='racialTrait'
             inputFields={inputFields}

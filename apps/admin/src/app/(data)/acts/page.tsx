@@ -1,6 +1,6 @@
 import db from "@/lib/db";
-import { GenericCardDisplay } from "@/components/GenericCardDisplay";
-import { InputField } from "@/components/InputFieldMapper";
+import { DataCardDisplay } from "@/components/data/DataCardDisplay";
+import { InputField } from "@/components/data/InputFieldMapper";
 
 const inputFields: InputField[] = [
     {
@@ -45,10 +45,6 @@ export default async function Acts() {
     });
 
     return (
-        <GenericCardDisplay
-            data={acts}
-            dataType='act'
-            inputFields={inputFields}
-        />
+        <DataCardDisplay data={acts} dataType='act' inputFields={inputFields} />
     );
 }

@@ -11,13 +11,17 @@ type Props = {
     enumObject: { [key: string]: string | number };
     selectedValue: string;
     setSelectedValue: (value: string) => void;
+    disabled?: boolean;
+    required?: boolean;
 };
 
-export function GenericEnumDropdown({
+export function EnumDropdown({
     name,
     enumObject,
     selectedValue,
     setSelectedValue,
+    disabled,
+    required,
 }: Props) {
     const [options, setOptions] = useState<Option[]>([]);
 
@@ -35,6 +39,8 @@ export function GenericEnumDropdown({
             options={options}
             selectedValue={selectedValue}
             setSelectedValue={setSelectedValue}
+            disabled={disabled}
+            required={required}
         />
     );
 }

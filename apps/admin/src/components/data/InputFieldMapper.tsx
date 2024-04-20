@@ -1,10 +1,10 @@
 import React from "react";
-import { GenericDataDropdown } from "./GenericDataDropdown";
-import { GenericEnumDropdown } from "./GenericEnumDropdown";
-import { TextArrayInput } from "./TextArrayInput";
+import { DataDropdown } from "./fields/DataDropdown";
+import { EnumDropdown } from "./fields/EnumDropdown";
+import { TextArrayInput } from "./fields/TextArrayInput";
 import { Input } from "@/components/ui/input";
-import { ForeignKeyArray } from "./ForeignKeyArray";
-import { ImageUrlSelector } from "./ImageUrlSelector";
+import { DataArray } from "./fields/DataArray";
+import { ImageUrlSelector } from "./fields/ImageUrlSelector";
 
 export type InputField =
     | {
@@ -46,6 +46,7 @@ type Props = {
     inputFields: InputField[];
     formData: { [key: string]: any };
     setFormData: (data: { [key: string]: any }) => void;
+    disabled?: boolean;
 };
 
 export function InputFieldMapper({
@@ -53,6 +54,7 @@ export function InputFieldMapper({
     inputFields,
     formData,
     setFormData,
+    disabled,
 }: Props) {
     return (
         <>
@@ -74,7 +76,7 @@ export function InputFieldMapper({
                                 key={field.name}
                             >
                                 {labelWithAsterisk}
-                                <GenericDataDropdown
+                                <DataDropdown
                                     name={field.label}
                                     dataType={field.dataType}
                                     selectedId={formData[field.name]}
@@ -84,6 +86,8 @@ export function InputFieldMapper({
                                             [field.name]: id,
                                         })
                                     }
+                                    disabled={disabled}
+                                    required={field.required}
                                 />
                             </div>
                         );
@@ -95,12 +99,13 @@ export function InputFieldMapper({
                                 key={field.name}
                             >
                                 {labelWithAsterisk}
-                                <ForeignKeyArray
+                                <DataArray
                                     items={
                                         data[field.name as keyof typeof data] ||
                                         []
                                     }
                                     dataType={field.dataType}
+                                    disabled={disabled}
                                 />
                             </div>
                         );
@@ -111,7 +116,7 @@ export function InputFieldMapper({
                                 key={field.name}
                             >
                                 {labelWithAsterisk}
-                                <GenericEnumDropdown
+                                <EnumDropdown
                                     name={field.label}
                                     enumObject={field.enumObject}
                                     selectedValue={formData[field.name]}
@@ -121,6 +126,8 @@ export function InputFieldMapper({
                                             [field.name]: value,
                                         })
                                     }
+                                    disabled={disabled}
+                                    required={field.required}
                                 />
                             </div>
                         );
@@ -139,6 +146,7 @@ export function InputFieldMapper({
                                             [field.name]: newValues,
                                         })
                                     }
+                                    disabled={disabled}
                                 />
                             </div>
                         );
@@ -158,6 +166,7 @@ export function InputFieldMapper({
                                         })
                                     }
                                     className='mb-2'
+                                    disabled={disabled}
                                 />
                             </div>
                         );
@@ -178,6 +187,7 @@ export function InputFieldMapper({
                                         })
                                     }
                                     className='mb-2'
+                                    disabled={disabled}
                                 />
                             </div>
                         );

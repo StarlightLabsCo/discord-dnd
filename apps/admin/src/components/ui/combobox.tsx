@@ -29,6 +29,9 @@ type ComboboxProps = {
     options: Option[];
     selectedValue: string;
     setSelectedValue: (value: string) => void;
+    required?: boolean;
+    disabled?: boolean;
+    className?: string;
 };
 
 export function Combobox({
@@ -36,8 +39,16 @@ export function Combobox({
     options = [],
     selectedValue,
     setSelectedValue,
+    required,
+    disabled,
+    className,
 }: ComboboxProps) {
     const [open, setOpen] = useState(false);
+
+    const handleSelect = (value: string) => {
+        setSelectedValue(value);
+        setOpen(false);
+    };
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -46,7 +57,8 @@ export function Combobox({
                     variant='outline'
                     role='combobox'
                     aria-expanded={open}
-                    className='w-[200px] justify-between'
+                    className={cn("w-[200px] justify-between", className)}
+                    disabled={disabled}
                 >
                     {selectedValue
                         ? options.find(
@@ -62,14 +74,24 @@ export function Combobox({
                     <CommandEmpty>No {name} found.</CommandEmpty>
                     <CommandGroup>
                         <CommandList>
+                            {!required && (
+                                <CommandItem
+                                    key='none'
+                                    value=''
+                                    onSelect={() => handleSelect("")}
+                                    className='hover:bg-[hsl(var(--accent))] cursor-pointer'
+                                >
+                                    <Check className='mr-2 w-4 h-4 opacity-0' />
+                                    None
+                                </CommandItem>
+                            )}
+
                             {options.map((option) => (
                                 <CommandItem
                                     key={option.value}
                                     value={option.value}
-                                    onSelect={() => {
-                                        setSelectedValue(option.value);
-                                        setOpen(false);
-                                    }}
+                                    onSelect={() => handleSelect(option.value)}
+                                    className='cursor-pointer'
                                 >
                                     <Check
                                         className={cn(

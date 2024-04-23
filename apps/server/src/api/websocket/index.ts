@@ -3,7 +3,7 @@ import { validateWebSocketRequest } from "starlight-api-types/websocket";
 import type { User } from "database";
 
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
-import { handleLobbyReadyRequest } from "./handlers/LobbyReady";
+import { handleLobbyReadyRequest } from "./handlers/lobbyReady";
 
 export type WebSocketData = {
     user: User;

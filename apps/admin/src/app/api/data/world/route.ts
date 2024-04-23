@@ -1,8 +1,29 @@
 import db from "@/lib/db";
 import { NextRequest } from "next/server";
 
-export async function GET() {
-    const worlds = await db.world.findMany({});
+export async function GET(request: NextRequest) {
+    const url = new URL(request.url);
+    const campaignId = url.searchParams.get("campaignId");
+
+    let query = {};
+    if (campaignId) {
+        query = {
+            campaigns: {
+                some: {
+                    id: campaignId,
+                },
+            },
+        };
+    }
+
+    const worlds = await db.world.findMany({
+        where: query,
+        include: {
+            races: true,
+            classes: true,
+            backgrounds: true,
+        },
+    });
 
     return new Response(JSON.stringify(worlds), {
         headers: {

@@ -18,6 +18,7 @@ type CharacterInstanceInfo = CharacterInstance & {
 interface CharacterEditorStoreState {
     world: WorldInfo | null;
     setWorld: (world: WorldInfo) => void;
+    setWorldByCampaignId: (campaignId: string) => void;
 
     draftCharacter: CharacterInstanceInfo | null;
     setDraftCharacter: (character: CharacterInstanceInfo) => void;
@@ -38,6 +39,23 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             if (world && get().draftCharacter === null) {
                 set({ draftCharacter: getRandomCharacter(world) });
             }
+        },
+        setWorldByCampaignId: async (campaignId) => {
+            const response = await fetch("/api/world?campaignId=" + campaignId);
+            if (!response.ok) {
+                console.error("Failed to fetch world");
+                return;
+            }
+
+            const data = await response.json();
+            // const parsedData = WorldInfoZodSchema.safeParse(data);
+            // if (!parsedData.success) {
+            //     console.error(parsedData.error);
+            //     return;
+            // }
+            console.log(data);
+
+            set({ world: data[0] });
         },
 
         draftCharacter: null,

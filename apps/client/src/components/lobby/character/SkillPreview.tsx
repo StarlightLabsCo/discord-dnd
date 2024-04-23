@@ -1,3 +1,4 @@
+import { s3UrlRewriter } from "@/lib/discord/utils";
 import { cn } from "@/lib/tailwind/utils";
 
 type SkillPreviewProps = {
@@ -14,12 +15,12 @@ export function SkillPreview({ skill, className }: SkillPreviewProps) {
         <div className={cn("relative group", className)}>
             <img
                 className='cursor-pointer h-[3vw] w-[3vw] aspect-square rounded-[0.4vw]'
-                src={skill.image}
+                src={s3UrlRewriter(skill.image)}
                 alt={skill.title}
             />
             <div className='hidden group-hover:flex items-center absolute inset-0 -translate-x-full rounded-[0.5vw] rounded-br-none -translate-y-full w-[25vw] h-[10vw] bg-black border-[0.1vw] border-white text-white'>
                 <img
-                    src={skill.image}
+                    src={s3UrlRewriter(skill.image)}
                     alt={skill.title}
                     className='h-full aspect-square rounded-l-[0.5vw]'
                 />

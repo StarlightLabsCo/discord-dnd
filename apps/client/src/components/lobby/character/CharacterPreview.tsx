@@ -3,6 +3,7 @@ import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 import { AbilityScoreDisplay } from "./AbilityScoreDisplay";
 import { ItemPreview } from "./ItemPreview";
 import { SkillPreview } from "./SkillPreview";
+import { s3UrlRewriter } from "@/lib/discord/utils";
 
 type CharacterPreviewProps = {
     className?: string;
@@ -19,7 +20,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
         <div className={cn("relative h-full w-[30vw]", className)}>
             <img
                 className='object-cover w-full h-full'
-                src={draftCharacter.imageUrl}
+                src={s3UrlRewriter(draftCharacter.imageUrl)}
                 alt='Character Preview'
             />
             <div className='flex absolute right-0 bottom-0 left-0 flex-col gap-y-[1.5vw] items-center pt-[0.2vw] h-1/3 text-white bg-black bg-opacity-65 border-t border-white'>

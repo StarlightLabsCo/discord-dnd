@@ -1,4 +1,4 @@
-import React from "react";
+import { s3UrlRewriter } from "@/lib/discord/utils";
 
 export interface SelectableGridItem {
     id: string;
@@ -36,7 +36,7 @@ export const SelectableGrid: React.FC<SelectableGridProps> = ({
                             <div className='absolute inset-0 w-full h-full rounded-[1vw] bg-black/50 group-hover:bg-transparent' />
                         )}
                         <img
-                            src={item.src}
+                            src={s3UrlRewriter(item.src)}
                             className={`rounded-[1vw] aspect-square ${columns === 4 ? "w-[9vw] h-[9vw]" : "w-[11vw] h-[11vw]"}`}
                         />
                     </div>

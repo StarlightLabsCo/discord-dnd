@@ -1,3 +1,4 @@
+import { s3UrlRewriter } from "@/lib/discord/utils";
 import { cn } from "@/lib/tailwind/utils";
 
 type ItemPreviewProps = {
@@ -14,12 +15,12 @@ export function ItemPreview({ item, className }: ItemPreviewProps) {
         <div className={cn("relative group", className)}>
             <img
                 className='cursor-pointer h-[3vw] w-[3vw] aspect-square rounded-[0.4vw]'
-                src={item.image}
+                src={s3UrlRewriter(item.image)}
                 alt={item.title}
             />
             <div className='hidden group-hover:flex items-center absolute inset-0 -translate-x-full rounded-[0.5vw] rounded-br-none -translate-y-full w-[25vw] h-[10vw] bg-black border-[0.1vw] border-white text-white'>
                 <img
-                    src={item.image}
+                    src={s3UrlRewriter(item.image)}
                     alt={item.title}
                     className='h-full aspect-square rounded-l-[0.5vw]'
                 />

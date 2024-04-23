@@ -1,6 +1,7 @@
 import { Character, User } from "database";
 import { DiscordAvatar } from "./DiscordAvatar";
 import { Link } from "@tanstack/react-router";
+import { s3UrlRewriter } from "@/lib/discord/utils";
 
 type CharacterPortraitProps = {
     user: User;
@@ -25,7 +26,7 @@ export function CharacterPortrait({
             <div className='relative group'>
                 {character && (
                     <img
-                        src={character.imageUrl}
+                        src={s3UrlRewriter(character.imageUrl)}
                         className='object-cover w-full h-full rounded-[1vw]'
                         alt='Character Portrait'
                     />

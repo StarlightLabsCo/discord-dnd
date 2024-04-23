@@ -51,14 +51,12 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             }
 
             const data = await response.json();
-            // const parsedData = WorldInfoZodSchema.safeParse(data);
-            // if (!parsedData.success) {
-            //     console.error(parsedData.error);
-            //     return;
-            // }
-            console.log(data);
 
             set({ world: data[0] });
+
+            if (data[0] && get().draftCharacter === null) {
+                set({ draftCharacter: getRandomCharacter(data[0]) });
+            }
         },
 
         draftCharacter: null,

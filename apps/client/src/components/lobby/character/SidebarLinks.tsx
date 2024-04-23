@@ -5,7 +5,7 @@ import { origins } from "starlight-game-data/origins";
 import { races } from "starlight-game-data/races";
 import { classes } from "starlight-game-data/classes";
 
-import { useCharacterStore } from "@/lib/game/character";
+import { useCharacterStore } from "@/lib/game/characterEditor";
 import { cn } from "@/lib/tailwind/utils";
 import { SidebarLink } from "./SidebarLink";
 

@@ -10,6 +10,7 @@ import {
 import { openai } from "@/lib/openai";
 import { uploadImageToR2 } from "@/lib/cloudflare";
 import { authorizeAndValidateRequest } from "@/api/http/utils";
+import type { Item } from "database";
 
 export async function handleImageRequest(req: Request, server: Server) {
     const url = new URL(req.url);
@@ -32,8 +33,8 @@ async function handleImagePost(req: Request) {
     const characterClass = classes[data.classId].title;
 
     const startingItems = classes[data.classId].startingItems?.reduce(
-        (acc, item) => {
-            acc.push(item.title);
+        (acc: string[], item: Item) => {
+            acc.push(item.name);
             return acc;
         },
         [] as string[]

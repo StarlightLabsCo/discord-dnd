@@ -1,7 +1,0 @@
-{
-    "name": "starlight-game-data",
-    "version": "0.0.0",
-    "dependencies": {
-        "zod": "^3.22.4"
-    }
-}

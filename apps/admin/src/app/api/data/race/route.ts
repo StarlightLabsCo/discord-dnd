@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { Language, Proficiency, RacialTrait, Subrace } from "database";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -62,6 +63,27 @@ export async function POST(request: NextRequest) {
             charismaModifier: Number.parseInt(body.charismaModifier),
             size: body.size,
             speed: Number.parseInt(body.speed),
+            languages: {
+                connect: body.languages
+                    ? body.languages.map((language: Language) => ({
+                          id: language.id,
+                      }))
+                    : [],
+            },
+            racialTraits: {
+                connect: body.racialTraits
+                    ? body.racialTraits.map((racialTrait: RacialTrait) => ({
+                          id: racialTrait.id,
+                      }))
+                    : [],
+            },
+            subraces: {
+                connect: body.subraces
+                    ? body.subraces.map((subrace: Subrace) => ({
+                          id: subrace.id,
+                      }))
+                    : [],
+            },
         },
     });
 
@@ -74,7 +96,8 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
     const body = await request.json();
-    const { id, ...updates } = body;
+    const { id, languages, racialTraits, proficiencies, subraces, ...updates } =
+        body;
 
     if (!id) {
         return new Response("Missing race ID", {
@@ -84,7 +107,47 @@ export async function PATCH(request: NextRequest) {
 
     const updated = await db.race.update({
         where: { id },
-        data: updates,
+        data: {
+            ...updates,
+            strengthModifier: updates.strengthModifier
+                ? Number.parseInt(updates.strengthModifier)
+                : undefined,
+            dexterityModifier: updates.dexterityModifier
+                ? Number.parseInt(updates.dexterityModifier)
+                : undefined,
+            constitutionModifier: updates.constitutionModifier
+                ? Number.parseInt(updates.constitutionModifier)
+                : undefined,
+            intelligenceModifier: updates.intelligenceModifier
+                ? Number.parseInt(updates.intelligenceModifier)
+                : undefined,
+            wisdomModifier: updates.wisdomModifier
+                ? Number.parseInt(updates.wisdomModifier)
+                : undefined,
+            charismaModifier: updates.charismaModifier
+                ? Number.parseInt(updates.charismaModifier)
+                : undefined,
+            speed: updates.speed ? Number.parseInt(updates.speed) : undefined,
+            languages: {
+                connect: languages
+                    ? languages.map((language: Language) => ({
+                          id: language.id,
+                      }))
+                    : [],
+            },
+            racialTraits: {
+                connect: racialTraits
+                    ? racialTraits.map((racialTrait: RacialTrait) => ({
+                          id: racialTrait.id,
+                      }))
+                    : [],
+            },
+            subraces: {
+                connect: subraces
+                    ? subraces.map((subrace: Subrace) => ({ id: subrace.id }))
+                    : [],
+            },
+        },
     });
 
     return new Response(JSON.stringify(updated), {

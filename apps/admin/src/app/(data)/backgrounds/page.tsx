@@ -6,7 +6,7 @@ export default async function Backgrounds() {
         include: {
             world: true,
             proficiencies: true,
-            equipment: true,
+            startingEquipment: true,
             characters: true,
         },
     });

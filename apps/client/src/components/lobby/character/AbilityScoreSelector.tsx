@@ -1,6 +1,6 @@
-import { useCharacterStore } from "@/lib/game/character";
 import { Icons } from "@/components/Icons";
 import clickSound from "@/assets/sfx/lobby/click.mp3";
+import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 type AbilityScoreSelectorProps = {
     id: string;
@@ -16,16 +16,16 @@ export function AbilityScoreSelector({
     className,
 }: AbilityScoreSelectorProps) {
     const {
-        setStrength,
-        setDexterity,
-        setConstitution,
-        setIntelligence,
-        setWisdom,
-        setCharisma,
+        draftCharacter,
+        setDraftCharacter,
 
-        characterAbilityPoints,
-        setCharacterAbilityPoints,
-    } = useCharacterStore();
+        availableCharacterAbilityPoints: characterAbilityPoints,
+        setAvailableCharacterAbilityPoints: setCharacterAbilityPoints,
+    } = useCharacterEditorStore();
+
+    if (!draftCharacter) {
+        return <div>Character is undefined.</div>;
+    }
 
     const abilityCosts: { [key: number]: number } = {
         8: 0,
@@ -47,26 +47,10 @@ export function AbilityScoreSelector({
 
         const costDifference = calculateCost(newValue, value);
         if (characterAbilityPoints >= costDifference) {
-            switch (id) {
-                case "strength":
-                    setStrength(newValue);
-                    break;
-                case "dexterity":
-                    setDexterity(newValue);
-                    break;
-                case "constitution":
-                    setConstitution(newValue);
-                    break;
-                case "intelligence":
-                    setIntelligence(newValue);
-                    break;
-                case "wisdom":
-                    setWisdom(newValue);
-                    break;
-                case "charisma":
-                    setCharisma(newValue);
-                    break;
-            }
+            setDraftCharacter({
+                ...draftCharacter,
+                [id]: newValue,
+            });
             setCharacterAbilityPoints(characterAbilityPoints - costDifference);
         }
     };

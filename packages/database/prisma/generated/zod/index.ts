@@ -34,9 +34,9 @@ export const RacialTraitScalarFieldEnumSchema = z.enum(['id','raceId','subraceId
 
 export const LanguageScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','createdAt','updatedAt']);
 
-export const ClassScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','createdAt','updatedAt']);
+export const ClassScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','hitDice','createdAt','updatedAt']);
 
-export const ClassFeatureScalarFieldEnumSchema = z.enum(['id','classId','name','description','imageUrl','createdAt','updatedAt']);
+export const ClassFeatureScalarFieldEnumSchema = z.enum(['id','classId','name','description','imageUrl','startingLevel','createdAt','updatedAt']);
 
 export const BackgroundScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','personalityTraits','ideals','bonds','flaws','createdAt','updatedAt']);
 
@@ -44,15 +44,15 @@ export const ProficiencyScalarFieldEnumSchema = z.enum(['id','type','name','desc
 
 export const FeatScalarFieldEnumSchema = z.enum(['id','worldId','prerequisites','name','description','imageUrl','createdAt','updatedAt']);
 
-export const CharacterScalarFieldEnumSchema = z.enum(['id','campaignId','raceId','subraceId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','size','speed','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
+export const CharacterScalarFieldEnumSchema = z.enum(['id','campaignId','raceId','subraceId','classId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','size','speed','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
 export const ItemScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','weight','value','rarity','damageDice','damageType','damageBonus','properties','createdAt','updatedAt']);
 
 export const SpellScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','level','school','castingTime','range','components','duration','ritual','createdAt','updatedAt']);
 
-export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','campaignId','createdAt','updatedAt']);
+export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','name','description','imageUrl','campaignId','createdAt','updatedAt']);
 
-export const CharacterInstanceScalarFieldEnumSchema = z.enum(['id','userId','characterId','campaignInstanceId','raceId','subraceId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personality','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','healthPoints','size','speed','availableLevel1SpellSlots','availableLevel2SpellSlots','availableLevel3SpellSlots','availableLevel4SpellSlots','availableLevel5SpellSlots','availableLevel6SpellSlots','availableLevel7SpellSlots','availableLevel8SpellSlots','availableLevel9SpellSlots','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
+export const CharacterInstanceScalarFieldEnumSchema = z.enum(['id','userId','characterId','campaignInstanceId','raceId','subraceId','classId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','healthPoints','size','speed','availableLevel1SpellSlots','availableLevel2SpellSlots','availableLevel3SpellSlots','availableLevel4SpellSlots','availableLevel5SpellSlots','availableLevel6SpellSlots','availableLevel7SpellSlots','availableLevel8SpellSlots','availableLevel9SpellSlots','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -297,6 +297,7 @@ export type Language = z.infer<typeof LanguageSchema>
 /////////////////////////////////////////
 
 export const ClassSchema = z.object({
+  hitDice: DiceSchema,
   id: z.string().cuid(),
   worldId: z.string(),
   name: z.string(),
@@ -318,6 +319,7 @@ export const ClassFeatureSchema = z.object({
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),
+  startingLevel: z.number().int(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -389,6 +391,7 @@ export const CharacterSchema = z.object({
   campaignId: z.string(),
   raceId: z.string(),
   subraceId: z.string().nullable(),
+  classId: z.string(),
   backgroundId: z.string(),
   name: z.string(),
   description: z.string(),
@@ -481,6 +484,9 @@ export type Spell = z.infer<typeof SpellSchema>
 
 export const CampaignInstanceSchema = z.object({
   id: z.string().cuid(),
+  name: z.string(),
+  description: z.string(),
+  imageUrl: z.string(),
   campaignId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -498,9 +504,10 @@ export const CharacterInstanceSchema = z.object({
   id: z.string().cuid(),
   userId: z.string().nullable(),
   characterId: z.string().nullable(),
-  campaignInstanceId: z.string(),
+  campaignInstanceId: z.string().nullable(),
   raceId: z.string(),
   subraceId: z.string().nullable(),
+  classId: z.string(),
   backgroundId: z.string(),
   name: z.string(),
   description: z.string(),
@@ -511,7 +518,7 @@ export const CharacterInstanceSchema = z.object({
   alignment: z.string(),
   appearance: z.string(),
   backstory: z.string(),
-  personality: z.string().array(),
+  personalityTraits: z.string().array(),
   ideals: z.string().array(),
   bonds: z.string().array(),
   flaws: z.string().array(),

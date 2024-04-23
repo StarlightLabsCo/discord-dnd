@@ -9,7 +9,7 @@ export interface SelectableGridItem {
 interface SelectableGridProps {
     items: SelectableGridItem[];
     selected: string;
-    setSelected: (title: string) => void;
+    setSelected: (id: string) => void;
     columns: number;
 }
 

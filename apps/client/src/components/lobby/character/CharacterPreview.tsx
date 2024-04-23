@@ -2,7 +2,7 @@ import { races } from "starlight-game-data/races";
 import { classes } from "starlight-game-data/classes";
 
 import { cn } from "@/lib/tailwind/utils";
-import { useCharacterStore } from "@/lib/game/character";
+import { useCharacterStore } from "@/lib/game/characterEditor";
 import { AbilityScoreDisplay } from "./AbilityScoreDisplay";
 import { ItemPreview } from "./ItemPreview";
 import { SkillPreview } from "./SkillPreview";

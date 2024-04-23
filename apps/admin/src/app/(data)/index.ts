@@ -25,7 +25,7 @@ export const linkGroups: LinkGroup[] = [
         links: [
             { label: "Locations", url: "/locations" },
             { label: "Races", url: "/races" },
-            { label: "Racial Traits", url: "/racialtraits" },
+            { label: "Racial Traits", url: "/racialTraits" },
             { label: "Subraces", url: "/subraces" },
             { label: "Languages", url: "/languages" },
         ],
@@ -34,7 +34,7 @@ export const linkGroups: LinkGroup[] = [
         groupName: "Character Development",
         links: [
             { label: "Classes", url: "/classes" },
-            { label: "Class Features", url: "/classfeatures" },
+            { label: "Class Features", url: "/classFeatures" },
             { label: "Backgrounds", url: "/backgrounds" },
             { label: "Proficiencies", url: "/proficiencies" },
             { label: "Feats", url: "/feats" },

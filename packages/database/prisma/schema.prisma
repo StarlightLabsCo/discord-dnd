@@ -202,8 +202,7 @@ model Race {
     languages Language[]
 
     racialTraits RacialTrait[]
-
-    subraces Subrace[]
+    subraces     Subrace[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -258,6 +257,8 @@ model RacialTrait {
     description String
     imageUrl    String
 
+    proficiencies Proficiency[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -295,6 +296,11 @@ model Class {
 
     classFeatures ClassFeature[]
 
+    proficiencies     Proficiency[]
+    startingEquipment Item[]
+
+    hitDice Dice @default(D6)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -314,6 +320,8 @@ model ClassFeature {
     description String
     imageUrl    String
 
+    startingLevel Int @default(1)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -329,8 +337,8 @@ model Background {
     description String
     imageUrl    String
 
-    proficiencies Proficiency[] // proficiencies that the background gives
-    equipment     Item[] // equipment that the background gives
+    proficiencies     Proficiency[] // proficiencies that the background gives
+    startingEquipment Item[] // equipment that the background gives
 
     personalityTraits String[] // personality traits to pick from (2)
     ideals            String[] // ideals to pick from (1)
@@ -370,9 +378,11 @@ model Proficiency {
     updatedAt DateTime @updatedAt
 
     // models referencing this proficiency
+    classes            Class[]
     backgrounds        Background[]
     characters         Character[]
     characterInstances CharacterInstance[]
+    racialTraits       RacialTrait[]
 }
 
 // - Feat - (Static)
@@ -432,7 +442,8 @@ model Character {
     subraceId String?
     subrace   Subrace? @relation(fields: [subraceId], references: [id], onDelete: SetNull)
 
-    classes Class[]
+    classId String
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
 
     backgroundId String
     background   Background @relation(fields: [backgroundId], references: [id], onDelete: Cascade)
@@ -545,6 +556,7 @@ model Item {
     updatedAt DateTime @updatedAt
 
     // model/instances who have this item
+    classes            Class[]
     backgrounds        Background[]
     characters         Character[]
     characterInstances CharacterInstance[]
@@ -596,6 +608,10 @@ model Spell {
 model CampaignInstance {
     id String @id @default(cuid())
 
+    name        String
+    description String
+    imageUrl    String
+
     campaignId String
     campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Restrict)
 
@@ -619,8 +635,8 @@ model CharacterInstance {
     character   Character? @relation(fields: [characterId], references: [id], onDelete: Restrict)
 
     // ---- Character Instance Info ---
-    campaignInstanceId String
-    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id], onDelete: Restrict)
+    campaignInstanceId String?
+    campaignInstance   CampaignInstance? @relation(fields: [campaignInstanceId], references: [id], onDelete: Restrict)
 
     raceId String
     race   Race   @relation(fields: [raceId], references: [id], onDelete: Restrict)
@@ -628,7 +644,8 @@ model CharacterInstance {
     subraceId String?
     subrace   Subrace? @relation(fields: [subraceId], references: [id], onDelete: Restrict)
 
-    classes Class[]
+    classId String
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Restrict)
 
     backgroundId String
     background   Background @relation(fields: [backgroundId], references: [id], onDelete: Restrict)
@@ -637,16 +654,16 @@ model CharacterInstance {
     description String
     imageUrl    String
 
-    pronouns    String
-    age         Int
-    voice       String
-    alignment   String
-    appearance  String
-    backstory   String
-    personality String[]
-    ideals      String[]
-    bonds       String[]
-    flaws       String[]
+    pronouns          String
+    age               Int
+    voice             String
+    alignment         String
+    appearance        String
+    backstory         String
+    personalityTraits String[]
+    ideals            String[]
+    bonds             String[]
+    flaws             String[]
 
     currentLocationId String?
     currentLocation   Location? @relation(fields: [currentLocationId], references: [id], onDelete: Restrict)

@@ -1,14 +1,9 @@
 import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
-import readySound from "@/assets/sfx/lobby/ready.mp3";
-import campaignCover from "@/assets/images/campaign/cover.png";
-
 import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
 import { useMusicStore } from "@/lib/game/music";
-import { sendMessage } from "@/lib/websocket";
-import { useCampaignStore } from "@/lib/game/campaign";
 
 export const Route = createFileRoute("/_layout/lobby")({
     component: Lobby,
@@ -17,10 +12,23 @@ export const Route = createFileRoute("/_layout/lobby")({
 function Lobby() {
     const user = useGameStore((state) => state.user);
 
-    const connectedPlayers = useGameStore((state) => state.connectedPlayers);
+    const connectedPlayers = useGameStore(
+        (state) => state.state?.connectedPlayers || []
+    );
 
-    const title = useCampaignStore((state) => state.title);
-    const description = useCampaignStore((state) => state.description);
+    const title = useGameStore((state) => state.state?.selectedCampaign?.name);
+    const description = useGameStore(
+        (state) => state.state?.selectedCampaign?.description
+    );
+    const campaignCover = useGameStore(
+        (state) => state.state?.selectedCampaign?.imageUrl
+    );
+
+    const instanceState = useGameStore((state) => state.state);
+
+    useEffect(() => {
+        if (!instanceState) return;
+    }, [instanceState]);
 
     const play = useMusicStore((state) => state.play);
 
@@ -96,7 +104,7 @@ function Lobby() {
                                     isCurrentUser={
                                         connectedPlayer.user.id === user.id
                                     }
-                                    ready={connectedPlayer.ready}
+                                    ready={connectedPlayer.status === "READY"}
                                 />
                             );
                         })}

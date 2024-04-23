@@ -117,8 +117,19 @@ export function DataDialog({
 
         const formDataDiff = Object.keys(formData).reduce<Record<string, any>>(
             (diff, key) => {
-                if (String(formData[key]) !== String(data[key])) {
-                    diff[key] = formData[key];
+                const originalValue = data[key];
+                const newValue = formData[key];
+                console.log(key, originalValue, newValue);
+
+                if (Array.isArray(originalValue) && Array.isArray(newValue)) {
+                    if (
+                        originalValue.sort().toString() !==
+                        newValue.sort().toString()
+                    ) {
+                        diff[key] = newValue;
+                    }
+                } else if (String(newValue) !== String(originalValue)) {
+                    diff[key] = newValue;
                 }
                 return diff;
             },

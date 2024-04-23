@@ -13,15 +13,19 @@ import {
 } from "@/components/ui/dialog";
 
 type Props = {
-    items: any[];
+    selectedItems: any[];
     dataType: string;
     disabled?: boolean;
+    setSelectedItems: (items: any[]) => void;
 };
 
-export function DataArray({ items, dataType, disabled }: Props) {
+export function DataArray({
+    selectedItems,
+    dataType,
+    disabled,
+    setSelectedItems,
+}: Props) {
     const router = useRouter();
-
-    const [selectedItems, setSelectedItems] = useState<any[]>(items);
     const [potentialItems, setPotentialItems] = useState<any[]>([]);
     const [isNavigateDialogOpen, setIsNavigateDialogOpen] = useState(false);
     const [navigateItemId, setNavigateItemId] = useState<string | null>(null);
@@ -40,7 +44,6 @@ export function DataArray({ items, dataType, disabled }: Props) {
                     (selectedItem) => selectedItem.id === fetchedItem.id
                 )
         );
-        console.log(filteredItems);
         setPotentialItems(filteredItems);
     };
 
@@ -48,38 +51,12 @@ export function DataArray({ items, dataType, disabled }: Props) {
         fetchPotentialItems();
     }, [dataType, selectedItems]);
 
-    const handleSelectItem = async (selectedItemId: string) => {
-        if (!selectedItems.some((item) => item.id === selectedItemId)) {
-            const foundItem = potentialItems.find(
-                (item) => item.id === selectedItemId
-            );
-
-            if (foundItem) {
-                setSelectedItems((prevItems) => [...prevItems, foundItem]);
-            } else {
-                const response = await fetch(`/api/data/${dataType}`);
-                const fetchedItems = await response.json();
-                const newPotentialItems = fetchedItems.filter(
-                    (fetchedItem: any) =>
-                        !selectedItems.some(
-                            (selectedItem) => selectedItem.id === fetchedItem.id
-                        )
-                );
-
-                const newFoundItem = newPotentialItems.find(
-                    (item: any) => item.id === selectedItemId
-                );
-                if (newFoundItem) {
-                    setSelectedItems((prevItems) => [
-                        ...prevItems,
-                        newFoundItem,
-                    ]);
-                } else {
-                    console.error(
-                        `Item with id ${selectedItemId} still not found`
-                    );
-                }
-            }
+    const handleSelectItem = (selectedItemId: string) => {
+        const foundItem = potentialItems.find(
+            (item) => item.id === selectedItemId
+        );
+        if (foundItem) {
+            setSelectedItems([...selectedItems, foundItem]);
         }
     };
 

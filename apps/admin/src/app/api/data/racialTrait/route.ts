@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { Proficiency } from "database";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -10,6 +11,9 @@ export async function GET(request: NextRequest) {
         where: {
             ...(raceId && { raceId }),
             ...(subraceId && { subraceId }),
+        },
+        include: {
+            proficiencies: true,
         },
     });
 
@@ -34,6 +38,13 @@ export async function POST(request: NextRequest) {
             name: body.name,
             description: body.description,
             imageUrl: body.imageUrl,
+            proficiencies: {
+                connect: body.proficiencies
+                    ? body.proficiencies.map((proficiency: Proficiency) => ({
+                          id: proficiency.id,
+                      }))
+                    : [],
+            },
         },
     });
 
@@ -46,7 +57,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
     const body = await request.json();
-    const { id, ...updates } = body;
+    const { id } = body;
 
     if (!id) {
         return new Response("Missing racial trait ID", {
@@ -56,7 +67,18 @@ export async function PATCH(request: NextRequest) {
 
     const updated = await db.racialTrait.update({
         where: { id },
-        data: updates,
+        data: {
+            name: body.name,
+            description: body.description,
+            imageUrl: body.imageUrl,
+            proficiencies: {
+                set: body.proficiencies
+                    ? body.proficiencies.map((proficiency: Proficiency) => ({
+                          id: proficiency.id,
+                      }))
+                    : [],
+            },
+        },
     });
 
     return new Response(JSON.stringify(updated), {

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCharacterStore } from "@/lib/game/character";
 import { AbilityScoreSelector } from "@/components/lobby/character/AbilityScoreSelector";
+import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 export const Route = createFileRoute(
     "/_layout/lobby/character/_layout/abilities"
@@ -10,81 +10,74 @@ export const Route = createFileRoute(
 
 function Abilities() {
     const {
-        strength,
-        dexterity,
-        constitution,
-        intelligence,
-        wisdom,
-        charisma,
+        draftCharacter,
+        setDraftCharacter,
+        availableCharacterAbilityPoints,
+    } = useCharacterEditorStore();
 
-        setStrength,
-        setDexterity,
-        setConstitution,
-        setIntelligence,
-        setWisdom,
-        setCharisma,
+    if (!draftCharacter) {
+        return <div>Character is undefined.</div>;
+    }
 
-        characterAbilityPoints,
-        setCharacterAbilityPoints,
-    } = useCharacterStore();
+    const resetDisabled = availableCharacterAbilityPoints === 27;
 
     const resetAbilities = () => {
-        setStrength(8);
-        setDexterity(8);
-        setConstitution(8);
-        setIntelligence(8);
-        setWisdom(8);
-        setCharisma(8);
-        setCharacterAbilityPoints(27);
+        setDraftCharacter({
+            ...draftCharacter,
+            strength: 8,
+            dexterity: 8,
+            constitution: 8,
+            intelligence: 8,
+            wisdom: 8,
+            charisma: 8,
+        });
     };
-
-    const resetDisabled = characterAbilityPoints === 27;
 
     return (
         <div className='flex flex-col items-center w-[80%] gap-y-[2.5vw]'>
             <div className='flex flex-col text-[1vw] items-center'>
                 <div>Ability Points</div>
                 <div
-                    className={`${characterAbilityPoints > 0 ? "text-red-500" : ""}`}
+                    className={`${availableCharacterAbilityPoints > 0 ? "text-red-500" : ""}`}
                 >
-                    {characterAbilityPoints} / 27
+                    {availableCharacterAbilityPoints} / 27
                 </div>
             </div>
             <AbilityScoreSelector
                 key={"strength"}
                 id={"strength"}
                 title={"Strength"}
-                value={strength}
+                value={draftCharacter.strength}
             />
             <AbilityScoreSelector
                 key={"dexterity"}
                 id={"dexterity"}
                 title={"Dexterity"}
-                value={dexterity}
+                value={draftCharacter.dexterity}
             />
             <AbilityScoreSelector
                 key={"constitution"}
                 id={"constitution"}
                 title={"Constitution"}
-                value={constitution}
+                value={draftCharacter.constitution}
             />
             <AbilityScoreSelector
                 key={"intelligence"}
                 id={"intelligence"}
                 title={"Intelligence"}
-                value={intelligence}
+                value={draftCharacter.intelligence}
             />
             <AbilityScoreSelector
                 key={"wisdom"}
                 id={"wisdom"}
                 title={"Wisdom"}
-                value={wisdom}
+                value={draftCharacter.wisdom}
             />
             <AbilityScoreSelector
                 key={"charisma"}
                 id={"charisma"}
                 title={"Charisma"}
-                value={charisma}
+                value={draftCharacter.charisma}
             />
             <button
                 onClick={resetAbilities}

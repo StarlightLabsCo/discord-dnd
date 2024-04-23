@@ -103,15 +103,15 @@ export function InputFieldMapper({
                             >
                                 {labelWithAsterisk}
                                 <DataArray
-                                    items={
-                                        data
-                                            ? data[
-                                                  field.name as keyof typeof data
-                                              ]
-                                            : []
-                                    }
+                                    selectedItems={formData[field.name] || []}
                                     dataType={field.dataType}
                                     disabled={disabled}
+                                    setSelectedItems={(newItems) =>
+                                        setFormData({
+                                            ...formData,
+                                            [field.name]: newItems,
+                                        })
+                                    }
                                 />
                             </div>
                         );

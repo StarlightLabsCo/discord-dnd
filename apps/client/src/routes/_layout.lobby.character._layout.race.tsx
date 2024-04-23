@@ -1,27 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { races } from "starlight-game-data/races";
-import { useCharacterStore } from "@/lib/game/character";
-import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
+import {
+    SelectableGrid,
+    SelectableGridItem,
+} from "@/components/lobby/character/SelectableGrid";
+import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout/race")({
     component: Race,
 });
 
 function Race() {
-    const { raceId, setRaceId } = useCharacterStore();
+    const { world, draftCharacter, setDraftCharacter } =
+        useCharacterEditorStore();
 
-    const items = Object.values(races).map((race) => ({
+    if (!world || !draftCharacter) {
+        return <div>Races data is undefined.</div>;
+    }
+
+    const items = Object.values(world.races).map((race) => ({
         id: race.id,
-        src: race.baseImage,
-        title: race.title,
+        src: race.imageUrl,
+        title: race.name,
     }));
 
     return (
         <SelectableGrid
-            items={items}
-            selected={raceId}
-            setSelected={setRaceId}
+            items={items as SelectableGridItem[]}
+            selected={draftCharacter.raceId}
+            setSelected={(id) => {
+                setDraftCharacter({
+                    ...draftCharacter,
+                    raceId: id,
+                });
+            }}
             columns={3}
         />
     );

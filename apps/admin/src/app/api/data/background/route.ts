@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { Item, Proficiency } from "database";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
         where: worldId ? { worldId } : {},
         include: {
             proficiencies: true,
-            equipment: true,
+            startingEquipment: true,
             characters: true,
         },
     });
@@ -53,6 +54,20 @@ export async function POST(request: NextRequest) {
             ideals: body.ideals,
             bonds: body.bonds,
             flaws: body.flaws,
+            proficiencies: {
+                connect: body.proficiencies
+                    ? body.proficiencies.map((proficiency: Proficiency) => ({
+                          id: proficiency.id,
+                      }))
+                    : [],
+            },
+            startingEquipment: {
+                connect: body.startingEquipment
+                    ? body.startingEquipment.map((item: Item) => ({
+                          id: item.id,
+                      }))
+                    : [],
+            },
         },
     });
 
@@ -65,7 +80,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
     const body = await request.json();
-    const { id, ...updates } = body;
+    const { id } = body;
 
     if (!id) {
         return new Response("Missing background ID", {
@@ -75,7 +90,29 @@ export async function PATCH(request: NextRequest) {
 
     const updated = await db.background.update({
         where: { id },
-        data: updates,
+        data: {
+            name: body.name,
+            description: body.description,
+            imageUrl: body.imageUrl,
+            personalityTraits: body.personalityTraits,
+            ideals: body.ideals,
+            bonds: body.bonds,
+            flaws: body.flaws,
+            proficiencies: {
+                set: body.proficiencies
+                    ? body.proficiencies.map((proficiency: Proficiency) => ({
+                          id: proficiency.id,
+                      }))
+                    : [],
+            },
+            startingEquipment: {
+                set: body.startingEquipment
+                    ? body.startingEquipment.map((item: Item) => ({
+                          id: item.id,
+                      }))
+                    : [],
+            },
+        },
     });
 
     return new Response(JSON.stringify(updated), {

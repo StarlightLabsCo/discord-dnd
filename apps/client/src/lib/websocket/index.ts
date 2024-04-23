@@ -6,8 +6,6 @@ import {
 } from "starlight-api-types/websocket";
 
 import { handleUserInfoResponse } from "./handlers/userInfo";
-import { handleConnectedPlayersInfoResponse } from "./handlers/connectedPlayersInfo";
-import { handleGameStateUpdateResponse } from "./handlers/gameStateUpdate";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -129,6 +127,4 @@ async function onMessage(event: MessageEvent) {
 
 const handlers = {
     UserInfoResponse: handleUserInfoResponse,
-    ConnectedPlayersInfoResponse: handleConnectedPlayersInfoResponse,
-    GameStateUpdateResponse: handleGameStateUpdateResponse,
 };

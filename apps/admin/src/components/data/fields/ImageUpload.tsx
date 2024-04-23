@@ -62,7 +62,6 @@ export function ImageUpload({ setImageUrl, className }: ImageUploadProps) {
                 const data = await response.json();
                 setUploading(false);
                 if (response.ok) {
-                    toast.success(`Image uploaded! URL: ${data.url}`);
                     setImageUrl(data.url);
                 } else {
                     toast.error(`Upload failed: ${data.error}`);

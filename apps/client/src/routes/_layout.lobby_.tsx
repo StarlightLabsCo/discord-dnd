@@ -16,6 +16,8 @@ function Lobby() {
         (state) => state.state?.connectedPlayers || []
     );
 
+    console.log("Connected players", connectedPlayers);
+
     const title = useGameStore((state) => state.state?.selectedCampaign?.name);
     const description = useGameStore(
         (state) => state.state?.selectedCampaign?.description

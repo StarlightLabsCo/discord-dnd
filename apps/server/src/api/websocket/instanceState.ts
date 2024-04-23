@@ -33,6 +33,8 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
         });
     }
 
+    idToState.set(instanceId, instanceState);
+
     const instanceStateResponse: InstanceStateResponse = {
         type: "InstanceStateResponse",
         data: instanceState,

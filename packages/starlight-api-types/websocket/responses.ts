@@ -22,6 +22,7 @@ export const InstanceStateResponseZodSchema = z.object({
 // ----- Response Schema -----
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
+    InstanceStateResponse: InstanceStateResponseZodSchema,
 };
 
 export function getResponseSchema(type: keyof typeof responseTypeToSchema) {

@@ -1,4 +1,4 @@
-import { z, ZodSchema } from "zod";
+import { ZodSchema } from "zod";
 import { getUser } from "@/lib/discord";
 
 export async function authorizeAndValidateRequest<T>(

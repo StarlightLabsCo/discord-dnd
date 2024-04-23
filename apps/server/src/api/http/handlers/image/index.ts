@@ -1,5 +1,3 @@
-import type { Server } from "bun";
-
 import {
     PostImageRequestZodSchema,
     type PostImageResponse,
@@ -10,7 +8,7 @@ import { uploadImageToR2 } from "@/lib/cloudflare";
 import { authorizeAndValidateRequest } from "@/api/http/utils";
 import type { Item } from "database";
 
-export async function handleImageRequest(req: Request, server: Server) {
+export async function handleImageRequest(req: Request) {
     const url = new URL(req.url);
 
     if (url.pathname === "/api/image/") {

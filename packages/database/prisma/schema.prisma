@@ -301,6 +301,8 @@ model Class {
 
     hitDice Dice @default(D6)
 
+    mainAbility String @default("strength") // the main ability score for the class (used for attack rolls, etc.)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

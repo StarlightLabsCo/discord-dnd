@@ -1,8 +1,11 @@
-import { Item } from "starlight-game-data/items";
 import { cn } from "@/lib/tailwind/utils";
 
 type ItemPreviewProps = {
-    item: Item;
+    item: {
+        image: string;
+        title: string;
+        description: string;
+    };
     className?: string;
 };
 

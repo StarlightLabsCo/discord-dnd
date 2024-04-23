@@ -2,7 +2,6 @@
     "name": "starlight-api-types",
     "version": "0.0.0",
     "dependencies": {
-        "zod": "^3.22.4",
-        "starlight-game-data": "workspace:*"
+        "zod": "^3.22.4"
     }
 }

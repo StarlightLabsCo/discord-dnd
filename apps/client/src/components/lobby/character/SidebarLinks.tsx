@@ -1,13 +1,9 @@
 import { useRouterState } from "@tanstack/react-router";
 
 import { AppLayoutPaths } from "@/main";
-import { origins } from "starlight-game-data/origins";
-import { races } from "starlight-game-data/races";
-import { classes } from "starlight-game-data/classes";
-
-import { useCharacterStore } from "@/lib/game/characterEditor";
 import { cn } from "@/lib/tailwind/utils";
 import { SidebarLink } from "./SidebarLink";
+import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 type SidebarLinksProps = {
     className?: string;
@@ -20,7 +16,10 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         return location.pathname === path;
     };
 
-    const { originId, raceId, classId } = useCharacterStore();
+    const { draftCharacter } = useCharacterEditorStore();
+    if (!draftCharacter) {
+        return null;
+    }
 
     const sidebarLinks: {
         to: AppLayoutPaths;
@@ -30,17 +29,17 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         {
             to: "/lobby/character/origin",
             text: "Origin",
-            subtext: origins[originId].title,
+            subtext: draftCharacter.characterId ? "test" : "Custom",
         },
         {
             to: "/lobby/character/race",
             text: "Race",
-            subtext: races[raceId].title,
+            subtext: draftCharacter.race.name,
         },
         {
             to: "/lobby/character/class",
             text: "Class",
-            subtext: classes[classId].title,
+            subtext: draftCharacter.class.name,
         },
         {
             to: "/lobby/character/abilities",

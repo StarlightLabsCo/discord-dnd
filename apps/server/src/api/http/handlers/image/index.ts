@@ -1,7 +1,5 @@
 import type { Server } from "bun";
 
-import { classes } from "starlight-game-data/classes";
-import { races } from "starlight-game-data/races";
 import {
     PostImageRequestZodSchema,
     type PostImageResponse,

@@ -1,4 +1,4 @@
-type ChAbilityScoreDisplayProps = {
+type AbilityScoreDisplayProps = {
     label: string;
     value: number;
     main?: boolean;
@@ -8,7 +8,7 @@ export function AbilityScoreDisplay({
     label,
     value,
     main,
-}: ChAbilityScoreDisplayProps) {
+}: AbilityScoreDisplayProps) {
     return (
         <div className='flex flex-col items-center'>
             <div

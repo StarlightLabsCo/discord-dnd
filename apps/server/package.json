@@ -18,7 +18,6 @@
     "database": "workspace:*",
     "openai": "^4.33.0",
     "openpipe": "^0.10.0",
-    "starlight-api-types": "workspace:*",
-    "starlight-game-data": "workspace:*"
+    "starlight-api-types": "workspace:*"
   }
 }

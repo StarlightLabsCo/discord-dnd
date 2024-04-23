@@ -34,7 +34,7 @@ export const RacialTraitScalarFieldEnumSchema = z.enum(['id','raceId','subraceId
 
 export const LanguageScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','createdAt','updatedAt']);
 
-export const ClassScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','hitDice','createdAt','updatedAt']);
+export const ClassScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','hitDice','mainAbility','createdAt','updatedAt']);
 
 export const ClassFeatureScalarFieldEnumSchema = z.enum(['id','classId','name','description','imageUrl','startingLevel','createdAt','updatedAt']);
 
@@ -303,6 +303,7 @@ export const ClassSchema = z.object({
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),
+  mainAbility: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })

@@ -9,12 +9,18 @@ type WorldInfo = World & {
     backgrounds: Background[];
 };
 
+type CharacterInstanceInfo = CharacterInstance & {
+    race: Race;
+    class: Class;
+    background: Background;
+};
+
 interface CharacterEditorStoreState {
     world: WorldInfo | null;
     setWorld: (world: WorldInfo) => void;
 
-    draftCharacter: CharacterInstance | null;
-    setDraftCharacter: (character: CharacterInstance) => void;
+    draftCharacter: CharacterInstanceInfo | null;
+    setDraftCharacter: (character: CharacterInstanceInfo) => void;
 
     availableCharacterAbilityPoints: number;
     setAvailableCharacterAbilityPoints: (points: number) => void;
@@ -86,7 +92,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
     })
 );
 
-export const getRandomCharacter = (world: WorldInfo): CharacterInstance => {
+export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
     const randomRace =
         world.races[Math.floor(Math.random() * world.races.length)];
     const randomClass =
@@ -99,10 +105,18 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstance => {
         userId: null,
         characterId: null,
         campaignInstanceId: null,
+
         raceId: randomRace.id,
+        race: randomRace,
+
         subraceId: null,
+
         classId: randomClass.id,
+        class: randomClass,
+
         backgroundId: randomBackground.id,
+        background: randomBackground,
+
         name: "Random Character",
         description: "A randomly generated character",
         imageUrl: "",
@@ -152,5 +166,5 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstance => {
         availableLevel9SpellSlots: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
-    } as CharacterInstance;
+    } as CharacterInstanceInfo;
 };

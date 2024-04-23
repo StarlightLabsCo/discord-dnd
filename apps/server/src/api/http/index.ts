@@ -5,6 +5,7 @@ import { handleImageRequest } from "./handlers/image/index";
 import { handleDataRequest } from "./handlers/data";
 
 export async function handleApiRequest(req: Request, server: Server) {
+    console.log(`[HTTP] ${req.method} ${req.url}`);
     const url = new URL(req.url);
 
     if (url.pathname === "/api/token") return handleTokenRequest(req);

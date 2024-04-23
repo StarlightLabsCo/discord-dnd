@@ -4,6 +4,7 @@ import { useGameStore } from "@/lib/game";
 import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
 import { useMusicStore } from "@/lib/game/music";
+import { s3UrlRewriter } from "@/lib/discord/utils";
 
 export const Route = createFileRoute("/_layout/lobby")({
     component: Lobby,
@@ -81,7 +82,7 @@ function Lobby() {
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t to-transparent from-black/50' />
                     <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-b to-transparent from-black/30' />
                     <img
-                        src={campaignCover}
+                        src={s3UrlRewriter(campaignCover || "")}
                         className='object-cover absolute inset-0 w-full h-full'
                         alt='Campaign Cover'
                     />

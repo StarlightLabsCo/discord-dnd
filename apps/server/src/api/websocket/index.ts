@@ -1,9 +1,5 @@
 import type { ServerWebSocket, WebSocketHandler } from "bun";
-import {
-    validateWebSocketRequest,
-    type LobbyReadyRequest,
-    type CharacterSelectRequest,
-} from "starlight-api-types/websocket";
+import { validateWebSocketRequest } from "starlight-api-types/websocket";
 import type { User } from "database";
 
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";

@@ -16,6 +16,7 @@ import {
 } from "starlight-api-types/rest";
 import { useWebsocketStore } from "../websocket";
 import { useGameStore } from ".";
+import { CharacterSelectRequest } from "starlight-api-types/websocket";
 
 type WorldInfo = World & {
     races: Race[];
@@ -176,7 +177,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
                             data: {
                                 characterInstanceId: data.id,
                             },
-                        })
+                        } as CharacterSelectRequest)
                     );
                 } else {
                     console.error("No websocket connection available");

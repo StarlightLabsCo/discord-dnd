@@ -42,6 +42,11 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
             subtext: draftCharacter.class.name,
         },
         {
+            to: "/lobby/character/background",
+            text: "Background",
+            subtext: draftCharacter.background.name,
+        },
+        {
             to: "/lobby/character/abilities",
             text: "Abilities",
             subtext: "",

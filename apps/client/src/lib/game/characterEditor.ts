@@ -1,6 +1,7 @@
 import { World, Race, Class, Background, CharacterInstance } from "database";
 import { create } from "zustand";
 import { useDiscordStore } from "../discord";
+import { createId } from "@paralleldrive/cuid2";
 import {
     PostImageRequest,
     PostImageResponseZodSchema,
@@ -123,7 +124,7 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
         world.backgrounds[Math.floor(Math.random() * world.backgrounds.length)];
 
     return {
-        id: "",
+        id: createId(),
         userId: null,
         characterId: null,
         campaignInstanceId: null,

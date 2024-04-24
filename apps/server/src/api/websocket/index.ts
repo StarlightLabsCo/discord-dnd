@@ -1,9 +1,14 @@
 import type { ServerWebSocket, WebSocketHandler } from "bun";
-import { validateWebSocketRequest } from "starlight-api-types/websocket";
+import {
+    validateWebSocketRequest,
+    type LobbyReadyRequest,
+    type CharacterSelectRequest,
+} from "starlight-api-types/websocket";
 import type { User } from "database";
 
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 import { handleLobbyReadyRequest } from "./handlers/lobbyReady";
+import { handleCharacterSelectRequest } from "./handlers/characterSelect";
 
 export type WebSocketData = {
     user: User;
@@ -39,9 +44,10 @@ async function handleWebSocketMessage(
         return;
     }
 
-    await handler(ws, request);
+    await handler(ws, request as any);
 }
 
 const handlers = {
     LobbyReadyRequest: handleLobbyReadyRequest,
+    CharacterSelectRequest: handleCharacterSelectRequest,
 };

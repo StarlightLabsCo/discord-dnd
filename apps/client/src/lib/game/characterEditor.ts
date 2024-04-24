@@ -168,14 +168,19 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
                 set({ draftCharacter: data });
 
                 const ws = useWebsocketStore.getState().ws;
-                ws?.send(
-                    JSON.stringify({
-                        type: "CharacterSelectRequest",
-                        data: {
-                            characterInstanceId: data.id,
-                        },
-                    })
-                );
+                if (ws) {
+                    console.log("Sending character select request");
+                    ws.send(
+                        JSON.stringify({
+                            type: "CharacterSelectRequest",
+                            data: {
+                                characterInstanceId: data.id,
+                            },
+                        })
+                    );
+                } else {
+                    console.error("No websocket connection available");
+                }
             }
         },
         savingCharacter: false,

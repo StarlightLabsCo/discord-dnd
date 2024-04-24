@@ -47,6 +47,10 @@ interface CharacterEditorStoreState {
     generateCharacter: () => void;
     generatingCharacter: boolean;
     setGeneratingCharacter: (generating: boolean) => void;
+
+    saveCharacter: () => void;
+    savingCharacter: boolean;
+    setSavingCharacter: (saving: boolean) => void;
 }
 
 export const useCharacterEditorStore = create<CharacterEditorStoreState>(
@@ -126,6 +130,39 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
         generatingCharacter: false,
         setGeneratingCharacter: (generating) =>
             set({ generatingCharacter: generating }),
+
+        saveCharacter: async () => {
+            const { draftCharacter } = get();
+            if (!draftCharacter) {
+                console.error("No character to save");
+                return;
+            }
+
+            set({ savingCharacter: true });
+
+            const response = await fetch("/api/data/character", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(draftCharacter),
+            });
+
+            set({ savingCharacter: false });
+
+            if (!response.ok) {
+                console.error("Failed to save character");
+                return;
+            }
+
+            const data = await response.json();
+            if (data) {
+                console.log("Character saved successfully");
+                set({ draftCharacter: data });
+            }
+        },
+        savingCharacter: false,
+        setSavingCharacter: (saving) => set({ savingCharacter: saving }),
     })
 );
 

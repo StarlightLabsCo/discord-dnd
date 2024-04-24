@@ -2,12 +2,15 @@ import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { CharacterPreview } from "@/components/lobby/character/CharacterPreview";
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
+import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 export const Route = createFileRoute("/_layout/lobby/character/_layout")({
     component: Layout,
 });
 
 function Layout() {
+    const { saveCharacter } = useCharacterEditorStore();
+
     return (
         <div className='flex relative items-center w-screen h-screen text-white'>
             <SidebarLinks className='w-1/5' />
@@ -19,6 +22,7 @@ function Layout() {
                 <Link
                     to='/lobby'
                     className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer'
+                    onClick={saveCharacter}
                 >
                     Lobby
                 </Link>

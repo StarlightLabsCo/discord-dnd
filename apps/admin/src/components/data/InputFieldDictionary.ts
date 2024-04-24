@@ -139,8 +139,8 @@ export const inputFieldDictionary: Record<string, InputField[]> = {
         {
             type: "foreignkeyarray",
             dataType: "item",
-            name: "equipment",
-            label: "Equipment",
+            name: "startingEquipment",
+            label: "Starting Equipment",
             required: false,
         },
         {

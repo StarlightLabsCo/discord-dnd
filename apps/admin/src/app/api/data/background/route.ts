@@ -99,14 +99,14 @@ export async function PATCH(request: NextRequest) {
             bonds: body.bonds,
             flaws: body.flaws,
             proficiencies: {
-                set: body.proficiencies
+                connect: body.proficiencies
                     ? body.proficiencies.map((proficiency: Proficiency) => ({
                           id: proficiency.id,
                       }))
                     : [],
             },
             startingEquipment: {
-                set: body.startingEquipment
+                connect: body.startingEquipment
                     ? body.startingEquipment.map((item: Item) => ({
                           id: item.id,
                       }))

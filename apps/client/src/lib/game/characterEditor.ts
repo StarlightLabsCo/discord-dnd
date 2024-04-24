@@ -77,8 +77,10 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             const data = await response.json();
 
             set({ world: data[0] });
+            console.log("World set");
 
             if (data[0] && get().draftCharacter === null) {
+                console.log("Generating random character...");
                 set({ draftCharacter: getRandomCharacter(data[0]) });
             }
         },
@@ -179,7 +181,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 );
 
 export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
-    const selectedCampaign = useGameStore().state?.selectedCampaign;
+    const selectedCampaign = useGameStore.getState().state?.selectedCampaign;
 
     const randomRace =
         world.races[Math.floor(Math.random() * world.races.length)];

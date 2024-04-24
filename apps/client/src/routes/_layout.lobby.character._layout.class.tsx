@@ -17,7 +17,7 @@ function Class() {
         return <div>World or Draft Character is undefined.</div>;
     }
 
-    const items = Object.values(world?.classes).map((characterClass) => ({
+    const items = Object.values(world.classes).map((characterClass) => ({
         id: characterClass.id,
         src: characterClass.imageUrl,
         title: characterClass.name,
@@ -31,6 +31,9 @@ function Class() {
                 setDraftCharacter({
                     ...draftCharacter,
                     classId: id,
+                    class: world.classes.find(
+                        (characterClass) => characterClass.id == id
+                    )!,
                 });
             }}
             columns={4}

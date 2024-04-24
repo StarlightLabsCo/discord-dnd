@@ -32,6 +32,7 @@ function Race() {
                 setDraftCharacter({
                     ...draftCharacter,
                     raceId: id,
+                    race: world.races.find((race) => race.id == id)!,
                 });
             }}
             columns={3}

@@ -14,6 +14,8 @@ import {
     PostImageRequest,
     PostImageResponseZodSchema,
 } from "starlight-api-types/rest";
+import { useWebsocketStore } from "../websocket";
+import { useGameStore } from ".";
 
 type WorldInfo = World & {
     races: Race[];
@@ -159,6 +161,16 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             if (data) {
                 console.log("Character saved successfully");
                 set({ draftCharacter: data });
+
+                const { ws } = useWebsocketStore();
+                ws?.send(
+                    JSON.stringify({
+                        type: "CharacterSelectRequest",
+                        data: {
+                            characterInstanceId: data.id,
+                        },
+                    })
+                );
             }
         },
         savingCharacter: false,
@@ -167,6 +179,8 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 );
 
 export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
+    const selectedCampaign = useGameStore().state?.selectedCampaign;
+
     const randomRace =
         world.races[Math.floor(Math.random() * world.races.length)];
     const randomClass =
@@ -178,7 +192,7 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
         id: cuid(),
         userId: null,
         characterId: null,
-        campaignInstanceId: null,
+        campaignInstanceId: selectedCampaign?.id,
 
         raceId: randomRace.id,
         race: randomRace,

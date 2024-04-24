@@ -1,7 +1,7 @@
 import z from "zod";
 import {
     CampaignInstanceSchema,
-    CharacterSchema,
+    CharacterInstanceSchema,
     UserSchema,
 } from "database/prisma/generated/zod";
 
@@ -17,7 +17,7 @@ export type LobbyPlayerStatus = z.infer<typeof LobbyPlayerStatusSchema>;
 
 export const LobbyPlayerSchema = z.object({
     user: UserSchema,
-    character: z.union([CharacterSchema, z.null()]),
+    character: z.union([CharacterInstanceSchema, z.null()]),
     status: LobbyPlayerStatusSchema,
 });
 export type LobbyPlayer = z.infer<typeof LobbyPlayerSchema>;

@@ -6,10 +6,10 @@ import type {
 } from "starlight-api-types/websocket";
 import { server } from "index";
 
-const idToState = new Map<string, InstanceState>();
+export const instanceIdToState = new Map<string, InstanceState>();
 
 export async function addUserToInstanceState(instanceId: string, user: User) {
-    let instanceState = idToState.get(instanceId);
+    let instanceState = instanceIdToState.get(instanceId);
     if (!instanceState) {
         let selectedCampaign = await findOrCreateCampaignForUser(user);
 
@@ -24,7 +24,7 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
             ],
             selectedCampaign,
         };
-        idToState.set(instanceId, instanceState);
+        instanceIdToState.set(instanceId, instanceState);
     } else {
         instanceState.connectedPlayers.push({
             user,
@@ -33,7 +33,7 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
         });
     }
 
-    idToState.set(instanceId, instanceState);
+    instanceIdToState.set(instanceId, instanceState);
 
     const instanceStateResponse: InstanceStateResponse = {
         type: "InstanceStateResponse",
@@ -92,7 +92,7 @@ export async function removeUserFromInstanceState(
     instanceId: string,
     user: User
 ) {
-    const instanceState = idToState.get(instanceId);
+    const instanceState = instanceIdToState.get(instanceId);
     if (!instanceState) return;
 
     instanceState.connectedPlayers = instanceState.connectedPlayers.filter(
@@ -100,9 +100,9 @@ export async function removeUserFromInstanceState(
     );
 
     if (instanceState.connectedPlayers.length === 0) {
-        idToState.delete(instanceId);
+        instanceIdToState.delete(instanceId);
     } else {
-        idToState.set(instanceId, instanceState);
+        instanceIdToState.set(instanceId, instanceState);
         const instanceStateResponse: InstanceStateResponse = {
             type: "InstanceStateResponse",
             data: instanceState,

@@ -24,27 +24,52 @@ async function POST(request: Request) {
         where: { id: characterData.id },
     });
 
+    const baseData = {
+        ...characterData,
+
+        id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined,
+        userId: undefined,
+        characterId: undefined,
+        campaignInstanceId: undefined,
+        raceId: undefined,
+        subraceId: undefined,
+        classId: undefined,
+        backgroundId: undefined,
+        currentLocationId: undefined,
+
+        user: characterData.userId
+            ? { connect: { id: characterData.userId } }
+            : undefined,
+        campaignInstance: {
+            connect: { id: characterData.campaignInstanceId },
+        },
+        race: { connect: { id: characterData.raceId } },
+        subrace: characterData.subraceId
+            ? { connect: { id: characterData.subraceId } }
+            : undefined,
+        class: { connect: { id: characterData.classId } },
+        background: { connect: { id: characterData.backgroundId } },
+        currentLocation: characterData.currentLocationId
+            ? { connect: { id: characterData.currentLocationId } }
+            : undefined,
+    };
+
     if (existingCharacter) {
-        const updatedCharacter = await db.characterInstance.update({
+        const updatedCharacterInstance = await db.characterInstance.update({
             where: { id: characterData.id },
-            data: {
-                ...characterData,
-            },
+            data: baseData,
         });
-        return new Response(JSON.stringify(updatedCharacter), {
+        return new Response(JSON.stringify(updatedCharacterInstance), {
             headers: { "Content-Type": "application/json" },
             status: 200,
         });
     } else {
-        const newCharacter = await db.characterInstance.create({
-            data: {
-                ...characterData,
-                id: undefined,
-                createdAt: undefined,
-                updatedAt: undefined,
-            },
+        const newCharacterInstance = await db.characterInstance.create({
+            data: baseData,
         });
-        return new Response(JSON.stringify(newCharacter), {
+        return new Response(JSON.stringify(newCharacterInstance), {
             headers: { "Content-Type": "application/json" },
             status: 201,
         });

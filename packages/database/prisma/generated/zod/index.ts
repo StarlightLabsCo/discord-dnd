@@ -505,7 +505,7 @@ export const CharacterInstanceSchema = z.object({
   id: z.string().cuid(),
   userId: z.string().nullable(),
   characterId: z.string().nullable(),
-  campaignInstanceId: z.string().nullable(),
+  campaignInstanceId: z.string(),
   raceId: z.string(),
   subraceId: z.string().nullable(),
   classId: z.string(),

@@ -122,7 +122,10 @@ function Lore() {
                     <textarea
                         value={draftCharacter?.personalityTraits || ""}
                         onChange={(e) =>
-                            updateDraftCharacter("personality", e.target.value)
+                            updateDraftCharacter(
+                                "personalityTraits",
+                                e.target.value
+                            )
                         }
                         className='bg-transparent border-white border-[0.1vw] p-[0.5vw] w-3/5 h-[10vh]'
                     />

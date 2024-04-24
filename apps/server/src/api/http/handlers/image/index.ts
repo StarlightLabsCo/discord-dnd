@@ -12,7 +12,9 @@ export async function handleImageRequest(req: Request) {
     console.log("Handling image request");
     const url = new URL(req.url);
 
+    console.log(url.pathname);
     if (url.pathname === "/api/image/") {
+        console.log(req.method);
         if (req.method === "POST") {
             return handleImagePost(req);
         }

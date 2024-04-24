@@ -9,6 +9,7 @@ import { authorizeAndValidateRequest } from "@/api/http/utils";
 import type { Item } from "database";
 
 export async function handleImageRequest(req: Request) {
+    console.log("Handling image request");
     const url = new URL(req.url);
 
     if (url.pathname === "/api/image/") {
@@ -19,11 +20,14 @@ export async function handleImageRequest(req: Request) {
 }
 
 async function handleImagePost(req: Request) {
+    console.log("Handling image post");
     const { error, data } = await authorizeAndValidateRequest(
         req,
         PostImageRequestZodSchema
     );
     if (error) return error;
+
+    console.log("Generating image");
 
     // const startingItems = classes[data.classId].startingItems?.reduce(
     //     (acc: string[], item: Item) => {

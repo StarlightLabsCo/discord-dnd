@@ -2,8 +2,9 @@ import { cn } from "@/lib/tailwind/utils";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 import { AbilityScoreDisplay } from "./AbilityScoreDisplay";
 import { ItemPreview } from "./ItemPreview";
-import { SkillPreview } from "./SkillPreview";
+import { ProficiencyPreview } from "./SkillPreview";
 import { s3UrlRewriter } from "@/lib/discord/utils";
+import { Proficiency } from "database";
 
 type CharacterPreviewProps = {
     className?: string;
@@ -80,21 +81,30 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                         <div className='text-[0.8vw] text-neutral-400'>
                             Starting Skills
                         </div>
-                        {/* <div className='flex gap-x-[1.5vw]'>
-                            {classes[classId].startingSkills?.map((skill) => (
-                                <SkillPreview key={skill.id} skill={skill} />
-                            ))}
-                        </div> */}
+                        <div className='flex gap-x-[1.5vw]'>
+                            {draftCharacter.background.proficiencies.map(
+                                (skill: Proficiency) => {
+                                    return (
+                                        <ProficiencyPreview
+                                            key={skill.id}
+                                            proficiency={skill}
+                                        />
+                                    );
+                                }
+                            )}
+                        </div>
                     </div>
                     <div className='flex flex-col items-center gap-y-[0.5vw]'>
                         <div className='text-[0.8vw] text-neutral-400'>
                             Starting Items
                         </div>
-                        {/* <div className='flex gap-x-[1.5vw]'>
-                            {classes[classId].startingItems?.map((item) => (
-                                <ItemPreview key={item.id} item={item} />
-                            ))}
-                        </div> */}
+                        <div className='flex gap-x-[1.5vw]'>
+                            {draftCharacter.background.startingEquipment.map(
+                                (item) => (
+                                    <ItemPreview key={item.id} item={item} />
+                                )
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

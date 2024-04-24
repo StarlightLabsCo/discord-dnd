@@ -26,7 +26,12 @@ async function GET(request: Request) {
         include: {
             races: true,
             classes: true,
-            backgrounds: true,
+            backgrounds: {
+                include: {
+                    startingEquipment: true,
+                    proficiencies: true,
+                },
+            },
         },
     });
 

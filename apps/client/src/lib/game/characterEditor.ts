@@ -1,4 +1,12 @@
-import { World, Race, Class, Background, CharacterInstance } from "database";
+import {
+    World,
+    Race,
+    Class,
+    Background,
+    CharacterInstance,
+    Proficiency,
+    Item,
+} from "database";
 import { create } from "zustand";
 import { useDiscordStore } from "../discord";
 import cuid from "cuid";
@@ -10,13 +18,19 @@ import {
 type WorldInfo = World & {
     races: Race[];
     classes: Class[];
-    backgrounds: Background[];
+    backgrounds: (Background & {
+        proficiencies: Proficiency[];
+        startingEquipment: Item[];
+    })[];
 };
 
 type CharacterInstanceInfo = CharacterInstance & {
     race: Race;
     class: Class;
-    background: Background;
+    background: Background & {
+        proficiencies: Proficiency[];
+        startingEquipment: Item[];
+    };
 };
 
 interface CharacterEditorStoreState {

@@ -164,7 +164,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
                 console.log("Character saved successfully");
                 set({ draftCharacter: data });
 
-                const { ws } = useWebsocketStore();
+                const ws = useWebsocketStore.getState().ws;
                 ws?.send(
                     JSON.stringify({
                         type: "CharacterSelectRequest",
@@ -217,7 +217,6 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
         appearance: "Randomly generated",
         backstory: "Mysterious origins",
         personalityTraits: [],
-        personality: [],
         ideals: [],
         bonds: [],
         flaws: [],

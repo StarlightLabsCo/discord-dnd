@@ -1,7 +1,10 @@
 import { World, Race, Class, Background, CharacterInstance } from "database";
 import { create } from "zustand";
 import { useDiscordStore } from "../discord";
-import { PostImageResponseZodSchema } from "starlight-api-types/rest";
+import {
+    PostImageRequest,
+    PostImageResponseZodSchema,
+} from "starlight-api-types/rest";
 
 type WorldInfo = World & {
     races: Race[];
@@ -80,7 +83,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
                     Authorization: `Bearer ${auth.access_token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(get().draftCharacter),
+                body: JSON.stringify(get().draftCharacter as PostImageRequest),
             });
 
             get().setGeneratingCharacter(false);

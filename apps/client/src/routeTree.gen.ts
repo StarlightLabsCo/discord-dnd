@@ -22,6 +22,7 @@ import { Route as LayoutLobbyCharacterLayoutRaceImport } from './routes/_layout.
 import { Route as LayoutLobbyCharacterLayoutOriginImport } from './routes/_layout.lobby.character._layout.origin'
 import { Route as LayoutLobbyCharacterLayoutLoreImport } from './routes/_layout.lobby.character._layout.lore'
 import { Route as LayoutLobbyCharacterLayoutClassImport } from './routes/_layout.lobby.character._layout.class'
+import { Route as LayoutLobbyCharacterLayoutBackgroundImport } from './routes/_layout.lobby.character._layout.background'
 import { Route as LayoutLobbyCharacterLayoutAbilitiesImport } from './routes/_layout.lobby.character._layout.abilities'
 
 // Create Virtual Routes
@@ -87,6 +88,12 @@ const LayoutLobbyCharacterLayoutClassRoute =
     getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
   } as any)
 
+const LayoutLobbyCharacterLayoutBackgroundRoute =
+  LayoutLobbyCharacterLayoutBackgroundImport.update({
+    path: '/background',
+    getParentRoute: () => LayoutLobbyCharacterLayoutRoute,
+  } as any)
+
 const LayoutLobbyCharacterLayoutAbilitiesRoute =
   LayoutLobbyCharacterLayoutAbilitiesImport.update({
     path: '/abilities',
@@ -121,6 +128,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutLobbyCharacterLayoutAbilitiesImport
       parentRoute: typeof LayoutLobbyCharacterLayoutImport
     }
+    '/_layout/lobby/character/_layout/background': {
+      preLoaderRoute: typeof LayoutLobbyCharacterLayoutBackgroundImport
+      parentRoute: typeof LayoutLobbyCharacterLayoutImport
+    }
     '/_layout/lobby/character/_layout/class': {
       preLoaderRoute: typeof LayoutLobbyCharacterLayoutClassImport
       parentRoute: typeof LayoutLobbyCharacterLayoutImport
@@ -153,6 +164,7 @@ export const routeTree = rootRoute.addChildren([
     LayoutLobbyCharacterRoute.addChildren([
       LayoutLobbyCharacterLayoutRoute.addChildren([
         LayoutLobbyCharacterLayoutAbilitiesRoute,
+        LayoutLobbyCharacterLayoutBackgroundRoute,
         LayoutLobbyCharacterLayoutClassRoute,
         LayoutLobbyCharacterLayoutLoreRoute,
         LayoutLobbyCharacterLayoutOriginRoute,

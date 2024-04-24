@@ -25,16 +25,13 @@ async function handleImagePost(req: Request) {
     );
     if (error) return error;
 
-    const race = races[data.raceId].title;
-    const characterClass = classes[data.classId].title;
-
-    const startingItems = classes[data.classId].startingItems?.reduce(
-        (acc: string[], item: Item) => {
-            acc.push(item.name);
-            return acc;
-        },
-        [] as string[]
-    );
+    // const startingItems = classes[data.classId].startingItems?.reduce(
+    //     (acc: string[], item: Item) => {
+    //         acc.push(item.name);
+    //         return acc;
+    //     },
+    //     [] as string[]
+    // );
 
     // Generate image description
     const imagePromptResponse = await openai.chat.completions.create({
@@ -48,7 +45,7 @@ async function handleImagePost(req: Request) {
             },
             {
                 role: "user",
-                content: `Name: ${data.name}\nPronouns: ${data.pronouns}\nAge: ${data.age}\nLevel: 1\nClass: ${characterClass}\nRace: ${race}\nBackstory: ${data.backstory}\nTraits: ${data.personality}, ${data.ideals}, ${data.bonds}, ${data.flaws}\nItems: ${startingItems.join(", ")}\nStats:\n- Strength: ${data.strength}\n- Dexterity: ${data.dexterity}\n- Constitution: ${data.constitution}\n- Intelligence: ${data.intelligence}\n- Wisdom: ${data.wisdom}\n- Charisma: ${data.charisma}`,
+                content: `Name: ${data.name}\nPronouns: ${data.pronouns}\nAge: ${data.age}\nLevel: 1\nClass: ${data.class.name}\nRace: ${data.race.name}\nBackground${data.background.name}Backstory: ${data.backstory}\nTraits: ${data.personalityTraits}, ${data.ideals}, ${data.bonds}, ${data.flaws}\n\nStats:\n- Strength: ${data.strength}\n- Dexterity: ${data.dexterity}\n- Constitution: ${data.constitution}\n- Intelligence: ${data.intelligence}\n- Wisdom: ${data.wisdom}\n- Charisma: ${data.charisma}`,
             },
         ],
         openpipe: {

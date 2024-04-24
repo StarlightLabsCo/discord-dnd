@@ -66,6 +66,11 @@ async function POST(request: Request) {
         const updatedCharacterInstance = await db.characterInstance.update({
             where: { id: characterData.id },
             data: baseData,
+            include: {
+                race: true,
+                background: true,
+                class: true,
+            },
         });
         return new Response(JSON.stringify(updatedCharacterInstance), {
             headers: { "Content-Type": "application/json" },
@@ -74,6 +79,11 @@ async function POST(request: Request) {
     } else {
         const newCharacterInstance = await db.characterInstance.create({
             data: baseData,
+            include: {
+                race: true,
+                background: true,
+                class: true,
+            },
         });
         return new Response(JSON.stringify(newCharacterInstance), {
             headers: { "Content-Type": "application/json" },

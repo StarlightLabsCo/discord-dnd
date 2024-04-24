@@ -14,9 +14,8 @@ COPY . .
 ARG DATABASE_URL
 RUN bun install --frozen-lockfile
 RUN bunx turbo run db:generate
-# RUN bun build --compile --minify ./apps/server/index.ts --outfile server
+RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 
 ENV NODE_ENV=production
 
-CMD ["bun", "start"]
-# CMD ./server
+CMD ./server

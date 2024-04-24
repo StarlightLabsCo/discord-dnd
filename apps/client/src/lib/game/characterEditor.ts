@@ -144,9 +144,12 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 
             set({ savingCharacter: true });
 
+            const { auth } = useDiscordStore.getState();
+
             const response = await fetch("/api/data/character", {
                 method: "POST",
                 headers: {
+                    Authorization: `Bearer ${auth?.access_token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(draftCharacter),
@@ -182,6 +185,7 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 
 export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
     const selectedCampaign = useGameStore.getState().state?.selectedCampaign;
+    const user = useGameStore.getState().user;
 
     const randomRace =
         world.races[Math.floor(Math.random() * world.races.length)];
@@ -192,7 +196,7 @@ export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
 
     return {
         id: cuid(),
-        userId: null,
+        userId: user?.id,
         characterId: null,
         campaignInstanceId: selectedCampaign?.id,
 

@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import type { CharacterInstance } from "@prisma/client";
+import { authorizeAndValidateRequest } from "@/api/http/utils";
+import { CharacterInstanceSchema } from "database/prisma/generated/zod";
 
 export async function handleCharacterRequest(req: Request) {
     if (req.method === "GET") {
@@ -18,7 +20,13 @@ async function GET(request: Request) {
 }
 
 async function POST(request: Request) {
-    const characterData = (await request.json()) as CharacterInstance;
+    const { error, data, user } = await authorizeAndValidateRequest(
+        request,
+        CharacterInstanceSchema
+    );
+    if (error) return error;
+
+    const characterData = data as CharacterInstance;
 
     const existingCharacter = await db.characterInstance.findUnique({
         where: { id: characterData.id },
@@ -39,9 +47,7 @@ async function POST(request: Request) {
         backgroundId: undefined,
         currentLocationId: undefined,
 
-        user: characterData.userId
-            ? { connect: { id: characterData.userId } }
-            : undefined,
+        user: characterData.userId ? { connect: { id: user.id } } : undefined,
         campaignInstance: {
             connect: { id: characterData.campaignInstanceId },
         },

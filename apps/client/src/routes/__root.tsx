@@ -22,6 +22,7 @@ function App() {
         }
     }, [connect, auth]);
 
+    // TODO: add a debug flag to enable/disable devtools
     return (
         <>
             <Outlet />

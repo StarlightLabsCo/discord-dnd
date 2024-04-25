@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SelectableGrid } from "@/components/lobby/character/SelectableGrid";
 
-export const Route = createFileRoute("/_layout/lobby/character/_layout/origin")(
+export const Route = createFileRoute("/_layout/lobby/character/origin")(
     {
         component: Origin,
     }

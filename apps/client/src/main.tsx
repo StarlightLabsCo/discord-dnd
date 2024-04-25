@@ -9,7 +9,7 @@ import {
 
 import { routeTree } from "./routeTree.gen";
 
-const router = createRouter({ routeTree });
+export const router = createRouter({ routeTree, defaultPreload: "intent" });
 export type AppLayoutPaths = RoutePaths<typeof routeTree>;
 
 declare module "@tanstack/react-router" {

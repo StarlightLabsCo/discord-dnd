@@ -7,6 +7,7 @@ import {
 
 import { handleUserInfoResponse } from "./handlers/userInfo";
 import { handleInstanceStateResponse } from "./handlers/instanceState";
+import { handleGameStartResponse } from "./handlers/gameStart";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -111,7 +112,7 @@ async function onMessage(event: MessageEvent) {
         const response = validateWebSocketResponse(event.data);
         if (!response) return;
 
-        const handler = handlers[response.type];
+        const handler = handlers[response.type as keyof typeof handlers];
         if (!handler) {
             console.error(
                 "[DiscordD&D WS] No handler for message type:",
@@ -129,4 +130,5 @@ async function onMessage(event: MessageEvent) {
 const handlers = {
     UserInfoResponse: handleUserInfoResponse,
     InstanceStateResponse: handleInstanceStateResponse,
+    GameStartResponse: handleGameStartResponse,
 };

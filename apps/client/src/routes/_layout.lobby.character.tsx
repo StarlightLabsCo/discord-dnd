@@ -4,7 +4,7 @@ import { CharacterPreview } from "@/components/lobby/character/CharacterPreview"
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
-export const Route = createFileRoute("/_layout/lobby/character/_layout")({
+export const Route = createFileRoute("/_layout/lobby/character")({
     component: Layout,
 });
 
@@ -30,3 +30,4 @@ function Layout() {
         </div>
     );
 }
+    

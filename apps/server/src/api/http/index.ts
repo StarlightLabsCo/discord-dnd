@@ -11,8 +11,6 @@ export async function handleApiRequest(req: Request, server: Server) {
     if (url.pathname === "/api/token") return handleTokenRequest(req);
     if (url.pathname === "/api/ws")
         return handleWebSocketInitRequest(req, server);
-
     if (url.pathname.startsWith("/api/image")) return handleImageRequest(req);
-
     if (url.pathname.startsWith("/api/data")) return handleDataRequest(req);
 }

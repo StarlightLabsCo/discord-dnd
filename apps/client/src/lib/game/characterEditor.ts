@@ -67,8 +67,13 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
         },
         setWorldByCampaignId: async (campaignId) => {
             console.log("Fetching world...");
+            console.log(
+                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/data/world?campaignId=` +
+                    campaignId
+            );
             const response = await fetch(
-                "/api/data/world?campaignId=" + campaignId
+                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/data/world?campaignId=` +
+                    campaignId
             );
             if (!response.ok) {
                 console.error("Failed to fetch world");
@@ -101,14 +106,19 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             }
 
             get().setGeneratingCharacter(true);
-            const response = await fetch("/api/image", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${auth.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(get().draftCharacter as PostImageRequest),
-            });
+            const response = await fetch(
+                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/image`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${auth.access_token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(
+                        get().draftCharacter as PostImageRequest
+                    ),
+                }
+            );
 
             get().setGeneratingCharacter(false);
 
@@ -147,14 +157,17 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 
             const { auth } = useDiscordStore.getState();
 
-            const response = await fetch("/api/data/character", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${auth?.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(draftCharacter),
-            });
+            const response = await fetch(
+                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/data/character`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${auth?.access_token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(draftCharacter),
+                }
+            );
 
             set({ savingCharacter: false });
 

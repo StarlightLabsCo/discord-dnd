@@ -7,9 +7,20 @@ export const server = Bun.serve({
         try {
             const url = new URL(req.url);
 
-            return url.pathname.startsWith("/api")
+            const response = url.pathname.startsWith("/api")
                 ? await handleApiRequest(req, server)
                 : new Response("Not Found", { status: 404 });
+
+            if (process.env.NODE_ENV === "development" && response) {
+                response.headers.set("Access-Control-Allow-Origin", "*");
+                response.headers.set(
+                    "Access-Control-Allow-Methods",
+                    "GET, POST, OPTIONS, PUT, DELETE"
+                );
+                response.headers.set("Access-Control-Allow-Headers", "*");
+            }
+
+            return response;
         } catch (e) {
             console.error(e);
             return new Response("Internal Server Error", { status: 500 });

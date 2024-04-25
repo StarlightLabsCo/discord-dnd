@@ -5,20 +5,31 @@ export async function authorizeAndValidateRequest<T>(
     req: Request,
     schema: ZodSchema<T>
 ) {
-    // Authorization
-    const authorization = req.headers.get("Authorization");
-    if (!authorization) {
-        return { error: new Response("Unauthorized", { status: 401 }) };
-    }
+    let user;
 
-    const access_token = authorization.split("Bearer ")[1];
-    if (!access_token) {
-        return { error: new Response("Unauthorized", { status: 401 }) };
-    }
+    const isDevelopment = process.env.NODE_ENV === "development";
+    if (isDevelopment) {
+        user = {
+            id: "1077378222834073682",
+            username: "starlightharris",
+            discriminator: "0",
+            global_name: "starlight-harris",
+        };
+    } else {
+        const authorization = req.headers.get("Authorization");
+        if (!authorization) {
+            return { error: new Response("Unauthorized", { status: 401 }) };
+        }
 
-    const user = await getUser(access_token);
-    if (!user) {
-        return { error: new Response("Unauthorized", { status: 401 }) };
+        const access_token = authorization.split("Bearer ")[1];
+        if (!access_token) {
+            return { error: new Response("Unauthorized", { status: 401 }) };
+        }
+
+        user = await getUser(access_token);
+        if (!user) {
+            return { error: new Response("Unauthorized", { status: 401 }) };
+        }
     }
 
     // Parse and validate request body

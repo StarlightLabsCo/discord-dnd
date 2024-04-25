@@ -8,6 +8,16 @@ export async function handleCharacterRequest(req: Request) {
         return GET(req);
     } else if (req.method === "POST") {
         return POST(req);
+    } else if (req.method === "OPTIONS") {
+        if (process.env.NODE_ENV === "development") {
+            return new Response(null, {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                    "Access-Control-Allow-Headers": "*",
+                },
+            });
+        }
     }
 }
 
@@ -68,7 +78,12 @@ async function POST(request: Request) {
             data: baseData,
             include: {
                 race: true,
-                background: true,
+                background: {
+                    include: {
+                        startingEquipment: true,
+                        proficiencies: true,
+                    },
+                },
                 class: true,
             },
         });
@@ -81,7 +96,12 @@ async function POST(request: Request) {
             data: baseData,
             include: {
                 race: true,
-                background: true,
+                background: {
+                    include: {
+                        startingEquipment: true,
+                        proficiencies: true,
+                    },
+                },
                 class: true,
             },
         });

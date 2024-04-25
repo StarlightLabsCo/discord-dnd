@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
-import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
+import { LobbyCharacterPortrait } from "@/components/lobby/LobbyCharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
 import { useMusicStore } from "@/lib/game/music";
 import { s3UrlRewriter } from "@/lib/discord/utils";
@@ -107,7 +107,7 @@ function Lobby() {
                     <div className='grid grid-cols-3 gap-[2vw] place-items-center w-full'>
                         {connectedPlayers.map((connectedPlayer) => {
                             return (
-                                <CharacterPortrait
+                                <LobbyCharacterPortrait
                                     key={connectedPlayer.user.id}
                                     user={connectedPlayer.user}
                                     character={connectedPlayer.character}

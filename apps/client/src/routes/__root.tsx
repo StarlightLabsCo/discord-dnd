@@ -26,7 +26,6 @@ function App() {
     return (
         <>
             <Outlet />
-            <TanStackRouterDevtools position='top-left' />
         </>
     );
 }

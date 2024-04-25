@@ -15,7 +15,6 @@ import { Route as LobbyImport } from './routes/lobby'
 import { Route as GameImport } from './routes/game'
 import { Route as IndexImport } from './routes/index'
 import { Route as LobbyIndexImport } from './routes/lobby.index'
-import { Route as GameIndexImport } from './routes/game.index'
 import { Route as LobbyCharacterImport } from './routes/lobby.character'
 import { Route as LobbyCharacterSubraceImport } from './routes/lobby.character.subrace'
 import { Route as LobbyCharacterRaceImport } from './routes/lobby.character.race'
@@ -45,11 +44,6 @@ const IndexRoute = IndexImport.update({
 const LobbyIndexRoute = LobbyIndexImport.update({
   path: '/',
   getParentRoute: () => LobbyRoute,
-} as any)
-
-const GameIndexRoute = GameIndexImport.update({
-  path: '/',
-  getParentRoute: () => GameRoute,
 } as any)
 
 const LobbyCharacterRoute = LobbyCharacterImport.update({
@@ -112,10 +106,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LobbyCharacterImport
       parentRoute: typeof LobbyImport
     }
-    '/game/': {
-      preLoaderRoute: typeof GameIndexImport
-      parentRoute: typeof GameImport
-    }
     '/lobby/': {
       preLoaderRoute: typeof LobbyIndexImport
       parentRoute: typeof LobbyImport
@@ -155,7 +145,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  GameRoute.addChildren([GameIndexRoute]),
+  GameRoute,
   LobbyRoute.addChildren([
     LobbyCharacterRoute.addChildren([
       LobbyCharacterAbilitiesRoute,

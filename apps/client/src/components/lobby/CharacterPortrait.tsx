@@ -1,11 +1,11 @@
-import { Character, User } from "database";
+import { CharacterInstance, User } from "database";
 import { DiscordAvatar } from "./DiscordAvatar";
 import { Link } from "@tanstack/react-router";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 
 type CharacterPortraitProps = {
     user: User;
-    character: Character | null;
+    character: CharacterInstance | null;
     ready?: boolean;
     isCurrentUser?: boolean;
 };
@@ -23,11 +23,11 @@ export function CharacterPortrait({
                     Ready
                 </div>
             )}
-            <div className='relative group'>
+            <div className='relative group w-[14vw] h-[14vw]'>
                 {character && (
                     <img
                         src={s3UrlRewriter(character.imageUrl)}
-                        className='object-cover w-full h-full rounded-[1vw]'
+                        className='w-[14vw] h-[14vw] object-cover rounded-[1vw]'
                         alt='Character Portrait'
                     />
                 )}

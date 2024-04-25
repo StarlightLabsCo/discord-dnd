@@ -57,6 +57,9 @@ export function SidebarLinks({ className }: SidebarLinksProps) {
         },
     ];
 
+    console.log(`Sidebarlinks:`);
+    console.log(sidebarLinks);
+
     return (
         <div
             className={cn(

@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
 import { CharacterPortrait } from "@/components/lobby/CharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
 import { useMusicStore } from "@/lib/game/music";
 import { s3UrlRewriter } from "@/lib/discord/utils";
+import { useWebsocketStore } from "@/lib/websocket";
+import readySound from "@/assets/sfx/lobby/ready.mp3";
 
 export const Route = createFileRoute("/_layout/lobby")({
     component: Lobby,
@@ -16,8 +18,6 @@ function Lobby() {
     const connectedPlayers = useGameStore(
         (state) => state.state?.connectedPlayers || []
     );
-
-    console.log("Connected players", connectedPlayers);
 
     const title = useGameStore((state) => state.state?.selectedCampaign?.name);
     const description = useGameStore(
@@ -39,39 +39,46 @@ function Lobby() {
         play();
     }, [play]);
 
-    const toggleReady = () => {
+    function toggleReady() {
         if (!user) return;
-        // if (!gameState.readyUserIds.includes(user.id)) {
-        //     const readySfx = new Audio(readySound);
-        //     readySfx.play();
 
-        //     const newGameState = {
-        //         readyUserIds: [...gameState.readyUserIds, user.id],
-        //     };
+        const readySfx = new Audio(readySound);
 
-        //     setGameState(newGameState);
-        //     sendMessage(
-        //         JSON.stringify({
-        //             type: "GameStateUpdateRequest",
-        //             data: newGameState,
-        //         } as GameStateUpdateRequest)
-        //     );
-        // } else {
-        //     const newGameState = {
-        //         readyUserIds: gameState.readyUserIds.filter(
-        //             (id) => id !== user.id
-        //         ),
-        //     };
+        const currentState = useGameStore.getState().state;
+        if (!currentState || !currentState.connectedPlayers) return;
 
-        //     setGameState(newGameState);
-        //     sendMessage(
-        //         JSON.stringify({
-        //             type: "GameStateUpdateRequest",
-        //             data: newGameState,
-        //         } as GameStateUpdateRequest)
-        //     );
-        // }
-    };
+        const currentPlayer = currentState.connectedPlayers.find(
+            (p) => p.user.id === user.id
+        );
+        if (!currentPlayer || !currentPlayer.character) return;
+
+        const newStatus =
+            currentPlayer.status === "READY" ? "NOT_READY" : "READY";
+        currentPlayer.status = newStatus;
+
+        useGameStore.setState({
+            state: {
+                ...currentState,
+                connectedPlayers: currentState.connectedPlayers.map((player) =>
+                    player.user.id === user.id
+                        ? { ...player, status: newStatus }
+                        : player
+                ),
+            },
+        });
+
+        readySfx.play();
+
+        const message = JSON.stringify({
+            type: "LobbyReadyRequest",
+            data: { ready: newStatus === "READY" },
+        });
+
+        const ws = useWebsocketStore.getState().ws;
+        if (ws) {
+            ws.send(message);
+        }
+    }
 
     if (!user) return null; // Invalid state
 
@@ -114,16 +121,26 @@ function Lobby() {
                         {connectedPlayers.length < 6 && <AddPlayerButton />}
                     </div>
                     <div className='flex justify-end items-center w-full'>
-                        <div
-                            className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer hover:scale-105'
-                            onClick={toggleReady}
-                        >
-                            {/* {connectedPlayers.find((p) => p.user.id === user.id)
-                                .ready
-                                ? "Ready"
-                                : "Unready"} */}
-                            Ready
-                        </div>
+                        {connectedPlayers.find((p) => p.user.id === user.id)
+                            ?.character ? (
+                            <div
+                                className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer hover:scale-105'
+                                onClick={toggleReady}
+                            >
+                                {connectedPlayers.find(
+                                    (p) => p.user.id === user.id
+                                )?.status === "READY"
+                                    ? "Unready"
+                                    : "Ready"}
+                            </div>
+                        ) : (
+                            <Link
+                                to='/lobby/character/origin'
+                                className='text-[3.5vw] font-bold text-white drop-shadow-xl cursor-pointer hover:scale-105'
+                            >
+                                Create Character
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

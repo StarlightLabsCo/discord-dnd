@@ -22,11 +22,11 @@ export function GameCharacterPortrait({
                     Ready
                 </div>
             )}
-            <div className='relative group w-[14vw] h-[14vw]'>
+            <div className='relative group w-[8vw] h-[8vw]'>
                 {character && (
                     <img
                         src={s3UrlRewriter(character.imageUrl)}
-                        className='w-[14vw] h-[14vw] object-cover rounded-[1vw]'
+                        className='w-[8vw] h-[8vw] object-cover rounded-[1vw]'
                         alt='Character Portrait'
                     />
                 )}

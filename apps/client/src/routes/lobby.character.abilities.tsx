@@ -3,7 +3,7 @@ import { AbilityScoreSelector } from "@/components/lobby/character/AbilityScoreS
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
 export const Route = createFileRoute(
-    "/_layout/lobby/character/abilities"
+    "/lobby/character/abilities"
 )({
     component: Abilities,
 });

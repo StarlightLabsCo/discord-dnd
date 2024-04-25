@@ -1,7 +1,7 @@
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_layout/lobby/character/lore")({
+export const Route = createFileRoute("/lobby/character/lore")({
     component: Lore,
 });
 

@@ -4,7 +4,7 @@ import { CharacterPreview } from "@/components/lobby/character/CharacterPreview"
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
-export const Route = createFileRoute("/_layout/lobby/character")({
+export const Route = createFileRoute("/lobby/character")({
     component: Layout,
 });
 

@@ -19,10 +19,18 @@ export const InstanceStateResponseZodSchema = z.object({
     data: InstanceStateSchema,
 });
 
+export type GameStartResponse = z.infer<typeof GameStartResponseZodSchema>;
+
+export const GameStartResponseZodSchema = z.object({
+    type: z.literal("GameStartResponse"),
+    data: z.object({}),
+});
+
 // ----- Response Schema -----
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
+    GameStartResponse: GameStartResponseZodSchema,
 };
 
 export function getResponseSchema(type: keyof typeof responseTypeToSchema) {

@@ -34,4 +34,16 @@ export async function handleLobbyReadyRequest(
         data: instanceState,
     };
     server.publish(ws.data.instanceId, JSON.stringify(instanceStateResponse));
+
+    // Start the game if all players are ready
+    const allReady = instanceState.connectedPlayers.every(
+        (p) => p.status === "READY"
+    );
+    if (allReady) {
+        const gameStartResponse = {
+            type: "GameStartResponse",
+            data: {},
+        };
+        server.publish(ws.data.instanceId, JSON.stringify(gameStartResponse));
+    }
 }

@@ -2,7 +2,7 @@ import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { LobbyControls } from "@/components/lobby/LobbyControls";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocropped.png";
 
-export const Route = createFileRoute("/_layout")({
+export const Route = createFileRoute("/lobby")({
     component: Layout,
 });
 

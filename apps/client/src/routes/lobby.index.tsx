@@ -8,7 +8,7 @@ import { s3UrlRewriter } from "@/lib/discord/utils";
 import { useWebsocketStore } from "@/lib/websocket";
 import readySound from "@/assets/sfx/lobby/ready.mp3";
 
-export const Route = createFileRoute("/_layout/lobby")({
+export const Route = createFileRoute("/lobby/")({
     component: Lobby,
 });
 

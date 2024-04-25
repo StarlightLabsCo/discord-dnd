@@ -6,7 +6,7 @@ import {
 } from "@/components/lobby/character/SelectableGrid";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 
-export const Route = createFileRoute("/_layout/lobby/character/race")({
+export const Route = createFileRoute("/lobby/character/race")({
     component: Race,
 });
 

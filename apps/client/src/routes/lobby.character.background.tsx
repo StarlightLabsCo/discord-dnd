@@ -5,7 +5,7 @@ import {
     SelectableGridItem,
 } from "@/components/lobby/character/SelectableGrid";
 
-export const Route = createFileRoute("/_layout/lobby/character/background")({
+export const Route = createFileRoute("/lobby/character/background")({
     component: Background,
 });
 

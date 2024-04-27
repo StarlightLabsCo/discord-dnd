@@ -40,7 +40,7 @@ export function DiscordAvatar({ user, className }: DiscordAvatarProps) {
             ) : (
                 <img
                     src={`https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`}
-                    className='w-8 h-8 rounded-full'
+                    className='w-full h-full rounded-full'
                     alt='Default User Avatar'
                 />
             )}

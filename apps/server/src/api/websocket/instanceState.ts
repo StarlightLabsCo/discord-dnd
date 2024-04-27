@@ -28,7 +28,7 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
     } else {
         instanceState.connectedPlayers.push({
             user,
-            character: null,
+            character: null, // TODO: Doesn't handle reconnections very well
             status: "NOT_READY",
         });
     }

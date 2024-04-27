@@ -16,17 +16,17 @@ export function GameCharacterPortrait({
     isCurrentUser,
 }: GameCharacterPortraitProps) {
     return (
-        <div className='relative w-[8vw] h-[8vw] border border-white aspect-square shrink-0 rounded-[0.8vw]'>
-            <div className='relative group w-[8vw] h-[8vw]'>
+        <div className='relative flex items-center justify-center w-[8vw] h-[8vw] border-[0.1vw] border-white aspect-square shrink-0 rounded-[0.8vw]'>
+            <div className='relative group w-[7.8vw] h-[7.8vw]'>
                 {character && (
                     <img
                         src={s3UrlRewriter(character.imageUrl)}
-                        className='w-[8vw] h-[8vw] object-cover rounded-[1vw]'
+                        className='w-[7.8vw] h-[7.8vw] object-cover rounded-[1vw]'
                         alt='Character Portrait'
                     />
                 )}
                 {isCurrentUser && (
-                    <div className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 bg-black/30 group-hover:opacity-100'>
+                    <div className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 bg-black/30 group-hover:opacity-100 rounded-[1vw]'>
                         hi
                     </div>
                 )}

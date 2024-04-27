@@ -17,29 +17,29 @@ export function LobbyCharacterPortrait({
     isCurrentUser,
 }: LobbyCharacterPortraitProps) {
     return (
-        <div className='relative w-[14vw] h-[14vw] border border-white aspect-square shrink-0 rounded-[1vw]'>
+        <div className='relative w-[14vw] h-[14vw] border-[0.1vw] border-white aspect-square shrink-0 rounded-[1vw] flex items-center justify-center'>
             {ready && (
-                <div className='absolute inset-0 z-10 flex items-end w-full h-full text-[3.5vw] leading-none font-bold text-white pb-[10%] justify-center bg-black/30'>
+                <div className='absolute inset-0 z-10 flex items-end w-[13.9vw] h-[13.9vw] text-[3.5vw] leading-none font-bold text-white pb-[10%] justify-center bg-black/30'>
                     Ready
                 </div>
             )}
-            <div className='relative group w-[14vw] h-[14vw]'>
+            <div className='relative group w-[13.9vw] h-[13.9vw]'>
                 {character && (
                     <img
                         src={s3UrlRewriter(character.imageUrl)}
-                        className='w-[14vw] h-[14vw] object-cover rounded-[1vw]'
+                        className='w-[13.9vw] h-[13.9vw] object-cover rounded-[1vw]'
                         alt='Character Portrait'
                     />
                 )}
                 {!character && (
-                    <div className='flex justify-center items-center w-[14vw] h-[14vw] rounded-[1vw] bg-black/50'>
+                    <div className='flex justify-center items-center w-[13.9vw] h-[13.9vw] rounded-[1vw] bg-black/50'>
                         <div className='text-white text-[2vw] font-bold opacity-100'>
                             No character
                         </div>
                     </div>
                 )}
                 {isCurrentUser && (
-                    <div className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 bg-black/30 group-hover:opacity-100'>
+                    <div className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 bg-black/30 group-hover:opacity-100 rounded-[1vw]'>
                         <Link
                             to='/lobby/character/origin'
                             className='text-white text-[2vw] font-bold opacity-100 cursor-pointer hover:scale-105'

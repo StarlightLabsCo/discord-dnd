@@ -22,7 +22,7 @@ function GameLayout() {
                     className='z-10 w-[3vw]'
                     alt='Fantasy Fogo Logo'
                 />
-                <div className=''>
+                <div className='flex flex-col gap-y-2'>
                     {connectedPlayers?.map((player) => (
                         <GameCharacterPortrait
                             key={player.user.id}

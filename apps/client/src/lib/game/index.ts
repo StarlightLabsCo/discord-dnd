@@ -19,6 +19,8 @@ export const useGameStore = create<GameStore>((set) => ({
 
     state: null,
     setState: (state: InstanceState) => {
+        console.log(`DEBUG: setState: ${JSON.stringify(state)}`);
+
         set({ state });
 
         if (!state) return;

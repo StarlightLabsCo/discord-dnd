@@ -10,14 +10,24 @@ export async function handleCharacterSelectRequest(
     ws: ServerWebSocket<WebSocketData>,
     request: CharacterSelectRequest
 ) {
+    console.log(
+        `DEBUG: handleCharacterSelectRequest: ${JSON.stringify(request)}`
+    );
+
     const { characterInstanceId } = request.data;
     const { user, instanceId } = ws.data;
+
+    console.log(`DEBUG: characterInstanceId: ${characterInstanceId}`);
+    console.log(`DEBUG: user: ${JSON.stringify(user)}`);
+    console.log(`DEBUG: instanceId: ${instanceId}`);
 
     const instanceState = instanceIdToState.get(instanceId);
     if (!instanceState) {
         sendWsError(ws, `Instance state not found for ID: ${instanceId}`);
         return;
     }
+
+    console.log(`DEBUG: instanceState: ${JSON.stringify(instanceState)}`);
 
     let playerIndex = instanceState.connectedPlayers.findIndex(
         (p) => p.user.id === user.id
@@ -30,6 +40,10 @@ export async function handleCharacterSelectRequest(
     const characterInstance = await db.characterInstance.findUnique({
         where: { id: characterInstanceId, userId: user.id },
     });
+
+    console.log(
+        `DEBUG: characterInstance: ${JSON.stringify(characterInstance)}`
+    );
 
     if (!characterInstance || characterInstance.userId !== user.id) {
         sendWsError(ws, `Character not found for ID: ${characterInstanceId}`);

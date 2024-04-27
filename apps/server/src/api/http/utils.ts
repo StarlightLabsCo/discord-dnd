@@ -7,32 +7,19 @@ export async function authorizeAndValidateRequest<T>(
 ) {
     let user;
 
-    const isProduction = process.env.NODE_ENV === "production";
-    if (!isProduction) {
-        const authorization = req.headers.get("Authorization");
-        if (!authorization) {
-            return { error: new Response("Unauthorized", { status: 401 }) };
-        }
+    const authorization = req.headers.get("Authorization");
+    if (!authorization) {
+        return { error: new Response("Unauthorized", { status: 401 }) };
+    }
 
-        const access_token = authorization.split("Bearer ")[1];
-        if (!access_token) {
-            return { error: new Response("Unauthorized", { status: 401 }) };
-        }
+    const access_token = authorization.split("Bearer ")[1];
+    if (!access_token) {
+        return { error: new Response("Unauthorized", { status: 401 }) };
+    }
 
-        user = await getUser(access_token);
-        if (!user) {
-            return { error: new Response("Unauthorized", { status: 401 }) };
-        }
-    } else {
-        console.log(
-            `DEBUG: Development mode, using test user in authorizeAndValidateRequest`
-        );
-        user = {
-            id: "1077378222834073682",
-            username: "starlightharris",
-            discriminator: "0",
-            global_name: "starlight-harris",
-        };
+    user = await getUser(access_token);
+    if (!user) {
+        return { error: new Response("Unauthorized", { status: 401 }) };
     }
 
     // Parse and validate request body

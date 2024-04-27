@@ -659,7 +659,7 @@ model CharacterInstance {
 
     // ---- Character Instance Info ---
     campaignInstanceId String
-    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id], onDelete: Restrict)
+    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id], onDelete: Cascade)
 
     raceId String
     race   Race   @relation(fields: [raceId], references: [id], onDelete: Restrict)

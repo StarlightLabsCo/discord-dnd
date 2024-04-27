@@ -15,36 +15,32 @@ export async function addUserToInstanceState(
     instanceId: string,
     user: User
 ) {
+    // State
     let instanceState = instanceIdToState.get(instanceId);
-    let selectedCampaign = await findOrCreateCampaignForUser(user);
-
-    const existingCharacterInstance = selectedCampaign.characterInstances.find(
-        (ci) => ci.userId === user.id
-    );
-
-    ws.data.characterInstanceId = existingCharacterInstance?.id || null;
-
     if (!instanceState) {
+        const selectedCampaign = await findOrCreateCampaignForUser(user);
+
         instanceState = {
             state: "LOBBY",
-            connectedPlayers: [
-                {
-                    user,
-                    character: existingCharacterInstance || null,
-                    status: "NOT_READY",
-                },
-            ],
-            selectedCampaign,
+            connectedPlayers: [],
+            selectedCampaign: selectedCampaign,
         };
-        instanceIdToState.set(instanceId, instanceState);
-    } else {
-        instanceState.connectedPlayers.push({
-            user,
-            character: existingCharacterInstance || null,
-            status: "NOT_READY",
-        });
     }
 
+    // Character
+    const existingCharacterInstance =
+        instanceState.selectedCampaign.characterInstances.find(
+            (ci) => ci.userId === user.id
+        );
+
+    ws.data.characterInstanceId = existingCharacterInstance?.id || null;
+    instanceState.connectedPlayers.push({
+        user,
+        character: existingCharacterInstance || null,
+        status: "NOT_READY",
+    });
+
+    // Update the map just before broadcasting the state
     instanceIdToState.set(instanceId, instanceState);
 
     const instanceStateResponse: InstanceStateResponse = {

@@ -9,6 +9,9 @@ export async function authorizeAndValidateRequest<T>(
 
     const isDevelopment = process.env.NODE_ENV === "development";
     if (isDevelopment) {
+        console.log(
+            `DEBUG: Development mode, using test user in authorizeAndValidateRequest`
+        );
         user = {
             id: "1077378222834073682",
             username: "starlightharris",

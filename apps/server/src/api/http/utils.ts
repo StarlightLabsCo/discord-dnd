@@ -7,19 +7,8 @@ export async function authorizeAndValidateRequest<T>(
 ) {
     let user;
 
-    console.log(`Current NODE_ENV: ${process.env.NODE_ENV}`);
-    const isDevelopment = process.env.NODE_ENV === "development";
-    if (isDevelopment) {
-        console.log(
-            `DEBUG: Development mode, using test user in authorizeAndValidateRequest`
-        );
-        user = {
-            id: "1077378222834073682",
-            username: "starlightharris",
-            discriminator: "0",
-            global_name: "starlight-harris",
-        };
-    } else {
+    const isProduction = process.env.NODE_ENV === "production";
+    if (!isProduction) {
         const authorization = req.headers.get("Authorization");
         if (!authorization) {
             return { error: new Response("Unauthorized", { status: 401 }) };
@@ -34,6 +23,16 @@ export async function authorizeAndValidateRequest<T>(
         if (!user) {
             return { error: new Response("Unauthorized", { status: 401 }) };
         }
+    } else {
+        console.log(
+            `DEBUG: Development mode, using test user in authorizeAndValidateRequest`
+        );
+        user = {
+            id: "1077378222834073682",
+            username: "starlightharris",
+            discriminator: "0",
+            global_name: "starlight-harris",
+        };
     }
 
     // Parse and validate request body

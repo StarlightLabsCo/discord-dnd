@@ -49,10 +49,8 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
 async function findOrCreateCampaignForUser(user: User) {
     let campaignInstance = await db.campaignInstance.findFirst({
         where: {
-            users: {
-                some: {
-                    id: user.id,
-                },
+            user: {
+                id: user.id,
             },
         },
         orderBy: {
@@ -60,6 +58,7 @@ async function findOrCreateCampaignForUser(user: User) {
         },
         include: {
             characterInstances: true,
+            messages: true,
         },
     });
 
@@ -80,7 +79,7 @@ async function findOrCreateCampaignForUser(user: User) {
                         id: campaign.id,
                     },
                 },
-                users: {
+                user: {
                     connect: {
                         id: user.id,
                     },
@@ -91,6 +90,7 @@ async function findOrCreateCampaignForUser(user: User) {
             },
             include: {
                 characterInstances: true,
+                messages: true,
             },
         });
     }

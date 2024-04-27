@@ -1,21 +1,27 @@
+import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
-import { CharacterInstance, Message } from "database";
+import { Message } from "database";
 
 type Props = {
-    message: Message & {
-        characterInstance: CharacterInstance;
-    };
+    message: Message;
     className?: string;
 };
 
 export function MessageDisplay({ message, className }: Props) {
+    const character =
+        useGameStore().state?.selectedCampaign.characterInstances.find(
+            (ci) => ci.id === message.characterInstanceId
+        );
+
+    if (!character) {
+        console.error("Character not found for message", message);
+        return null;
+    }
+
     return (
         <div className={cn("flex gap-x-6", className)}>
             <div className='shrink-0'>
-                <img
-                    src={message.characterInstance.imageUrl}
-                    className='rounded-full'
-                />
+                <img src={character.imageUrl} className='rounded-full' />
             </div>
             <div className='text-white'>{message.content}</div>
         </div>

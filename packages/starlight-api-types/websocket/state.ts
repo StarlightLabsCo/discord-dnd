@@ -2,6 +2,7 @@ import z from "zod";
 import {
     CampaignInstanceSchema,
     CharacterInstanceSchema,
+    MessageSchema,
     UserSchema,
 } from "database/prisma/generated/zod";
 
@@ -25,6 +26,11 @@ export type LobbyPlayer = z.infer<typeof LobbyPlayerSchema>;
 export const InstanceStateSchema = z.object({
     state: GameStateSchema,
     connectedPlayers: z.array(LobbyPlayerSchema),
-    selectedCampaign: CampaignInstanceSchema,
+    selectedCampaign: CampaignInstanceSchema.merge(
+        z.object({
+            characterInstances: z.array(CharacterInstanceSchema),
+            messages: z.array(MessageSchema),
+        })
+    ),
 });
 export type InstanceState = z.infer<typeof InstanceStateSchema>;

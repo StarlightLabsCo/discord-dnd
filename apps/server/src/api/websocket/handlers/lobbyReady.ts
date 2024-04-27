@@ -4,6 +4,7 @@ import { type LobbyReadyRequest } from "starlight-api-types/websocket";
 import { instanceIdToState } from "../instanceState";
 import { server } from "index";
 import { sendWsError } from "../utils";
+import { db } from "@/lib/db";
 
 export async function handleLobbyReadyRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -42,12 +43,31 @@ export async function handleLobbyReadyRequest(
         })
     );
 
-    if (instanceState.connectedPlayers.every((p) => p.status === "READY")) {
+    if (
+        instanceState.connectedPlayers.every((p) => p.status === "READY") &&
+        instanceState.connectedPlayers.every((p) => p.character !== null)
+    ) {
         instanceState.state = "IN_GAME";
         instanceIdToState.set(ws.data.instanceId, instanceState);
         server.publish(
             ws.data.instanceId,
             JSON.stringify({ type: "GameStartResponse", data: {} })
+        );
+
+        await db.campaignInstance.update({
+            where: { id: instanceState.selectedCampaign.id },
+            data: {
+                characterInstances: {
+                    connect: instanceState.connectedPlayers.map((p) => ({
+                        id: p.character!.id,
+                    })),
+                },
+            },
+        });
+    } else {
+        sendWsError(
+            ws,
+            "Not all players are ready or have selected a character"
         );
     }
 }

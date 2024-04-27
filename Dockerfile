@@ -16,7 +16,7 @@ COPY . .
 
 ARG DATABASE_URL
 
-RUN bun install --frozen-lockfile
+RUN bun install --production --frozen-lockfile
 RUN bunx turbo run db:generate
 RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 

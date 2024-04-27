@@ -620,7 +620,27 @@ model CampaignInstance {
     users              User[] // users that are part of the campaign
     characterInstances CharacterInstance[] // characters that are part of the campaign
 
-    // TODO
+    messages Message[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Message {
+    id String @id @default(cuid())
+
+    instanceId String
+    instance   CampaignInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+    characterInstanceId String?
+    characterInstance   CharacterInstance? @relation(fields: [characterInstanceId], references: [id], onDelete: Cascade)
+
+    content String
+
+    audioUrl         String?
+    audioWordTimings String?
+
+    tag String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -630,7 +650,7 @@ model CharacterInstance {
     id String @id @default(cuid())
 
     userId String?
-    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade) // no user means it's an NPC or AI character
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull) // no user means it's an NPC or AI character
 
     // ---- Character Template Info (was this character created from a template?) ---
     characterId String?
@@ -716,4 +736,7 @@ model CharacterInstance {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // Things that the character creates 
+    messages Message[]
 }

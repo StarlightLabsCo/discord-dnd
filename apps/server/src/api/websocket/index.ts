@@ -5,10 +5,12 @@ import type { User } from "database";
 import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 import { handleLobbyReadyRequest } from "./handlers/lobbyReady";
 import { handleCharacterSelectRequest } from "./handlers/characterSelect";
+import { handleSendMessageRequest } from "./handlers/sendMessage";
 
 export type WebSocketData = {
     user: User;
     instanceId: string;
+    characterInstanceId: string | null;
 };
 
 export const WebSocketHandlers: WebSocketHandler<WebSocketData> = {
@@ -46,4 +48,5 @@ async function handleWebSocketMessage(
 const handlers = {
     LobbyReadyRequest: handleLobbyReadyRequest,
     CharacterSelectRequest: handleCharacterSelectRequest,
+    SendMessageRequest: handleSendMessageRequest,
 };

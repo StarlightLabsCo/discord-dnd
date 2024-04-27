@@ -52,6 +52,8 @@ export const SpellScalarFieldEnumSchema = z.enum(['id','worldId','name','descrip
 
 export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','name','description','imageUrl','campaignId','createdAt','updatedAt']);
 
+export const MessageScalarFieldEnumSchema = z.enum(['id','instanceId','characterInstanceId','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
+
 export const CharacterInstanceScalarFieldEnumSchema = z.enum(['id','userId','characterId','campaignInstanceId','raceId','subraceId','classId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','healthPoints','size','speed','availableLevel1SpellSlots','availableLevel2SpellSlots','availableLevel3SpellSlots','availableLevel4SpellSlots','availableLevel5SpellSlots','availableLevel6SpellSlots','availableLevel7SpellSlots','availableLevel8SpellSlots','availableLevel9SpellSlots','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
@@ -494,6 +496,24 @@ export const CampaignInstanceSchema = z.object({
 })
 
 export type CampaignInstance = z.infer<typeof CampaignInstanceSchema>
+
+/////////////////////////////////////////
+// MESSAGE SCHEMA
+/////////////////////////////////////////
+
+export const MessageSchema = z.object({
+  id: z.string().cuid(),
+  instanceId: z.string(),
+  characterInstanceId: z.string().nullable(),
+  content: z.string(),
+  audioUrl: z.string().nullable(),
+  audioWordTimings: z.string().nullable(),
+  tag: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Message = z.infer<typeof MessageSchema>
 
 /////////////////////////////////////////
 // CHARACTER INSTANCE SCHEMA

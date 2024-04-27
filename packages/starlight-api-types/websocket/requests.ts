@@ -20,9 +20,19 @@ export const CharacterSelectRequestZodSchema = z.object({
     }),
 });
 
+export type SendMessageRequest = z.infer<typeof SendMessageRequestZodSchema>;
+
+export const SendMessageRequestZodSchema = z.object({
+    type: z.literal("SendMessageRequest"),
+    data: z.object({
+        message: z.string(),
+    }),
+});
+
 const requestTypeToSchema = {
     LobbyReadyRequest: LobbyReadyRequestZodSchema,
     CharacterSelectRequest: CharacterSelectRequestZodSchema,
+    SendMessageRequest: SendMessageRequestZodSchema,
 };
 
 export function getRequestSchema(type: keyof typeof requestTypeToSchema) {

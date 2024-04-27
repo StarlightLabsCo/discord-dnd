@@ -35,6 +35,8 @@ export async function handleCharacterSelectRequest(
         return;
     }
 
+    ws.data.characterInstanceId = characterInstanceId;
+
     instanceState.connectedPlayers[playerIndex].character = characterInstance;
     instanceIdToState.set(instanceId, instanceState);
 

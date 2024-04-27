@@ -5,23 +5,18 @@ import { s3UrlRewriter } from "@/lib/discord/utils";
 type GameCharacterPortraitProps = {
     user: User;
     character: CharacterInstance | null;
-    ready?: boolean;
     isCurrentUser?: boolean;
 };
+
+// TODO: implement the ability to view your own character stats/inventory
 
 export function GameCharacterPortrait({
     user,
     character,
-    ready,
     isCurrentUser,
 }: GameCharacterPortraitProps) {
     return (
         <div className='relative w-[8vw] h-[8vw] border border-white aspect-square shrink-0 rounded-[0.8vw]'>
-            {ready && (
-                <div className='absolute inset-0 z-10 flex items-end w-full h-full text-[3.5vw] leading-none font-bold text-white pb-[10%] justify-center bg-black/30'>
-                    Ready
-                </div>
-            )}
             <div className='relative group w-[8vw] h-[8vw]'>
                 {character && (
                     <img

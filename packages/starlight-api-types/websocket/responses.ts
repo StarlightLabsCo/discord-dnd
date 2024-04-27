@@ -1,5 +1,9 @@
 import z from "zod";
-import { UserSchema } from "database/prisma/generated/zod";
+import {
+    CharacterInstanceSchema,
+    MessageSchema,
+    UserSchema,
+} from "database/prisma/generated/zod";
 import { InstanceStateSchema } from "./state";
 
 // ----- UserInfoResponse -----
@@ -24,6 +28,19 @@ export type GameStartResponse = z.infer<typeof GameStartResponseZodSchema>;
 export const GameStartResponseZodSchema = z.object({
     type: z.literal("GameStartResponse"),
     data: z.object({}),
+});
+
+export type MessageAddedResponse = z.infer<
+    typeof MessageAddedResponseZodSchema
+>;
+
+export const MessageAddedResponseZodSchema = z.object({
+    type: z.literal("MessageAddedResponse"),
+    data: MessageSchema.merge(
+        z.object({
+            characterInstance: CharacterInstanceSchema,
+        })
+    ),
 });
 
 // ----- Response Schema -----

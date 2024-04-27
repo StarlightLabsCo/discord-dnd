@@ -5,6 +5,7 @@ import { Icons } from "@/components/Icons";
 import { useGameStore } from "@/lib/game";
 import { GameCharacterPortrait } from "@/components/game/GameCharacterPortrait";
 import { GameChat } from "@/components/game/GameChat";
+import { GameChatInput } from "@/components/game/GameChatInput";
 
 export const Route = createFileRoute("/game")({
     component: () => <GameLayout />,
@@ -39,10 +40,12 @@ function GameLayout() {
                 </div>
             </div>
             <div className='flex w-full h-full'>
-                <div className='w-4/5 h-full flex justify-center'>
+                <div className='w-[10vw]' /> {/* width of sidebar */}
+                <div className='flex flex-col items-center grow h-full overflow-y-scroll gap-y-10'>
                     <GameChat />
+                    <GameChatInput />
                 </div>
-                <div className='w-1/5 h-full border-l border-white'></div>
+                <div className='shrink-0 w-1/5 h-full border-l border-white'></div>
             </div>
         </div>
     );

@@ -86,8 +86,8 @@ function Lobby() {
         <div className={"w-screen h-screen"}>
             <div className='flex w-full h-full'>
                 <div className='flex relative flex-col justify-end p-[2vw] w-1/2'>
-                    <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-t to-transparent from-black/50' />
-                    <div className='absolute inset-0 z-10 w-full h-full bg-gradient-to-b to-transparent from-black/30' />
+                    <div className='absolute left-0  bottom-0 z-10 w-full h-[40%] bg-gradient-to-t from-black/50 to-transparent' />
+                    <div className='absolute left-0 top-0 z-10 w-full h-[40%] bg-gradient-to-b from-black/50 to-transparent' />
                     <img
                         src={s3UrlRewriter(campaignCover || "")}
                         className='object-cover absolute inset-0 w-full h-full'
@@ -97,8 +97,12 @@ function Lobby() {
                         <div className='font-sans text-[3.5vw] leading-none font-bold text-white drop-shadow-xl max-w-[85%]'>
                             {title}
                         </div>
-                        <div className='font-sans text-[1.2vw] font-light text-neutral-300 drop-shadow-xl max-w-[80%]'>
-                            {description}
+                        <div className='font-sans text-[1.2vw] text-neutral-200 drop-shadow-xl max-w-[80%]'>
+                            {description &&
+                                description.split(" ").slice(0, 20).join(" ") +
+                                    (description.split(" ").length > 20
+                                        ? "..."
+                                        : "")}
                         </div>
                     </div>
                 </div>

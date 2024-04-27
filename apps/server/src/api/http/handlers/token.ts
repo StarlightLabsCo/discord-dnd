@@ -35,6 +35,7 @@ export async function handleTokenRequest(req: Request) {
     );
 
     if (!response.ok) {
+        console.error(await response.text());
         return new Response("Failed to exchange code for access token", {
             status: 400,
         });

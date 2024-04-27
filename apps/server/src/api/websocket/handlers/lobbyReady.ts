@@ -54,16 +54,24 @@ export async function handleLobbyReadyRequest(
             JSON.stringify({ type: "GameStartResponse", data: {} })
         );
 
-        await db.campaignInstance.update({
+        const campaignInstance = await db.campaignInstance.findUnique({
             where: { id: instanceState.selectedCampaign.id },
-            data: {
-                characterInstances: {
-                    connect: instanceState.connectedPlayers.map((p) => ({
-                        id: p.character!.id,
-                    })),
-                },
-            },
+            include: { characterInstances: true },
         });
+
+        // If we're starting the campaign for the first time add all connected players to the campaign
+        if (campaignInstance?.characterInstances.length === 0) {
+            await db.campaignInstance.update({
+                where: { id: instanceState.selectedCampaign.id },
+                data: {
+                    characterInstances: {
+                        connect: instanceState.connectedPlayers.map((p) => ({
+                            id: p.character!.id,
+                        })),
+                    },
+                },
+            });
+        }
     } else {
         sendWsError(
             ws,

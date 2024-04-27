@@ -23,7 +23,7 @@ export function MessageDisplay({ message, className }: Props) {
             <div className='shrink-0'>
                 <img
                     src={character.imageUrl}
-                    className='rounded-full w-[3vw] h-[3vw]'
+                    className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>
             <div className='text-white'>{message.content}</div>

@@ -7,7 +7,7 @@ export function GameChat() {
     const messages = useGameStore().state?.selectedCampaign.messages || [];
 
     return (
-        <div className='grow w-1/2 flex flex-col gap-y-16 pt-10'>
+        <div className='grow w-1/2 max-w-[50%] flex flex-col gap-y-16 pt-10'>
             {messages.map((message) => {
                 return <MessageDisplay key={message.id} message={message} />;
             })}

@@ -28,7 +28,13 @@ export const InstanceStateSchema = z.object({
     connectedPlayers: z.array(LobbyPlayerSchema),
     selectedCampaign: CampaignInstanceSchema.merge(
         z.object({
-            characterInstances: z.array(CharacterInstanceSchema),
+            characterInstances: z.array(
+                CharacterInstanceSchema.merge(
+                    z.object({
+                        user: z.union([UserSchema, z.null()]),
+                    })
+                )
+            ),
             messages: z.array(MessageSchema),
         })
     ),

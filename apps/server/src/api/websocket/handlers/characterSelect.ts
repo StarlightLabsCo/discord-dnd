@@ -28,7 +28,7 @@ export async function handleCharacterSelectRequest(
     }
 
     const characterInstance = await db.characterInstance.findUnique({
-        where: { id: characterInstanceId },
+        where: { id: characterInstanceId, userId: user.id },
     });
 
     if (!characterInstance || characterInstance.userId !== user.id) {

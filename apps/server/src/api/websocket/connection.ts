@@ -19,7 +19,7 @@ export async function handlePlayerConnect(ws: ServerWebSocket<WebSocketData>) {
     ws.send(JSON.stringify(userInfoResponse));
 
     // Create or update the instance state
-    await addUserToInstanceState(instanceId, user);
+    await addUserToInstanceState(ws, instanceId, user);
 }
 
 export async function handlePlayerDisconnect(

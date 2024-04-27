@@ -13,10 +13,10 @@ export async function handleSendMessageRequest(
     request: SendMessageRequest
 ) {
     const { message } = request.data;
-    const { instanceId, characterInstanceId } = ws.data;
+    const { characterInstanceId } = ws.data;
 
-    if (!instanceId || !characterInstanceId) {
-        sendWsError(ws, `Instance or character not found`);
+    if (!characterInstanceId) {
+        sendWsError(ws, `Character not found`);
         return;
     }
 
@@ -59,5 +59,5 @@ export async function handleSendMessageRequest(
         data: dbMessage,
     } as MessageAddedResponse;
 
-    server.publish(instanceId, JSON.stringify(messageResponse));
+    server.publish(ws.data.instanceId, JSON.stringify(messageResponse));
 }

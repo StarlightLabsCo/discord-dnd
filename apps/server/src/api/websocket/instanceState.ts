@@ -5,16 +5,24 @@ import type {
     InstanceStateResponse,
 } from "starlight-api-types/websocket";
 import { server } from "index";
+import type { ServerWebSocket } from "bun";
+import type { WebSocketData } from ".";
 
 export const instanceIdToState = new Map<string, InstanceState>();
 
-export async function addUserToInstanceState(instanceId: string, user: User) {
+export async function addUserToInstanceState(
+    ws: ServerWebSocket<WebSocketData>,
+    instanceId: string,
+    user: User
+) {
     let instanceState = instanceIdToState.get(instanceId);
     let selectedCampaign = await findOrCreateCampaignForUser(user);
 
     const existingCharacterInstance = selectedCampaign.characterInstances.find(
         (ci) => ci.userId === user.id
     );
+
+    ws.data.characterInstanceId = existingCharacterInstance?.id || null;
 
     if (!instanceState) {
         instanceState = {
@@ -57,7 +65,11 @@ async function findOrCreateCampaignForUser(user: User) {
             updatedAt: "desc",
         },
         include: {
-            characterInstances: true,
+            characterInstances: {
+                include: {
+                    user: true,
+                },
+            },
             messages: true,
         },
     });
@@ -89,7 +101,11 @@ async function findOrCreateCampaignForUser(user: User) {
                 imageUrl: campaign.imageUrl,
             },
             include: {
-                characterInstances: true,
+                characterInstances: {
+                    include: {
+                        user: true,
+                    },
+                },
                 messages: true,
             },
         });

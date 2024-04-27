@@ -18,6 +18,10 @@ export async function handleSendMessageRequest(
         return;
     }
 
+    console.log(
+        `Message from ${characterInstanceId} in ${instanceId}: ${message}`
+    );
+
     const dbMessage = await db.message.create({
         data: {
             content: message,

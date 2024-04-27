@@ -8,6 +8,7 @@ import {
 import { handleUserInfoResponse } from "./handlers/userInfo";
 import { handleInstanceStateResponse } from "./handlers/instanceState";
 import { handleGameStartResponse } from "./handlers/gameStart";
+import { handleMessageAddedResponse } from "./handlers/messageAdded";
 
 type WebSocketStore = {
     ws: WebSocket | null;
@@ -131,4 +132,5 @@ const handlers = {
     UserInfoResponse: handleUserInfoResponse,
     InstanceStateResponse: handleInstanceStateResponse,
     GameStartResponse: handleGameStartResponse,
+    MessageAddedResponse: handleMessageAddedResponse,
 };

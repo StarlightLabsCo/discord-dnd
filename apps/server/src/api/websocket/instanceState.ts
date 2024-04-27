@@ -10,15 +10,19 @@ export const instanceIdToState = new Map<string, InstanceState>();
 
 export async function addUserToInstanceState(instanceId: string, user: User) {
     let instanceState = instanceIdToState.get(instanceId);
-    if (!instanceState) {
-        let selectedCampaign = await findOrCreateCampaignForUser(user);
+    let selectedCampaign = await findOrCreateCampaignForUser(user);
 
+    const existingCharacterInstance = selectedCampaign.characterInstances.find(
+        (ci) => ci.userId === user.id
+    );
+
+    if (!instanceState) {
         instanceState = {
             state: "LOBBY",
             connectedPlayers: [
                 {
                     user,
-                    character: null,
+                    character: existingCharacterInstance || null,
                     status: "NOT_READY",
                 },
             ],
@@ -28,7 +32,7 @@ export async function addUserToInstanceState(instanceId: string, user: User) {
     } else {
         instanceState.connectedPlayers.push({
             user,
-            character: null, // TODO: Doesn't handle reconnections very well
+            character: existingCharacterInstance || null,
             status: "NOT_READY",
         });
     }
@@ -53,6 +57,9 @@ async function findOrCreateCampaignForUser(user: User) {
         },
         orderBy: {
             updatedAt: "desc",
+        },
+        include: {
+            characterInstances: true,
         },
     });
 
@@ -81,6 +88,9 @@ async function findOrCreateCampaignForUser(user: User) {
                 name: campaign.name,
                 description: campaign.description,
                 imageUrl: campaign.imageUrl,
+            },
+            include: {
+                characterInstances: true,
             },
         });
     }

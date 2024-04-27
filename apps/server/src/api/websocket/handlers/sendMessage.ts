@@ -5,6 +5,7 @@ import type {
     SendMessageRequest,
 } from "starlight-api-types/websocket";
 import { db } from "@/lib/db";
+import { sendWsError } from "../utils";
 
 export async function handleSendMessageRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -14,20 +15,31 @@ export async function handleSendMessageRequest(
     const { instanceId, characterInstanceId } = ws.data;
 
     if (!instanceId || !characterInstanceId) {
-        ws.send(JSON.stringify({ error: "Invalid user or instance" }));
+        sendWsError(ws, `Instance or character not found`);
         return;
     }
 
-    console.log(
-        `Message from ${characterInstanceId} in ${instanceId}: ${message}`
-    );
+    const campaignInstance = await db.campaignInstance.findFirst({
+        where: {
+            characterInstances: {
+                some: {
+                    id: characterInstanceId,
+                },
+            },
+        },
+    });
+
+    if (!campaignInstance) {
+        sendWsError(ws, `Character not in campaign`);
+        return;
+    }
 
     const dbMessage = await db.message.create({
         data: {
             content: message,
             instance: {
                 connect: {
-                    id: instanceId,
+                    id: campaignInstance.id,
                 },
             },
             characterInstance: {

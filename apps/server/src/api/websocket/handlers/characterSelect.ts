@@ -4,6 +4,7 @@ import type { CharacterSelectRequest } from "starlight-api-types/websocket";
 import { instanceIdToState } from "../instanceState";
 import { db } from "@/lib/db";
 import { server } from "index";
+import { sendWsError } from "../utils";
 
 export async function handleCharacterSelectRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -14,7 +15,7 @@ export async function handleCharacterSelectRequest(
 
     const instanceState = instanceIdToState.get(instanceId);
     if (!instanceState) {
-        ws.send(JSON.stringify({ error: "Instance not found" }));
+        sendWsError(ws, `Instance state not found for ID: ${instanceId}`);
         return;
     }
 
@@ -22,7 +23,7 @@ export async function handleCharacterSelectRequest(
         (p) => p.user.id === user.id
     );
     if (playerIndex === -1) {
-        ws.send(JSON.stringify({ error: "User not found in instance" }));
+        sendWsError(ws, `User not found for ID: ${user.id}`);
         return;
     }
 
@@ -31,7 +32,7 @@ export async function handleCharacterSelectRequest(
     });
 
     if (!characterInstance || characterInstance.userId !== user.id) {
-        ws.send(JSON.stringify({ error: "Character not found" }));
+        sendWsError(ws, `Character not found for ID: ${characterInstanceId}`);
         return;
     }
 

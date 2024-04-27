@@ -43,11 +43,22 @@ export const MessageAddedResponseZodSchema = z.object({
     ),
 });
 
+export type ErrorResponse = z.infer<typeof ErrorResponseZodSchema>;
+
+export const ErrorResponseZodSchema = z.object({
+    type: z.literal("ErrorResponse"),
+    data: z.object({
+        error: z.string(),
+    }),
+});
+
 // ----- Response Schema -----
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
     GameStartResponse: GameStartResponseZodSchema,
+    MessageAddedResponse: MessageAddedResponseZodSchema,
+    ErrorResponse: ErrorResponseZodSchema,
 };
 
 export function getResponseSchema(type: keyof typeof responseTypeToSchema) {

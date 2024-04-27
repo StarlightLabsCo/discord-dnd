@@ -21,7 +21,10 @@ export function MessageDisplay({ message, className }: Props) {
     return (
         <div className={cn("flex gap-x-6", className)}>
             <div className='shrink-0'>
-                <img src={character.imageUrl} className='rounded-full' />
+                <img
+                    src={character.imageUrl}
+                    className='rounded-full w-[3vw] h-[3vw]'
+                />
             </div>
             <div className='text-white'>{message.content}</div>
         </div>

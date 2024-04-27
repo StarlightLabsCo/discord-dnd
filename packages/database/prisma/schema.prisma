@@ -610,6 +610,9 @@ model Spell {
 model CampaignInstance {
     id String @id @default(cuid())
 
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
     name        String
     description String
     imageUrl    String
@@ -617,10 +620,8 @@ model CampaignInstance {
     campaignId String
     campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Restrict)
 
-    users              User[] // users that are part of the campaign
     characterInstances CharacterInstance[] // characters that are part of the campaign
-
-    messages Message[]
+    messages           Message[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

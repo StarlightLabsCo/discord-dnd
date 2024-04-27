@@ -50,7 +50,7 @@ export const ItemScalarFieldEnumSchema = z.enum(['id','worldId','name','descript
 
 export const SpellScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','level','school','castingTime','range','components','duration','ritual','createdAt','updatedAt']);
 
-export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','name','description','imageUrl','campaignId','createdAt','updatedAt']);
+export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','userId','name','description','imageUrl','campaignId','createdAt','updatedAt']);
 
 export const MessageScalarFieldEnumSchema = z.enum(['id','instanceId','characterInstanceId','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
 
@@ -487,6 +487,7 @@ export type Spell = z.infer<typeof SpellSchema>
 
 export const CampaignInstanceSchema = z.object({
   id: z.string().cuid(),
+  userId: z.string(),
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),

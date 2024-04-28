@@ -12,6 +12,12 @@ export async function handleInstanceStatePatchResponse(
     const { gameState, setGameState } = useGameStore.getState();
 
     console.log("Applying patch to game state:");
+    console.log(`Game state:`);
+    console.log(gameState);
+
+    console.log(`Patch:`);
+    console.log(response.data);
+
     const newState = applyPatch(
         gameState,
         response.data as Operation[]

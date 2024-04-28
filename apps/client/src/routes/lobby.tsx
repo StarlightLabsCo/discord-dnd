@@ -14,7 +14,9 @@ function Layout() {
 
     // TODO: does this make the game start message kinda redundant?
     useEffect(() => {
+        console.log(`In game: ${inGame}`);
         if (inGame) {
+            console.log("Navigating to game");
             navigate({
                 to: "/game",
             });

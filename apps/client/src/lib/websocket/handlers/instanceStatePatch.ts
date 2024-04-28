@@ -26,7 +26,7 @@ export async function handleInstanceStatePatchResponse(
     console.log("New state after patch:");
     console.log(newState);
 
-    const validatedInstanceState = InstanceStateSchema.safeParse(newState); // why does this throw
+    const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
     if (validatedInstanceState.success) {
         console.log("Validated instance state after patch");

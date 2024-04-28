@@ -143,7 +143,7 @@ export function updateInstanceState(
     instanceId: string,
     newInstanceState: InstanceState
 ) {
-    const existingInstanceState = instanceIdToState.get(instanceId);
+    let existingInstanceState = instanceIdToState.get(instanceId) || {};
     instanceIdToState.set(instanceId, newInstanceState); // TODO: Bad!! Race condition, switch to using fast-json-patch's observer on the getInstanceState function
 
     // JSON Patch doesn't convert dates correctly, so we need to normalize the state to strings
@@ -153,10 +153,7 @@ export function updateInstanceState(
     const normalizedExistingState = JSON.parse(stringifiedExistingState);
     const normalizedNewInstanceState = JSON.parse(stringifiedNewInstanceState);
 
-    const patch = compare(
-        normalizedExistingState || {},
-        normalizedNewInstanceState
-    );
+    const patch = compare(normalizedExistingState, normalizedNewInstanceState);
 
     const patchResponse: InstanceStatePatchResponse = {
         type: "InstanceStatePatchResponse",

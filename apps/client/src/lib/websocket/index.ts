@@ -132,7 +132,6 @@ async function onMessage(event: MessageEvent) {
 const handlers = {
     UserInfoResponse: handleUserInfoResponse,
     InstanceStateResponse: handleInstanceStateResponse,
-    GameStartResponse: handleGameStartResponse,
     MessageAddedResponse: handleMessageAddedResponse,
     ErrorResponse: handleErrorResponse,
 };

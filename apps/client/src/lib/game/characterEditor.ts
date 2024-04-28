@@ -83,10 +83,8 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             const data = await response.json();
 
             set({ world: data[0] });
-            console.log("World set");
 
             if (data[0] && get().draftCharacter === null) {
-                console.log("Generating random character...");
                 set({ draftCharacter: getRandomCharacter(data[0]) });
             }
         },

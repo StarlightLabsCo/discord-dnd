@@ -23,13 +23,6 @@ export const InstanceStateResponseZodSchema = z.object({
     data: InstanceStateSchema,
 });
 
-export type GameStartResponse = z.infer<typeof GameStartResponseZodSchema>;
-
-export const GameStartResponseZodSchema = z.object({
-    type: z.literal("GameStartResponse"),
-    data: z.object({}),
-});
-
 export type MessageAddedResponse = z.infer<
     typeof MessageAddedResponseZodSchema
 >;
@@ -56,7 +49,6 @@ export const ErrorResponseZodSchema = z.object({
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
-    GameStartResponse: GameStartResponseZodSchema,
     MessageAddedResponse: MessageAddedResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };

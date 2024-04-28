@@ -2,14 +2,14 @@ import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
 import { type LobbyReadyRequest } from "starlight-api-types/websocket";
 import { instanceIdToState } from "../instanceState";
-import { server } from "index";
-import { sendWsError } from "../utils";
+import { sendWsError, updateAndBroadcastInstanceState } from "../utils";
 import { db } from "@/lib/db";
 
 export async function handleLobbyReadyRequest(
     ws: ServerWebSocket<WebSocketData>,
     request: LobbyReadyRequest
 ) {
+    // Get the instance state
     const instanceState = instanceIdToState.get(ws.data.instanceId);
     if (!instanceState) {
         sendWsError(
@@ -19,49 +19,25 @@ export async function handleLobbyReadyRequest(
         return;
     }
 
-    const player = instanceState.connectedPlayers.find(
-        (p) => p.user.id === ws.data.user.id
-    );
-    if (player) {
-        player.status = request.data.ready ? "READY" : "NOT_READY";
-    } else {
-        sendWsError(
-            ws,
-            `Player not found in instance state for user ID: ${ws.data.user.id}`
-        );
+    // Update the player's ready status
+    instanceState.connectedPlayers = instanceState.connectedPlayers.map((p) => {
+        if (p.user.id === ws.data.user.id) {
+            p.status = request.data.ready ? "READY" : "NOT_READY";
+        }
+        return p;
+    });
 
-        return;
-    }
-
-    instanceIdToState.set(ws.data.instanceId, instanceState);
-
-    server.publish(
-        ws.data.instanceId,
-        JSON.stringify({
-            type: "InstanceStateResponse",
-            data: instanceState,
-        })
-    );
-
+    // If all players are ready and have selected a character, start the game
     if (
-        instanceState.connectedPlayers.every((p) => p.status === "READY") &&
-        instanceState.connectedPlayers.every((p) => p.character !== null)
+        instanceState.connectedPlayers.every(
+            (p) => p.status === "READY" && p.character !== null
+        )
     ) {
         instanceState.state = "IN_GAME";
-        instanceIdToState.set(ws.data.instanceId, instanceState);
-        server.publish(
-            ws.data.instanceId,
-            JSON.stringify({ type: "GameStartResponse", data: {} })
-        );
 
-        const campaignInstance = await db.campaignInstance.findUnique({
-            where: { id: instanceState.selectedCampaign.id },
-            include: { characterInstances: true },
-        });
-
-        // If we're starting the campaign for the first time add all connected players to the campaign
-        if (campaignInstance?.characterInstances.length === 0) {
-            await db.campaignInstance.update({
+        // If we're starting the campaign for the first time add all connected players to the party
+        if (instanceState.selectedCampaign?.characterInstances.length === 0) {
+            const updatedCampaignInstance = await db.campaignInstance.update({
                 where: { id: instanceState.selectedCampaign.id },
                 data: {
                     characterInstances: {
@@ -70,12 +46,19 @@ export async function handleLobbyReadyRequest(
                         })),
                     },
                 },
+                include: {
+                    messages: true,
+                    characterInstances: {
+                        include: {
+                            user: true,
+                        },
+                    },
+                },
             });
+
+            instanceState.selectedCampaign = updatedCampaignInstance;
         }
-    } else {
-        sendWsError(
-            ws,
-            "Not all players are ready or have selected a character"
-        );
     }
+
+    updateAndBroadcastInstanceState(ws.data.instanceId, instanceState);
 }

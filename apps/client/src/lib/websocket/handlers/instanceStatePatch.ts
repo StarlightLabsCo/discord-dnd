@@ -16,6 +16,9 @@ export async function handleInstanceStatePatchResponse(
         response.data as Operation[]
     ).newDocument;
 
+    console.log("New state after patch:");
+    console.log(newState);
+
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
     if (validatedInstanceState.success) {

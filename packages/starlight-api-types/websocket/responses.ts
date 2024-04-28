@@ -11,15 +11,6 @@ export const UserInfoResponseZodSchema = z.object({
     data: UserSchema,
 });
 
-export type InstanceStateResponse = z.infer<
-    typeof InstanceStateResponseZodSchema
->;
-
-export const InstanceStateResponseZodSchema = z.object({
-    type: z.literal("InstanceStateResponse"),
-    data: InstanceStateSchema,
-});
-
 export type InstanceStatePatchResponse = z.infer<
     typeof InstanceStatePatchResponseZodSchema
 >;
@@ -41,7 +32,6 @@ export const ErrorResponseZodSchema = z.object({
 // ----- Response Schema -----
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
-    InstanceStateResponse: InstanceStateResponseZodSchema,
     InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };

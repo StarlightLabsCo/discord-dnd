@@ -1,10 +1,9 @@
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
 import type { CharacterSelectRequest } from "starlight-api-types/websocket";
-import { instanceIdToState } from "../instanceState";
+import { instanceIdToState, updateInstanceState } from "../instanceState";
 import { db } from "@/lib/db";
-import { server } from "index";
-import { sendWsError, updateAndBroadcastInstanceState } from "../utils";
+import { sendWsError } from "../utils";
 
 export async function handleCharacterSelectRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -39,5 +38,5 @@ export async function handleCharacterSelectRequest(
     ws.data.characterInstanceId = characterInstanceId;
 
     instanceState.connectedPlayers[playerIndex].character = characterInstance;
-    updateAndBroadcastInstanceState(instanceId, instanceState);
+    updateInstanceState(instanceId, instanceState);
 }

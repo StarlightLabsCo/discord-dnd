@@ -16,18 +16,20 @@ function Lobby() {
     const user = useGameStore((state) => state.user);
 
     const connectedPlayers = useGameStore(
-        (state) => state.state?.connectedPlayers || []
+        (state) => state.gameState?.connectedPlayers || []
     );
 
-    const title = useGameStore((state) => state.state?.selectedCampaign?.name);
+    const title = useGameStore(
+        (state) => state.gameState?.selectedCampaign?.name
+    );
     const description = useGameStore(
-        (state) => state.state?.selectedCampaign?.description
+        (state) => state.gameState?.selectedCampaign?.description
     );
     const campaignCover = useGameStore(
-        (state) => state.state?.selectedCampaign?.imageUrl
+        (state) => state.gameState?.selectedCampaign?.imageUrl
     );
 
-    const instanceState = useGameStore((state) => state.state);
+    const instanceState = useGameStore((state) => state.gameState);
 
     useEffect(() => {
         if (!instanceState) return;
@@ -44,7 +46,7 @@ function Lobby() {
 
         const readySfx = new Audio(readySound);
 
-        const currentState = useGameStore.getState().state;
+        const currentState = useGameStore.getState().gameState;
         if (!currentState || !currentState.connectedPlayers) return;
 
         const currentPlayer = currentState.connectedPlayers.find(
@@ -57,7 +59,7 @@ function Lobby() {
         currentPlayer.status = newStatus;
 
         useGameStore.setState({
-            state: {
+            gameState: {
                 ...currentState,
                 connectedPlayers: currentState.connectedPlayers.map((player) =>
                     player.user.id === user.id

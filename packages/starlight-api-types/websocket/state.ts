@@ -6,6 +6,7 @@ import {
     UserSchema,
 } from "database/prisma/generated/zod";
 
+// GAME STATE
 export const GameStateSchema = z.enum(["LOBBY", "IN_GAME"]);
 export type GameState = z.infer<typeof GameStateSchema>;
 

@@ -1,12 +1,15 @@
+import { compare } from "fast-json-patch";
 import { db } from "@/lib/db";
-import type { User } from "database";
-import type {
-    InstanceState,
-    InstanceStateResponse,
-} from "starlight-api-types/websocket";
 import { server } from "index";
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from ".";
+import type { User } from "database";
+import type {
+    InstanceState,
+    InstanceStatePatchResponse,
+    InstanceStateResponse,
+} from "starlight-api-types/websocket";
+import type { JsonPatchOperation } from "starlight-api-types/websocket/patch";
 
 export const instanceIdToState = new Map<string, InstanceState>();
 
@@ -139,4 +142,24 @@ export async function removeUserFromInstanceState(
         };
         server.publish(instanceId, JSON.stringify(instanceStateResponse));
     }
+}
+
+export function updateInstanceState(
+    instanceId: string,
+    newInstanceState: InstanceState
+) {
+    const existingInstanceState = instanceIdToState.get(instanceId);
+    if (!existingInstanceState) {
+        throw new Error(`Instance state not found for ID: ${instanceId}`);
+    }
+
+    instanceIdToState.set(instanceId, newInstanceState);
+
+    const patch = compare(existingInstanceState, newInstanceState);
+    const patchResponse: InstanceStatePatchResponse = {
+        type: "InstanceStatePatchResponse",
+        data: patch as JsonPatchOperation[],
+    };
+
+    server.publish(instanceId, JSON.stringify(patchResponse));
 }

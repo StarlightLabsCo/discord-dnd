@@ -1,14 +1,10 @@
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
-import type {
-    MessageAddedResponse,
-    SendMessageRequest,
-} from "starlight-api-types/websocket";
+import type { SendMessageRequest } from "starlight-api-types/websocket";
 import { db } from "@/lib/db";
 import { sendWsError } from "../utils";
-import { server } from "index";
 import { continueStory } from "@/core/continueStory";
-import { instanceIdToState } from "../instanceState";
+import { instanceIdToState, updateInstanceState } from "../instanceState";
 
 export async function handleSendMessageRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -66,14 +62,7 @@ export async function handleSendMessageRequest(
     }
 
     instanceState.selectedCampaign.messages.push(dbMessage);
-    instanceIdToState.set(ws.data.instanceId, instanceState);
-
-    const messageResponse = {
-        type: "MessageAddedResponse",
-        data: dbMessage,
-    } as MessageAddedResponse;
-
-    server.publish(ws.data.instanceId, JSON.stringify(messageResponse));
+    updateInstanceState(ws.data.instanceId, instanceState);
 
     continueStory(ws.data.instanceId);
 }

@@ -1,10 +1,7 @@
 import z from "zod";
-import {
-    CharacterInstanceSchema,
-    MessageSchema,
-    UserSchema,
-} from "database/prisma/generated/zod";
+import { UserSchema } from "database/prisma/generated/zod";
 import { InstanceStateSchema } from "./state";
+import { JsonPatchDocumentSchema } from "./patch";
 
 // ----- UserInfoResponse -----
 export type UserInfoResponse = z.infer<typeof UserInfoResponseZodSchema>;
@@ -23,30 +20,13 @@ export const InstanceStateResponseZodSchema = z.object({
     data: InstanceStateSchema,
 });
 
-export type MessageAddedResponse = z.infer<
-    typeof MessageAddedResponseZodSchema
+export type InstanceStatePatchResponse = z.infer<
+    typeof InstanceStatePatchResponseZodSchema
 >;
 
-export const MessageAddedResponseZodSchema = z.object({
-    type: z.literal("MessageAddedResponse"),
-    data: MessageSchema.merge(
-        z.object({
-            characterInstance: z.union([CharacterInstanceSchema, z.null()]),
-        })
-    ),
-});
-
-export type MessageUpdatedResponse = z.infer<
-    typeof MessageUpdatedResponseZodSchema
->;
-
-export const MessageUpdatedResponseZodSchema = z.object({
-    type: z.literal("MessageUpdatedResponse"),
-    data: MessageSchema.merge(
-        z.object({
-            characterInstance: z.union([CharacterInstanceSchema, z.null()]),
-        })
-    ),
+export const InstanceStatePatchResponseZodSchema = z.object({
+    type: z.literal("InstanceStatePatchResponse"),
+    data: JsonPatchDocumentSchema,
 });
 
 export type ErrorResponse = z.infer<typeof ErrorResponseZodSchema>;
@@ -62,8 +42,6 @@ export const ErrorResponseZodSchema = z.object({
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
-    MessageAddedResponse: MessageAddedResponseZodSchema,
-    MessageUpdatedResponse: MessageUpdatedResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

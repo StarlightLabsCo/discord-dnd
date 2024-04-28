@@ -3,7 +3,7 @@ import { GameCharacterPortrait } from "./GameCharacterPortrait";
 
 export function PartyDisplay() {
     const partyMembers =
-        useGameStore().state?.selectedCampaign?.characterInstances;
+        useGameStore().gameState?.selectedCampaign?.characterInstances;
 
     return (
         <div className='flex flex-col gap-y-[2vh]'>

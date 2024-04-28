@@ -5,7 +5,7 @@ import { InstanceStateResponse } from "starlight-api-types/websocket";
 export async function handleInstanceStateResponse(
     response: InstanceStateResponse
 ) {
-    useGameStore.getState().setState(response.data);
+    useGameStore.getState().setGameState(response.data);
 
     const campaignId = response.data.selectedCampaign.campaignId;
     useCharacterEditorStore.getState().setWorldByCampaignId(campaignId);

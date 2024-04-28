@@ -201,7 +201,8 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 );
 
 export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
-    const selectedCampaign = useGameStore.getState().state?.selectedCampaign;
+    const selectedCampaign =
+        useGameStore.getState().gameState?.selectedCampaign;
     const user = useGameStore.getState().user;
 
     const randomRace =

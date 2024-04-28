@@ -9,7 +9,7 @@ type Props = {
 
 export function MessageDisplay({ message, className }: Props) {
     const character =
-        useGameStore().state?.selectedCampaign.characterInstances.find(
+        useGameStore().gameState?.selectedCampaign.characterInstances.find(
             (ci) => ci.id === message.characterInstanceId
         );
 

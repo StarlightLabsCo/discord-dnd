@@ -10,7 +10,7 @@ export const Route = createFileRoute("/lobby")({
 
 function Layout() {
     const navigate = useNavigate();
-    const inGame = useGameStore().state?.state === "IN_GAME";
+    const inGame = useGameStore().gameState?.state === "IN_GAME";
 
     // TODO: does this make the game start message kinda redundant?
     useEffect(() => {

@@ -9,26 +9,26 @@ type GameStore = {
     user: User | null;
     setUser: (user: User) => void;
 
-    state: InstanceState | null;
-    setState: (state: InstanceState) => void;
+    gameState: InstanceState | null;
+    setGameState: (state: InstanceState) => void;
 };
 
 export const useGameStore = create<GameStore>((set) => ({
     user: null,
     setUser: (user: User) => set({ user }),
 
-    state: null,
-    setState: (state: InstanceState) => {
-        set({ state });
+    gameState: null,
+    setGameState: (gameState: InstanceState) => {
+        set({ gameState });
 
-        if (!state) return;
+        if (!gameState) return;
         discordSdk.commands.setActivity({
             activity: {
-                details: state.selectedCampaign?.name || "New Campaign",
-                state: state.state === "LOBBY" ? "Lobby" : "In Game",
+                details: gameState.selectedCampaign?.name || "New Campaign",
+                state: gameState.state === "LOBBY" ? "Lobby" : "In Game",
                 party: {
                     id: discordSdk.instanceId,
-                    size: [Math.min(state.connectedPlayers.length, 6), 6],
+                    size: [Math.min(gameState.connectedPlayers.length, 6), 6],
                 },
                 assets: {
                     large_image: "fantasyforgebigsquare",
@@ -55,7 +55,7 @@ if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
             createdAt: new Date("2024-04-11T02:40:40.464Z"),
             updatedAt: new Date("2024-04-25T00:33:16.186Z"),
         },
-        state: {
+        gameState: {
             state: "LOBBY",
             connectedPlayers: [
                 {
@@ -75,6 +75,7 @@ if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
                 },
             ],
             selectedCampaign: {
+                userId: "1077378222834073682",
                 campaignId: "clv8n2t2y0001i5bqmip6nuu1",
                 id: "clvcu9kz10000oxm3ux3c1crj",
                 name: "Test Campaign",

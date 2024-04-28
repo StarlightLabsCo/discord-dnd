@@ -16,7 +16,7 @@ export function GameCharacterPortrait({
     characterInstance,
     isCurrentUser,
 }: GameCharacterPortraitProps) {
-    const connectedPlayers = useGameStore().state?.connectedPlayers;
+    const connectedPlayers = useGameStore().gameState?.connectedPlayers;
     const isUserConnected = connectedPlayers?.some(
         (player) => player.user?.id === user?.id
     );

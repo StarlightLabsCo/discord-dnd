@@ -1,8 +1,8 @@
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
 import { type LobbyReadyRequest } from "starlight-api-types/websocket";
-import { instanceIdToState } from "../instanceState";
-import { sendWsError, updateAndBroadcastInstanceState } from "../utils";
+import { instanceIdToState, updateInstanceState } from "../instanceState";
+import { sendWsError } from "../utils";
 import { db } from "@/lib/db";
 
 export async function handleLobbyReadyRequest(
@@ -64,5 +64,5 @@ export async function handleLobbyReadyRequest(
         }
     }
 
-    updateAndBroadcastInstanceState(ws.data.instanceId, instanceState);
+    updateInstanceState(ws.data.instanceId, instanceState);
 }

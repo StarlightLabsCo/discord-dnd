@@ -14,7 +14,7 @@ export function MessageDisplay({ message, className }: Props) {
         );
 
     return (
-        <div className={cn("flex gap-x-6", className)}>
+        <div className={cn("flex gap-x-[1.5vw]", className)}>
             <div className='shrink-0'>
                 <img
                     src={
@@ -25,7 +25,9 @@ export function MessageDisplay({ message, className }: Props) {
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>
-            <div className='text-white'>{message.content}</div>
+            <div className='text-white font-light text-[1.1vw]'>
+                {message.content}
+            </div>
         </div>
     );
 }

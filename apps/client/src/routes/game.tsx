@@ -30,7 +30,7 @@ function GameLayout() {
             </div>
             <div className='flex w-full h-full'>
                 <div className='w-[10vw]' /> {/* width of sidebar */}
-                <div className='flex flex-col items-center grow h-full overflow-y-scroll gap-y-10'>
+                <div className='flex flex-col items-center grow h-full overflow-y-scroll gap-y-[4vh]'>
                     <GameChat />
                     <GameChatInput />
                 </div>

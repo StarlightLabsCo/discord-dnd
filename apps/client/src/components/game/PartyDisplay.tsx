@@ -6,7 +6,7 @@ export function PartyDisplay() {
         useGameStore().state?.selectedCampaign?.characterInstances;
 
     return (
-        <div className='flex flex-col gap-y-2'>
+        <div className='flex flex-col gap-y-[2vh]'>
             {partyMembers?.map((characterInstance) => (
                 <GameCharacterPortrait
                     key={characterInstance.id}

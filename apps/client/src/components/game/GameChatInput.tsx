@@ -32,7 +32,7 @@ export function GameChatInput() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
-            className='shrink-0 w-1/2 h-[3.5vh] bg-[#273747] text-white rounded-full mb-[1vh] px-4 py-1'
+            className='shrink-0 w-3/5 h-[3.5vh] bg-[#273747] text-white text-[1vw] rounded-full mb-[1vh] px-[1.4vw] py-[1vw]'
         />
     );
 }

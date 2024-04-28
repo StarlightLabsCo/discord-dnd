@@ -155,7 +155,15 @@ export function updateInstanceState(
 
     instanceIdToState.set(instanceId, newInstanceState);
 
+    console.log(`[updateInstanceState] - comparing instance states`);
+    console.log(existingInstanceState);
+    console.log(newInstanceState);
+    console.log(`-------------------`);
     const patch = compare(existingInstanceState, newInstanceState);
+
+    console.log(`[updateInstanceState] - patch`);
+    console.log(patch);
+
     const patchResponse: InstanceStatePatchResponse = {
         type: "InstanceStatePatchResponse",
         data: patch as JsonPatchOperation[],

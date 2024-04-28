@@ -1,21 +1,25 @@
 import { useGameStore } from "@/lib/game";
-import { InstanceStatePatchResponse } from "starlight-api-types/websocket";
+import {
+    InstanceStatePatchResponse,
+    InstanceStateSchema,
+} from "starlight-api-types/websocket";
 import { Operation, applyPatch } from "fast-json-patch";
 
 export async function handleInstanceStatePatchResponse(
     response: InstanceStatePatchResponse
 ) {
-    const { gameState: state, setGameState: setState } =
-        useGameStore.getState();
-    if (!state) {
-        console.error("No current instance game state to patch.");
-        return;
-    }
+    const { gameState, setGameState } = useGameStore.getState();
 
     const newState = applyPatch(
-        state,
+        gameState,
         response.data as Operation[]
     ).newDocument;
 
-    setState(newState);
+    const validatedInstanceState = InstanceStateSchema.safeParse(newState);
+
+    if (validatedInstanceState.success) {
+        setGameState(validatedInstanceState.data);
+    } else {
+        console.error(validatedInstanceState.error);
+    }
 }

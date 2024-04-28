@@ -10,8 +10,11 @@ export async function handleLobbyReadyRequest(
     request: LobbyReadyRequest
 ) {
     // Get the instance state
-    const instanceState = getInstanceState(ws.data.instanceId);
+    const { instanceState, release } = await getInstanceState(
+        ws.data.instanceId
+    );
     if (!instanceState) {
+        release();
         sendWsError(
             ws,
             `Instance state not found for ID: ${ws.data.instanceId}`
@@ -64,5 +67,5 @@ export async function handleLobbyReadyRequest(
         }
     }
 
-    updateInstanceState(ws.data.instanceId, instanceState);
+    updateInstanceState(ws.data.instanceId, instanceState, release);
 }

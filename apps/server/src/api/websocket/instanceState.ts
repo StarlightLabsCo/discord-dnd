@@ -9,14 +9,30 @@ import {
     type InstanceStatePatchResponse,
 } from "starlight-api-types/websocket";
 import type { JsonPatchOperation } from "starlight-api-types/websocket/patch";
+import { Mutex } from "async-mutex";
 
 const instanceIdToState = new Map<string, InstanceState>();
+const stateMutex = new Map<string, Mutex>();
 
-export function getInstanceState(instanceId: string) {
+function getMutexForInstance(instanceId: string): Mutex {
+    let mutex = stateMutex.get(instanceId);
+    if (!mutex) {
+        mutex = new Mutex();
+        stateMutex.set(instanceId, mutex);
+    }
+    return mutex;
+}
+
+export async function getInstanceState(instanceId: string) {
+    const mutex = getMutexForInstance(instanceId);
+    const release = await mutex.acquire(); // Lock
+
     const state = instanceIdToState.get(instanceId);
-    if (!state) return undefined;
 
-    return structuredClone(state);
+    return {
+        instanceState: state ? structuredClone(state) : undefined,
+        release,
+    };
 }
 
 export async function addUserToInstanceState(
@@ -25,7 +41,7 @@ export async function addUserToInstanceState(
     user: User
 ) {
     // State
-    let instanceState = getInstanceState(instanceId);
+    let { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
         const selectedCampaign = await findOrCreateCampaignForUser(user);
 
@@ -49,8 +65,7 @@ export async function addUserToInstanceState(
         status: "NOT_READY",
     });
 
-    // Update the map just before broadcasting the state
-    updateInstanceState(instanceId, instanceState);
+    updateInstanceState(instanceId, instanceState, release);
 }
 
 async function findOrCreateCampaignForUser(user: User) {
@@ -125,8 +140,11 @@ export async function removeUserFromInstanceState(
     instanceId: string,
     user: User
 ) {
-    const instanceState = getInstanceState(instanceId);
-    if (!instanceState) return;
+    const { instanceState, release } = await getInstanceState(instanceId);
+    if (!instanceState) {
+        release();
+        return;
+    }
 
     instanceState.connectedPlayers = instanceState.connectedPlayers.filter(
         (player) => player.user.id !== user.id
@@ -134,31 +152,42 @@ export async function removeUserFromInstanceState(
 
     if (instanceState.connectedPlayers.length === 0) {
         instanceIdToState.delete(instanceId);
+        stateMutex.delete(instanceId);
     } else {
-        updateInstanceState(instanceId, instanceState);
+        updateInstanceState(instanceId, instanceState, release);
     }
 }
 
 export function updateInstanceState(
     instanceId: string,
-    newInstanceState: InstanceState
+    newInstanceState: InstanceState,
+    release: () => void
 ) {
-    let existingInstanceState = instanceIdToState.get(instanceId) || {};
-    instanceIdToState.set(instanceId, newInstanceState); // TODO: Bad!! Race condition, switch to using fast-json-patch's observer on the getInstanceState function
+    try {
+        let existingInstanceState = instanceIdToState.get(instanceId) || {};
+        instanceIdToState.set(instanceId, newInstanceState);
 
-    // JSON Patch doesn't convert dates correctly, so we need to normalize the state to strings
-    const stringifiedExistingState = JSON.stringify(existingInstanceState);
-    const stringifiedNewInstanceState = JSON.stringify(newInstanceState);
+        // JSON Patch doesn't convert dates correctly, so we need to normalize the state to strings
+        const stringifiedExistingState = JSON.stringify(existingInstanceState);
+        const stringifiedNewInstanceState = JSON.stringify(newInstanceState);
 
-    const normalizedExistingState = JSON.parse(stringifiedExistingState);
-    const normalizedNewInstanceState = JSON.parse(stringifiedNewInstanceState);
+        const normalizedExistingState = JSON.parse(stringifiedExistingState);
+        const normalizedNewInstanceState = JSON.parse(
+            stringifiedNewInstanceState
+        );
 
-    const patch = compare(normalizedExistingState, normalizedNewInstanceState);
+        const patch = compare(
+            normalizedExistingState,
+            normalizedNewInstanceState
+        );
 
-    const patchResponse: InstanceStatePatchResponse = {
-        type: "InstanceStatePatchResponse",
-        data: patch as JsonPatchOperation[],
-    };
+        const patchResponse: InstanceStatePatchResponse = {
+            type: "InstanceStatePatchResponse",
+            data: patch as JsonPatchOperation[],
+        };
 
-    server.publish(instanceId, JSON.stringify(patchResponse));
+        server.publish(instanceId, JSON.stringify(patchResponse));
+    } finally {
+        release();
+    }
 }

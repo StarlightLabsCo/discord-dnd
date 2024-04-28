@@ -52,8 +52,11 @@ export async function handleSendMessageRequest(
         },
     });
 
-    const instanceState = getInstanceState(ws.data.instanceId);
+    const { instanceState, release } = await getInstanceState(
+        ws.data.instanceId
+    );
     if (!instanceState) {
+        release();
         sendWsError(
             ws,
             `Instance state not found for ID: ${ws.data.instanceId}`
@@ -62,7 +65,7 @@ export async function handleSendMessageRequest(
     }
 
     instanceState.selectedCampaign.messages.push(dbMessage);
-    updateInstanceState(ws.data.instanceId, instanceState);
+    updateInstanceState(ws.data.instanceId, instanceState, release);
 
     continueStory(ws.data.instanceId);
 }

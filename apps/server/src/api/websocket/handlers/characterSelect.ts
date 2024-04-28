@@ -12,8 +12,9 @@ export async function handleCharacterSelectRequest(
     const { characterInstanceId } = request.data;
     const { user, instanceId } = ws.data;
 
-    const instanceState = getInstanceState(instanceId);
+    const { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
+        release();
         sendWsError(ws, `Instance state not found for ID: ${instanceId}`);
         return;
     }
@@ -22,6 +23,7 @@ export async function handleCharacterSelectRequest(
         (p) => p.user.id === user.id
     );
     if (playerIndex === -1) {
+        release();
         sendWsError(ws, `User not found for ID: ${user.id}`);
         return;
     }
@@ -31,6 +33,7 @@ export async function handleCharacterSelectRequest(
     });
 
     if (!characterInstance || characterInstance.userId !== user.id) {
+        release();
         sendWsError(ws, `Character not found for ID: ${characterInstanceId}`);
         return;
     }
@@ -38,5 +41,5 @@ export async function handleCharacterSelectRequest(
     ws.data.characterInstanceId = characterInstanceId;
 
     instanceState.connectedPlayers[playerIndex].character = characterInstance;
-    updateInstanceState(instanceId, instanceState);
+    updateInstanceState(instanceId, instanceState, release);
 }

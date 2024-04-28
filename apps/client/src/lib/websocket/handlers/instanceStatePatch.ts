@@ -10,8 +10,6 @@ export async function handleInstanceStatePatchResponse(
 ) {
     const { gameState, setGameState } = useGameStore.getState();
 
-    // Apply patch fails:
-    // TypeError: Cannot read properties of undefined (reading 'updatedAt')
     const newState = applyPatch(
         gameState,
         response.data as Operation[]
@@ -20,10 +18,8 @@ export async function handleInstanceStatePatchResponse(
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
     if (validatedInstanceState.success) {
-        console.log("Validated instance state after patch");
         setGameState(validatedInstanceState.data);
     } else {
-        console.log("Failed to validate instance state after patch");
         console.error(validatedInstanceState.error);
     }
 }

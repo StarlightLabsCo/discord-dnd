@@ -1,9 +1,11 @@
-import { instanceIdToState } from "@/api/websocket/instanceState";
+import {
+    instanceIdToState,
+    updateInstanceState,
+} from "@/api/websocket/instanceState";
 import { getOpenAIMessages, getSystemPrompt } from "./utils";
 import { groq } from "@/lib/groq";
 import { db } from "@/lib/db";
 import { server } from "index";
-import type { MessageAddedResponse } from "starlight-api-types/websocket";
 
 export async function continueStory(instanceId: string) {
     const instanceState = instanceIdToState.get(instanceId);
@@ -43,12 +45,5 @@ export async function continueStory(instanceId: string) {
     });
 
     instanceState.selectedCampaign.messages.push(newMessage);
-    instanceIdToState.set(instanceId, instanceState);
-
-    const messageResponse = {
-        type: "MessageAddedResponse",
-        data: newMessage,
-    } as MessageAddedResponse;
-
-    server.publish(instanceId, JSON.stringify(messageResponse));
+    updateInstanceState(instanceId, instanceState);
 }

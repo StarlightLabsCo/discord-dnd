@@ -1,5 +1,5 @@
 import {
-    instanceIdToState,
+    getInstanceState,
     updateInstanceState,
 } from "@/api/websocket/instanceState";
 import { getOpenAIMessages, getSystemPrompt } from "./utils";
@@ -8,7 +8,7 @@ import { db } from "@/lib/db";
 import { server } from "index";
 
 export async function continueStory(instanceId: string) {
-    const instanceState = instanceIdToState.get(instanceId);
+    const instanceState = getInstanceState(instanceId);
     if (!instanceState) {
         return null;
     }

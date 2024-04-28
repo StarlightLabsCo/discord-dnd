@@ -4,14 +4,20 @@ import { server } from "index";
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from ".";
 import type { User } from "database";
-import type {
-    InstanceState,
-    InstanceStatePatchResponse,
-    InstanceStateResponse,
+import {
+    type InstanceState,
+    type InstanceStatePatchResponse,
 } from "starlight-api-types/websocket";
 import type { JsonPatchOperation } from "starlight-api-types/websocket/patch";
 
-export const instanceIdToState = new Map<string, InstanceState>();
+const instanceIdToState = new Map<string, InstanceState>();
+
+export function getInstanceState(instanceId: string) {
+    const state = instanceIdToState.get(instanceId);
+    if (!state) return undefined;
+
+    return structuredClone(state);
+}
 
 export async function addUserToInstanceState(
     ws: ServerWebSocket<WebSocketData>,
@@ -19,7 +25,7 @@ export async function addUserToInstanceState(
     user: User
 ) {
     // State
-    let instanceState = instanceIdToState.get(instanceId);
+    let instanceState = getInstanceState(instanceId);
     if (!instanceState) {
         const selectedCampaign = await findOrCreateCampaignForUser(user);
 
@@ -44,13 +50,7 @@ export async function addUserToInstanceState(
     });
 
     // Update the map just before broadcasting the state
-    instanceIdToState.set(instanceId, instanceState);
-
-    const instanceStateResponse: InstanceStateResponse = {
-        type: "InstanceStateResponse",
-        data: instanceState,
-    };
-    server.publish(instanceId, JSON.stringify(instanceStateResponse));
+    updateInstanceState(instanceId, instanceState);
 }
 
 async function findOrCreateCampaignForUser(user: User) {
@@ -125,7 +125,7 @@ export async function removeUserFromInstanceState(
     instanceId: string,
     user: User
 ) {
-    const instanceState = instanceIdToState.get(instanceId);
+    const instanceState = getInstanceState(instanceId);
     if (!instanceState) return;
 
     instanceState.connectedPlayers = instanceState.connectedPlayers.filter(
@@ -135,12 +135,7 @@ export async function removeUserFromInstanceState(
     if (instanceState.connectedPlayers.length === 0) {
         instanceIdToState.delete(instanceId);
     } else {
-        instanceIdToState.set(instanceId, instanceState);
-        const instanceStateResponse: InstanceStateResponse = {
-            type: "InstanceStateResponse",
-            data: instanceState,
-        };
-        server.publish(instanceId, JSON.stringify(instanceStateResponse));
+        updateInstanceState(instanceId, instanceState);
     }
 }
 
@@ -149,17 +144,13 @@ export function updateInstanceState(
     newInstanceState: InstanceState
 ) {
     const existingInstanceState = instanceIdToState.get(instanceId);
-    if (!existingInstanceState) {
-        throw new Error(`Instance state not found for ID: ${instanceId}`);
-    }
-
     instanceIdToState.set(instanceId, newInstanceState);
 
     console.log(`[updateInstanceState] - comparing instance states`);
     console.log(existingInstanceState);
     console.log(newInstanceState);
     console.log(`-------------------`);
-    const patch = compare(existingInstanceState, newInstanceState);
+    const patch = compare(existingInstanceState || {}, newInstanceState);
 
     console.log(`[updateInstanceState] - patch`);
     console.log(patch);

@@ -4,7 +4,7 @@ import type { SendMessageRequest } from "starlight-api-types/websocket";
 import { db } from "@/lib/db";
 import { sendWsError } from "../utils";
 import { continueStory } from "@/core/continueStory";
-import { instanceIdToState, updateInstanceState } from "../instanceState";
+import { getInstanceState, updateInstanceState } from "../instanceState";
 
 export async function handleSendMessageRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -52,7 +52,7 @@ export async function handleSendMessageRequest(
         },
     });
 
-    const instanceState = instanceIdToState.get(ws.data.instanceId);
+    const instanceState = getInstanceState(ws.data.instanceId);
     if (!instanceState) {
         sendWsError(
             ws,

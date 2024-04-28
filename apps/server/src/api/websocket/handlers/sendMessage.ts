@@ -7,6 +7,8 @@ import type {
 import { db } from "@/lib/db";
 import { sendWsError } from "../utils";
 import { server } from "index";
+import { continueStory } from "@/core/continueStory";
+import { instanceIdToState } from "../instanceState";
 
 export async function handleSendMessageRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -54,10 +56,24 @@ export async function handleSendMessageRequest(
         },
     });
 
+    const instanceState = instanceIdToState.get(ws.data.instanceId);
+    if (!instanceState) {
+        sendWsError(
+            ws,
+            `Instance state not found for ID: ${ws.data.instanceId}`
+        );
+        return;
+    }
+
+    instanceState.selectedCampaign.messages.push(dbMessage);
+    instanceIdToState.set(ws.data.instanceId, instanceState);
+
     const messageResponse = {
         type: "MessageAddedResponse",
         data: dbMessage,
     } as MessageAddedResponse;
 
     server.publish(ws.data.instanceId, JSON.stringify(messageResponse));
+
+    continueStory(ws.data.instanceId);
 }

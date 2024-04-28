@@ -47,7 +47,11 @@ export async function handleLobbyReadyRequest(
                     },
                 },
                 include: {
-                    messages: true,
+                    messages: {
+                        include: {
+                            characterInstance: true,
+                        },
+                    },
                     characterInstances: {
                         include: {
                             user: true,

@@ -66,7 +66,11 @@ async function findOrCreateCampaignForUser(user: User) {
                     user: true,
                 },
             },
-            messages: true,
+            messages: {
+                include: {
+                    characterInstance: true,
+                },
+            },
         },
     });
 
@@ -102,7 +106,11 @@ async function findOrCreateCampaignForUser(user: User) {
                         user: true,
                     },
                 },
-                messages: true,
+                messages: {
+                    include: {
+                        characterInstance: true,
+                    },
+                },
             },
         });
     }

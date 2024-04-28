@@ -36,6 +36,19 @@ export const MessageAddedResponseZodSchema = z.object({
     ),
 });
 
+export type MessageUpdatedResponse = z.infer<
+    typeof MessageUpdatedResponseZodSchema
+>;
+
+export const MessageUpdatedResponseZodSchema = z.object({
+    type: z.literal("MessageUpdatedResponse"),
+    data: MessageSchema.merge(
+        z.object({
+            characterInstance: CharacterInstanceSchema,
+        })
+    ),
+});
+
 export type ErrorResponse = z.infer<typeof ErrorResponseZodSchema>;
 
 export const ErrorResponseZodSchema = z.object({
@@ -50,6 +63,7 @@ const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
     MessageAddedResponse: MessageAddedResponseZodSchema,
+    MessageUpdatedResponse: MessageUpdatedResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

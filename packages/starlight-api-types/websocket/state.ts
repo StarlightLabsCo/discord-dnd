@@ -35,7 +35,16 @@ export const InstanceStateSchema = z.object({
                     })
                 )
             ),
-            messages: z.array(MessageSchema),
+            messages: z.array(
+                MessageSchema.merge(
+                    z.object({
+                        characterInstance: z.union([
+                            CharacterInstanceSchema,
+                            z.null(),
+                        ]),
+                    })
+                )
+            ),
         })
     ),
 });

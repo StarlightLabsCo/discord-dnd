@@ -5,10 +5,9 @@ import {
 import { getOpenAIMessages, getSystemPrompt } from "./utils";
 import { groq } from "@/lib/groq";
 import { db } from "@/lib/db";
-import { server } from "index";
 
 export async function continueStory(instanceId: string) {
-    const instanceState = getInstanceState(instanceId);
+    const { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
         return null;
     }
@@ -45,5 +44,5 @@ export async function continueStory(instanceId: string) {
     });
 
     instanceState.selectedCampaign.messages.push(newMessage);
-    updateInstanceState(instanceId, instanceState);
+    updateInstanceState(instanceId, instanceState, release);
 }

@@ -88,17 +88,17 @@ async function retry(set: WebSocketStoreSet, get: () => WebSocketStore) {
 }
 
 export function sendMessage(message: string) {
-    console.log(`[DiscordD&D WS] Sending message: ${message}`);
+    console.log(`[WS] Sending message: ${message}`);
 
     const ws = useWebsocketStore.getState().ws;
     if (!ws) {
-        console.error("[DiscordD&D WS] WebSocket connection not open");
+        console.error("[WS] WebSocket connection not open");
         return;
     }
 
     const request = validateWebSocketRequest(message);
     if (!request) {
-        console.error("[DiscordD&D WS] Invalid request:", message);
+        console.error("[WS] Invalid request:", message);
         return;
     }
 
@@ -106,7 +106,7 @@ export function sendMessage(message: string) {
 }
 
 async function onMessage(event: MessageEvent) {
-    console.log(`[DiscordD&D WS] Message: ${event.data}`);
+    console.log(`[WS] Message: ${event.data}`);
 
     try {
         const response = validateWebSocketResponse(event.data);
@@ -114,16 +114,13 @@ async function onMessage(event: MessageEvent) {
 
         const handler = handlers[response.type as keyof typeof handlers];
         if (!handler) {
-            console.error(
-                "[DiscordD&D WS] No handler for message type:",
-                response.type
-            );
+            console.error("[WS] No handler for message type:", response.type);
             return;
         }
 
         await handler(response as any);
     } catch (error) {
-        console.error("[DiscordD&D WS] Error parsing message:", error);
+        console.error("[WS] Error parsing message:", error);
     }
 }
 

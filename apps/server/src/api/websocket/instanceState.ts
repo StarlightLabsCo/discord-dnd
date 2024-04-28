@@ -143,6 +143,9 @@ export function updateInstanceState(
     instanceId: string,
     newInstanceState: InstanceState
 ) {
+    console.log(`Updating instance state for ID: ${instanceId}`);
+    console.log(`New instance state: ${JSON.stringify(newInstanceState)}`);
+
     const existingInstanceState = instanceIdToState.get(instanceId);
     instanceIdToState.set(instanceId, newInstanceState); // TODO: Bad!! Race condition, switch to using fast-json-patch's observer on the getInstanceState function
 

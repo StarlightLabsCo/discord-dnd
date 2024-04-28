@@ -42,6 +42,7 @@ export const ErrorResponseZodSchema = z.object({
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStateResponse: InstanceStateResponseZodSchema,
+    InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

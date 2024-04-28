@@ -11,6 +11,7 @@ export async function handleInstanceStatePatchResponse(
     console.log("Received instance state patch response");
     const { gameState, setGameState } = useGameStore.getState();
 
+    console.log("Applying patch to game state:");
     const newState = applyPatch(
         gameState,
         response.data as Operation[]
@@ -19,7 +20,7 @@ export async function handleInstanceStatePatchResponse(
     console.log("New state after patch:");
     console.log(newState);
 
-    const validatedInstanceState = InstanceStateSchema.safeParse(newState);
+    const validatedInstanceState = InstanceStateSchema.safeParse(newState); // why does this throw
 
     if (validatedInstanceState.success) {
         console.log("Validated instance state after patch");

@@ -8,6 +8,7 @@ import { Operation, applyPatch } from "fast-json-patch";
 export async function handleInstanceStatePatchResponse(
     response: InstanceStatePatchResponse
 ) {
+    console.log("Received instance state patch response");
     const { gameState, setGameState } = useGameStore.getState();
 
     const newState = applyPatch(
@@ -18,8 +19,10 @@ export async function handleInstanceStatePatchResponse(
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
     if (validatedInstanceState.success) {
+        console.log("Validated instance state after patch");
         setGameState(validatedInstanceState.data);
     } else {
+        console.log("Failed to validate instance state after patch");
         console.error(validatedInstanceState.error);
     }
 }

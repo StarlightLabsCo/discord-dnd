@@ -144,7 +144,7 @@ export function updateInstanceState(
     newInstanceState: InstanceState
 ) {
     const existingInstanceState = instanceIdToState.get(instanceId);
-    instanceIdToState.set(instanceId, newInstanceState);
+    instanceIdToState.set(instanceId, newInstanceState); // TODO: Bad!! Race condition, switch to using fast-json-patch's observer on the getInstanceState function
 
     const patch = compare(existingInstanceState || {}, newInstanceState);
 

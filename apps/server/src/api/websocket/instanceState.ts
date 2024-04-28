@@ -146,18 +146,17 @@ export function updateInstanceState(
     const existingInstanceState = instanceIdToState.get(instanceId);
     instanceIdToState.set(instanceId, newInstanceState); // TODO: Bad!! Race condition, switch to using fast-json-patch's observer on the getInstanceState function
 
-    console.log(`Updating instance state for ID: ${instanceId}`);
-    console.log(
-        `Existing instance state: ${JSON.stringify(existingInstanceState)}`
+    // JSON Patch doesn't convert dates correctly, so we need to normalize the state to strings
+    const stringifiedExistingState = JSON.stringify(existingInstanceState);
+    const stringifiedNewInstanceState = JSON.stringify(newInstanceState);
+
+    const normalizedExistingState = JSON.parse(stringifiedExistingState);
+    const normalizedNewInstanceState = JSON.parse(stringifiedNewInstanceState);
+
+    const patch = compare(
+        normalizedExistingState || {},
+        normalizedNewInstanceState
     );
-    console.log(`New instance state: ${JSON.stringify(newInstanceState)}`);
-
-    const patch = compare(existingInstanceState || {}, newInstanceState);
-
-    console.log(`Patch Length: ${patch.length}`);
-    for (let i = 0; i < Math.min(5, patch.length); i++) {
-        console.log(`Patch ${i}: ${JSON.stringify(patch[i])}`);
-    }
 
     const patchResponse: InstanceStatePatchResponse = {
         type: "InstanceStatePatchResponse",

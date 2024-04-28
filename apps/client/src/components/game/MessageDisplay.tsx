@@ -13,16 +13,15 @@ export function MessageDisplay({ message, className }: Props) {
             (ci) => ci.id === message.characterInstanceId
         );
 
-    if (!character) {
-        console.error("Character not found for message", message);
-        return null;
-    }
-
     return (
         <div className={cn("flex gap-x-6", className)}>
             <div className='shrink-0'>
                 <img
-                    src={character.imageUrl}
+                    src={
+                        character
+                            ? character.imageUrl
+                            : "https://cdn.midjourney.com/9fc0b2ca-d4dd-498e-8e4f-0540407f4c1c/0_2.webp"
+                    }
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>

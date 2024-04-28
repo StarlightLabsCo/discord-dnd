@@ -31,7 +31,7 @@ export const MessageAddedResponseZodSchema = z.object({
     type: z.literal("MessageAddedResponse"),
     data: MessageSchema.merge(
         z.object({
-            characterInstance: CharacterInstanceSchema,
+            characterInstance: z.union([CharacterInstanceSchema, z.null()]),
         })
     ),
 });
@@ -44,7 +44,7 @@ export const MessageUpdatedResponseZodSchema = z.object({
     type: z.literal("MessageUpdatedResponse"),
     data: MessageSchema.merge(
         z.object({
-            characterInstance: CharacterInstanceSchema,
+            characterInstance: z.union([CharacterInstanceSchema, z.null()]),
         })
     ),
 });

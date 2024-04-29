@@ -23,6 +23,7 @@ export async function streamAudio(
     );
 
     ws.onopen = async () => {
+        console.log(`[11 Labs] Connected to WebSocket`);
         ws.send(
             JSON.stringify({
                 text: " ",
@@ -35,11 +36,14 @@ export async function streamAudio(
         );
 
         ws.send(JSON.stringify({ text: message.content, flush: true }));
+        console.log(`[11 Labs] Sent initial messages`);
     };
 
     let audioBuffer: Buffer[] = [];
     let wordTimings: AudioWordTimings | null = null;
     ws.onmessage = (event) => {
+        console.log(`[11 Labs] Received message`);
+        console.log(event.data.toString());
         const data = JSON.parse(event.data.toString());
 
         if (data.audio) {
@@ -94,6 +98,8 @@ function publishAudio(
     audio: Buffer,
     start: boolean = false
 ) {
+    console.log(`[11 Labs] Publishing audio message ${messageId}`);
+
     const response = {
         type: "BufferAudioResponse",
         data: {
@@ -111,6 +117,8 @@ function publishWordTimings(
     messageId: string,
     wordTimings: AudioWordTimings
 ) {
+    console.log(`[11 Labs] Publishing word timings for message ${messageId}`);
+
     const response = {
         type: "WordTimingsResponse",
         data: {

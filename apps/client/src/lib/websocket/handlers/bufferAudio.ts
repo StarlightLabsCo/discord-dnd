@@ -25,5 +25,7 @@ export async function handleBufferAudioResponse(response: BufferAudioResponse) {
         useAudioStore.setState({ audioStartTime: new Date() });
     }
 
+    console.log(`Buffering audio for message ${response.data.messageId}`);
+    console.log(`Buffer length: ${response.data.buffer.length}`);
     bufferBase64Audio(audioContext, bufferedPlayerNode, response.data.buffer);
 }

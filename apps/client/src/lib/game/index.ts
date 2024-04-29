@@ -8,7 +8,7 @@ type GameStore = {
     user: User | null;
     setUser: (user: User) => void;
 
-    gameState: InstanceState | Record<string, never>;
+    gameState: InstanceState | null;
     setGameState: (state: InstanceState) => void;
 };
 
@@ -16,7 +16,7 @@ export const useGameStore = create<GameStore>((set) => ({
     user: null,
     setUser: (user: User) => set({ user }),
 
-    gameState: {},
+    gameState: null,
     setGameState: (gameState: InstanceState) => {
         set({ gameState });
 

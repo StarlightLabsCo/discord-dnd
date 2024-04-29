@@ -4,17 +4,25 @@ import {
     SelectableGrid,
     SelectableGridItem,
 } from "@/components/lobby/character/SelectableGrid";
+import { useGameStore } from "@/lib/game";
 
 export const Route = createFileRoute("/lobby/character/background")({
     component: Background,
 });
 
 function Background() {
-    const { world, draftCharacter, setDraftCharacter } =
-        useCharacterEditorStore();
-    if (!world || !draftCharacter) {
-        return <div>World or Draft Character is undefined.</div>;
+    const { gameState } = useGameStore();
+    const { draftCharacter, setDraftCharacter } = useCharacterEditorStore();
+
+    if (!gameState) {
+        return <div>Game state is undefined.</div>;
     }
+
+    if (!draftCharacter) {
+        return <div>Draft Character is undefined.</div>;
+    }
+
+    const world = gameState.selectedCampaignInstance.campaign.world;
 
     const items = Object.values(world.backgrounds).map((background) => ({
         id: background.id,

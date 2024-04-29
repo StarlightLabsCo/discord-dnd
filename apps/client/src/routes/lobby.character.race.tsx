@@ -5,18 +5,24 @@ import {
     SelectableGridItem,
 } from "@/components/lobby/character/SelectableGrid";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
+import { useGameStore } from "@/lib/game";
 
 export const Route = createFileRoute("/lobby/character/race")({
     component: Race,
 });
-
 function Race() {
-    const { world, draftCharacter, setDraftCharacter } =
-        useCharacterEditorStore();
+    const { gameState } = useGameStore();
+    const { draftCharacter, setDraftCharacter } = useCharacterEditorStore();
 
-    if (!world || !draftCharacter) {
-        return <div>Races data is undefined.</div>;
+    if (!gameState) {
+        return <div>Game state is undefined.</div>;
     }
+
+    if (!draftCharacter) {
+        return <div>Draft character is undefined</div>;
+    }
+
+    const world = gameState.selectedCampaignInstance.campaign.world;
 
     const items = Object.values(world.races).map((race) => ({
         id: race.id,

@@ -171,6 +171,10 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 
 export const getRandomCharacter = (): CharacterInstanceInfo => {
     const { user, gameState } = useGameStore.getState();
+    if (!gameState) {
+        throw new Error("Game state is undefined");
+    }
+
     const { selectedCampaignInstance } = gameState;
     const { campaign } = selectedCampaignInstance;
     const { world } = campaign || { races: [], classes: [], backgrounds: [] };

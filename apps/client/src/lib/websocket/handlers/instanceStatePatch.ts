@@ -10,8 +10,10 @@ export async function handleInstanceStatePatchResponse(
 ) {
     const { gameState, setGameState } = useGameStore.getState();
 
+    const currentState = gameState || {};
+
     const newState = applyPatch(
-        gameState,
+        currentState,
         response.data as Operation[]
     ).newDocument;
 

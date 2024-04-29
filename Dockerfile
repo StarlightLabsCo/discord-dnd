@@ -18,7 +18,7 @@ RUN bun install --production --frozen-lockfile
 RUN bunx turbo run db:generate
 RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 
-FROM oven/bun:slim as runner
+FROM oven/bun:1 as runner
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/server .

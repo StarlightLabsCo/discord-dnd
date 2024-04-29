@@ -19,18 +19,14 @@ export async function streamAudio(
     message: Message
 ) {
     let ws = new WebSocket(
-        `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=pcm_44100`,
-        {
-            headers: {
-                Authorization: `Bearer ${process.env.ELEVENLABS_API_KEY}`,
-            },
-        }
+        `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=pcm_44100`
     );
 
     ws.onopen = async () => {
         console.log(`[11 Labs] Connected to WebSocket`);
         ws.send(
             JSON.stringify({
+                xi_api_key: process.env.ELEVEN_LABS_API_KEY,
                 text: " ",
                 voice_settings: {
                     stability: 1,
@@ -38,6 +34,8 @@ export async function streamAudio(
                 },
             })
         );
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         ws.send(JSON.stringify({ text: message.content, flush: true }));
         console.log(`[11 Labs] Sent initial messages`);

@@ -7,6 +7,7 @@ import {
 
 import { handleUserInfoResponse } from "./handlers/userInfo";
 import { handleInstanceStatePatchResponse } from "./handlers/instanceStatePatch";
+import { handleBufferAudioResponse } from "./handlers/bufferAudio";
 import { handleErrorResponse } from "./handlers/error";
 
 type WebSocketStore = {
@@ -127,5 +128,6 @@ async function onMessage(event: MessageEvent) {
 const handlers = {
     UserInfoResponse: handleUserInfoResponse,
     InstanceStatePatchResponse: handleInstanceStatePatchResponse,
+    BufferAudioResponse: handleBufferAudioResponse,
     ErrorResponse: handleErrorResponse,
 };

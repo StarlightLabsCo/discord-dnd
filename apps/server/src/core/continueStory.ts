@@ -60,7 +60,7 @@ export async function continueStory(instanceId: string) {
         const bufferAudioResponse = {
             type: "BufferAudioResponse",
             data: {
-                buffer: chunk,
+                buffer: chunk.toString("base64"),
             },
         } as BufferAudioResponse;
 

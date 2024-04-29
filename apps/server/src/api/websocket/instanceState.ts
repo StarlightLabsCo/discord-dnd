@@ -14,6 +14,7 @@ import { Mutex } from "async-mutex";
 const instanceIdToState = new Map<string, InstanceState>();
 const stateMutex = new Map<string, Mutex>();
 
+// Eventually could be kinda cool to get only get a Mutex for a specific field and it's children rather than the whole state.
 function getMutexForInstance(instanceId: string): Mutex {
     let mutex = stateMutex.get(instanceId);
     if (!mutex) {

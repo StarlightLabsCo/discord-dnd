@@ -21,8 +21,6 @@ export const useGameStore = create<GameStore>((set) => ({
     setGameState: (gameState: InstanceState) => {
         set({ gameState });
 
-        console.log(`Setting game state: ${JSON.stringify(gameState)}`);
-
         if (!gameState) return;
         discordSdk.commands.setActivity({
             activity: {

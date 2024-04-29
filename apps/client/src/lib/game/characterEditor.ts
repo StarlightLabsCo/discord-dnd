@@ -66,14 +66,8 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
             }
         },
         setWorldByCampaignId: async (campaignId) => {
-            console.log("Fetching world...");
-            console.log(
-                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/data/world?campaignId=` +
-                    campaignId
-            );
             const response = await fetch(
-                `${import.meta.env.VITE_HOST ? import.meta.env.VITE_HOST : ""}/api/data/world?campaignId=` +
-                    campaignId
+                `/api/data/world?campaignId=${campaignId}`
             );
             if (!response.ok) {
                 console.error("Failed to fetch world");

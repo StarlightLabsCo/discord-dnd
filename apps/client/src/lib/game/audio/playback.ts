@@ -1,4 +1,6 @@
 export function setupBufferedPlayerProcessor() {
+    console.log(`Setting up buffered player processor...`);
+
     const processorCode = `
           // Incorporate RingBuffer inside the AudioWorkletProcessor
           class RingBuffer {
@@ -89,25 +91,20 @@ export function clearBufferedPlayerNodeBuffer(
 }
 
 export function bufferBase64Audio(
-    audioContext: AudioContext | null,
-    bufferedPlayerNode: AudioWorkletNode | null,
+    audioContext: AudioContext,
+    bufferedPlayerNode: AudioWorkletNode,
     audioBase64: string
 ) {
-    if (audioContext === null) {
-        console.log("audioContext is null");
-        return;
-    }
-
-    if (bufferedPlayerNode === null) {
-        console.log("bufferedPlayerNode is null");
-        return;
-    }
-
+    console.log(`Resuming audio context...`);
     audioContext.resume();
 
+    console.log(`Convert base64 to Uint8Array...`);
     const audioBytes = base64ToUint8Array(audioBase64);
+
+    console.log(`Convert Uint8Array to Float32Array...`);
     const audioFloat32Array = uint8ArrayToFloat32Array(audioBytes);
 
+    console.log(`Pushing audio to buffered player node...`);
     bufferedPlayerNode.port.postMessage({ push: audioFloat32Array });
 }
 

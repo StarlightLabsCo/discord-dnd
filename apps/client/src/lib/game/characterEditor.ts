@@ -57,7 +57,9 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
     (set, get) => ({
         draftCharacter: null,
         setDraftCharacter: (draftCharacter) => set({ draftCharacter }),
-        generateRandomDraftCharacter: getRandomCharacter,
+        generateRandomDraftCharacter: () => {
+            set({ draftCharacter: getRandomCharacter() });
+        },
 
         availableCharacterAbilityPoints: 27,
         setAvailableCharacterAbilityPoints: (points) =>

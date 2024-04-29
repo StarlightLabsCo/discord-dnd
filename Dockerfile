@@ -15,16 +15,11 @@ COPY . .
 
 ARG DATABASE_URL
 RUN bun install --production --frozen-lockfile
-
 RUN bunx turbo run db:generate
-
 RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 
-FROM alpine:latest as runner
+FROM oven/bun:canary-distroless as runner
 WORKDIR /usr/src/app
 
-RUN apk add --no-cache libc6-compat
-
 COPY --from=builder /usr/src/app/server .
-
-CMD ["./server"]
+CMD ./server

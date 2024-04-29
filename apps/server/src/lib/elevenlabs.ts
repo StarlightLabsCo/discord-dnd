@@ -35,8 +35,6 @@ export async function streamAudio(
             })
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
         ws.send(JSON.stringify({ text: message.content, flush: true }));
         console.log(`[11 Labs] Sent initial messages`);
     };

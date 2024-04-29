@@ -1,5 +1,8 @@
 import { useAudioStore } from "@/lib/game/audio";
-import { bufferBase64Audio } from "@/lib/game/audio/playback";
+import {
+    bufferBase64Audio,
+    clearBufferedPlayerNodeBuffer,
+} from "@/lib/game/audio/playback";
 import { BufferAudioResponse } from "starlight-api-types/websocket";
 
 export async function handleBufferAudioResponse(response: BufferAudioResponse) {
@@ -14,6 +17,12 @@ export async function handleBufferAudioResponse(response: BufferAudioResponse) {
     if (bufferedPlayerNode === null) {
         console.log("bufferedPlayerNode is null");
         return;
+    }
+
+    if (response.data.start) {
+        clearBufferedPlayerNodeBuffer(bufferedPlayerNode);
+        useAudioStore.setState({ streamedMessageId: response.data.messageId });
+        useAudioStore.setState({ audioStartTime: new Date() });
     }
 
     bufferBase64Audio(audioContext, bufferedPlayerNode, response.data.buffer);

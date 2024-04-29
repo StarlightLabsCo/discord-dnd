@@ -8,6 +8,7 @@ import {
 import { handleUserInfoResponse } from "./handlers/userInfo";
 import { handleInstanceStatePatchResponse } from "./handlers/instanceStatePatch";
 import { handleBufferAudioResponse } from "./handlers/bufferAudio";
+import { handleWordTimingsResponse } from "./handlers/wordTimings";
 import { handleErrorResponse } from "./handlers/error";
 
 type WebSocketStore = {
@@ -129,5 +130,6 @@ const handlers = {
     UserInfoResponse: handleUserInfoResponse,
     InstanceStatePatchResponse: handleInstanceStatePatchResponse,
     BufferAudioResponse: handleBufferAudioResponse,
+    WordTimingsResponse: handleWordTimingsResponse,
     ErrorResponse: handleErrorResponse,
 };

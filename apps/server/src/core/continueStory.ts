@@ -45,10 +45,5 @@ export async function continueStory(instanceId: string) {
     instanceState.selectedCampaign.messages.push(newMessage);
     updateInstanceState(instanceId, instanceState, release);
 
-    // Stream audio to the client
-    await streamAudio(
-        instanceId,
-        "1Tbay5PQasIwgSzUscmj",
-        completion.choices[0].message.content
-    );
+    await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);
 }

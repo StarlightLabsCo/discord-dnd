@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { setupBufferedPlayerProcessor } from "./playback";
+import { AudioWordTimings } from "starlight-api-types/websocket";
 
 type AudioStore = {
     masterVolume: number;
@@ -16,6 +17,10 @@ type AudioStore = {
     audioContext: AudioContext | null;
     bufferedPlayerNode: AudioWorkletNode | null;
     setupAudioNodes: () => void;
+
+    streamedMessageId: string | null;
+    streamedMessageWordTimings: AudioWordTimings | null;
+    audioStartTime: Date | null;
 };
 
 export const useAudioStore = create<AudioStore>()(
@@ -72,6 +77,9 @@ export const useAudioStore = create<AudioStore>()(
 
                 set({ bufferedPlayerNode });
             },
+            streamedMessageId: null,
+            streamedMessageWordTimings: null,
+            audioStartTime: null,
         }),
         {
             name: "audio-settings",

@@ -48,8 +48,27 @@ export async function uploadImageToR2(imageURL: string) {
     const uploadResponse = await S3.send(uploadCommand);
 
     if (uploadResponse.$metadata.httpStatusCode != 200) {
-        throw new Error("Failed to upload image to S3");
+        throw new Error("Failed to upload image to R2");
     }
 
-    return `/r2/${key}.png`;
+    return `${process.env.S3_PUBLIC_URL}/${key}.png`;
+}
+
+export async function uploadPcmToR2(pcmBuffer: Buffer) {
+    const key = createId();
+
+    const uploadCommand = new PutObjectCommand({
+        Bucket: process.env.S3_ASSETS_BUCKET,
+        Key: key + ".pcm",
+        Body: pcmBuffer,
+        ContentType: "audio/pcm",
+    });
+
+    const uploadResponse = await S3.send(uploadCommand);
+
+    if (uploadResponse.$metadata.httpStatusCode != 200) {
+        throw new Error("Failed to upload PCM audio to R2");
+    }
+
+    return `${process.env.S3_PUBLIC_URL}/${key}.pcm`;
 }

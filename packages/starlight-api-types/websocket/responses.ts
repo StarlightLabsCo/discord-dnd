@@ -1,6 +1,7 @@
 import z from "zod";
 import { UserSchema } from "database/prisma/generated/zod";
 import { JsonPatchDocumentSchema } from "./patch";
+import { AudioWordTimingsZodSchema } from ".";
 
 // ----- UserInfoResponse -----
 export type UserInfoResponse = z.infer<typeof UserInfoResponseZodSchema>;
@@ -24,7 +25,19 @@ export type BufferAudioResponse = z.infer<typeof BufferAudioResponseZodSchema>;
 export const BufferAudioResponseZodSchema = z.object({
     type: z.literal("BufferAudioResponse"),
     data: z.object({
+        messageId: z.string(),
         buffer: z.string(),
+        start: z.boolean(),
+    }),
+});
+
+export type WordTimingsResponse = z.infer<typeof WordTimingsResponseZodSchema>;
+
+export const WordTimingsResponseZodSchema = z.object({
+    type: z.literal("WordTimingsResponse"),
+    data: z.object({
+        messageId: z.string(),
+        wordTimings: AudioWordTimingsZodSchema,
     }),
 });
 
@@ -42,6 +55,7 @@ const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
     BufferAudioResponse: BufferAudioResponseZodSchema,
+    WordTimingsResponse: WordTimingsResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

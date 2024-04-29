@@ -20,6 +20,15 @@ export const InstanceStatePatchResponseZodSchema = z.object({
     data: JsonPatchDocumentSchema,
 });
 
+export type BufferAudioResponse = z.infer<typeof BufferAudioResponseZodSchema>;
+
+export const BufferAudioResponseZodSchema = z.object({
+    type: z.literal("BufferAudioResponse"),
+    data: z.object({
+        buffer: z.string(),
+    }),
+});
+
 export type ErrorResponse = z.infer<typeof ErrorResponseZodSchema>;
 
 export const ErrorResponseZodSchema = z.object({
@@ -33,6 +42,7 @@ export const ErrorResponseZodSchema = z.object({
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
+    BufferAudio: BufferAudioResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

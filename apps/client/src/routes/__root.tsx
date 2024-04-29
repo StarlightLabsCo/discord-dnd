@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { setup, useDiscordStore } from "../lib/discord";
+import { setupDiscordSDK, useDiscordStore } from "../lib/discord";
 import { useWebsocketStore } from "../lib/websocket";
+import { useAudioStore } from "@/lib/game/audio";
 
 export const Route = createRootRoute({
     component: App,
@@ -11,9 +11,11 @@ export const Route = createRootRoute({
 function App() {
     const auth = useDiscordStore((state) => state.auth);
     const connect = useWebsocketStore((state) => state.connect);
+    const setupAudio = useAudioStore((state) => state.setup);
 
     useEffect(() => {
-        setup();
+        setupDiscordSDK();
+        setupAudio();
     }, []);
 
     useEffect(() => {

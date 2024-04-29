@@ -1,6 +1,6 @@
+import { Message } from "database";
 import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
-import { Message } from "database";
 
 type FormattedTextProps = {
     text: string;

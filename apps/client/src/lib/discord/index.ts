@@ -27,7 +27,7 @@ const discordSdk: DiscordSDK | DiscordSDKMock = import.meta.env
 const instanceId = discordSdk.instanceId;
 useDiscordStore.getState().setInstanceId(instanceId);
 
-async function setup() {
+async function setupDiscordSDK() {
     await discordSdk.ready();
     await discordSdk.commands.encourageHardwareAcceleration();
 
@@ -35,4 +35,4 @@ async function setup() {
     useDiscordStore.getState().setAuth(auth);
 }
 
-export { setup, discordSdk as default, useDiscordStore };
+export { setupDiscordSDK, discordSdk as default, useDiscordStore };

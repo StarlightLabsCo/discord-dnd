@@ -3,7 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { useGameStore } from "@/lib/game";
 import { LobbyCharacterPortrait } from "@/components/lobby/LobbyCharacterPortrait";
 import { AddPlayerButton } from "@/components/lobby/AddPlayerButton";
-import { useMusicStore } from "@/lib/game/music";
+import { useMusicStore } from "@/lib/game/audio/music";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 import { useWebsocketStore } from "@/lib/websocket";
 import readySound from "@/assets/sfx/lobby/ready.mp3";

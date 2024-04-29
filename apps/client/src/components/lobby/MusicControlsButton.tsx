@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMusicStore } from "../../lib/game/music";
+import { useMusicStore } from "../../lib/game/audio/music";
 import { Icons } from "../Icons";
 
 export function MusicControlsButton() {

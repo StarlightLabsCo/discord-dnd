@@ -39,9 +39,12 @@ export async function handleLobbyReadyRequest(
         instanceState.state = "IN_GAME";
 
         // If we're starting the campaign for the first time add all connected players to the party
-        if (instanceState.selectedCampaign?.characterInstances.length === 0) {
+        if (
+            instanceState.selectedCampaignInstance?.characterInstances
+                .length === 0
+        ) {
             const updatedCampaignInstance = await db.campaignInstance.update({
-                where: { id: instanceState.selectedCampaign.id },
+                where: { id: instanceState.selectedCampaignInstance.id },
                 data: {
                     characterInstances: {
                         connect: instanceState.connectedPlayers.map((p) => ({
@@ -50,6 +53,22 @@ export async function handleLobbyReadyRequest(
                     },
                 },
                 include: {
+                    campaign: {
+                        include: {
+                            world: {
+                                include: {
+                                    races: true,
+                                    classes: true,
+                                    backgrounds: {
+                                        include: {
+                                            proficiencies: true,
+                                            startingEquipment: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                     messages: {
                         include: {
                             characterInstance: true,
@@ -63,7 +82,7 @@ export async function handleLobbyReadyRequest(
                 },
             });
 
-            instanceState.selectedCampaign = updatedCampaignInstance;
+            instanceState.selectedCampaignInstance = updatedCampaignInstance;
         }
     }
 

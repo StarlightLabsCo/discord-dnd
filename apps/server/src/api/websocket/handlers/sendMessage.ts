@@ -64,7 +64,7 @@ export async function handleSendMessageRequest(
         return;
     }
 
-    instanceState.selectedCampaign.messages.push(dbMessage);
+    instanceState.selectedCampaignInstance.messages.push(dbMessage);
     updateInstanceState(ws.data.instanceId, instanceState, release);
 
     continueStory(ws.data.instanceId);

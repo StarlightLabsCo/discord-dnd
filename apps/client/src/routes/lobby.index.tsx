@@ -20,13 +20,13 @@ function Lobby() {
     );
 
     const title = useGameStore(
-        (state) => state.gameState?.selectedCampaign?.name
+        (state) => state.gameState?.selectedCampaignInstance?.name
     );
     const description = useGameStore(
-        (state) => state.gameState?.selectedCampaign?.description
+        (state) => state.gameState?.selectedCampaignInstance?.description
     );
     const campaignCover = useGameStore(
-        (state) => state.gameState?.selectedCampaign?.imageUrl
+        (state) => state.gameState?.selectedCampaignInstance?.imageUrl
     );
 
     const instanceState = useGameStore((state) => state.gameState);

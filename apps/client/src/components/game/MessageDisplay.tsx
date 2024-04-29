@@ -21,7 +21,7 @@ type MessageDisplayProps = {
 
 export function MessageDisplay({ message, className }: MessageDisplayProps) {
     const character =
-        useGameStore().gameState?.selectedCampaign.characterInstances.find(
+        useGameStore().gameState?.selectedCampaignInstance.characterInstances.find(
             (ci) => ci.id === message.characterInstanceId
         );
 

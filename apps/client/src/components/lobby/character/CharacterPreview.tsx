@@ -11,10 +11,10 @@ type CharacterPreviewProps = {
 };
 
 export function CharacterPreview({ className }: CharacterPreviewProps) {
-    const { world, draftCharacter } = useCharacterEditorStore();
+    const { draftCharacter } = useCharacterEditorStore();
 
-    if (!world || !draftCharacter) {
-        return <div>Character or world is undefined.</div>;
+    if (!draftCharacter) {
+        return <div>Draft character is undefined.</div>;
     }
 
     return (

@@ -49,13 +49,13 @@ export async function addUserToInstanceState(
         instanceState = {
             state: "LOBBY",
             connectedPlayers: [],
-            selectedCampaign: selectedCampaign,
+            selectedCampaignInstance: selectedCampaign,
         };
     }
 
     // Character
     const existingCharacterInstance =
-        instanceState.selectedCampaign.characterInstances.find(
+        instanceState.selectedCampaignInstance.characterInstances.find(
             (ci) => ci.userId === user.id
         );
 
@@ -80,6 +80,22 @@ async function findOrCreateCampaignForUser(user: User) {
             updatedAt: "desc",
         },
         include: {
+            campaign: {
+                include: {
+                    world: {
+                        include: {
+                            races: true,
+                            classes: true,
+                            backgrounds: {
+                                include: {
+                                    proficiencies: true,
+                                    startingEquipment: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
             characterInstances: {
                 include: {
                     user: true,
@@ -120,6 +136,22 @@ async function findOrCreateCampaignForUser(user: User) {
                 imageUrl: campaign.imageUrl,
             },
             include: {
+                campaign: {
+                    include: {
+                        world: {
+                            include: {
+                                races: true,
+                                classes: true,
+                                backgrounds: {
+                                    include: {
+                                        proficiencies: true,
+                                        startingEquipment: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
                 characterInstances: {
                     include: {
                         user: true,

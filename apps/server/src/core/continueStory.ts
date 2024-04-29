@@ -13,7 +13,7 @@ export async function continueStory(instanceId: string) {
         return null;
     }
 
-    const campaignInstance = instanceState.selectedCampaign;
+    const campaignInstance = instanceState.selectedCampaignInstance;
     if (!campaignInstance) {
         return null;
     }
@@ -42,7 +42,7 @@ export async function continueStory(instanceId: string) {
         },
     });
 
-    instanceState.selectedCampaign.messages.push(newMessage);
+    instanceState.selectedCampaignInstance.messages.push(newMessage);
     updateInstanceState(instanceId, instanceState, release);
 
     await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);

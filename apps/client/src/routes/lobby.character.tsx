@@ -3,13 +3,23 @@ import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { CharacterPreview } from "@/components/lobby/character/CharacterPreview";
 import { SidebarLinks } from "@/components/lobby/character/SidebarLinks";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
+import { useEffect } from "react";
+import { useGameStore } from "@/lib/game";
 
 export const Route = createFileRoute("/lobby/character")({
     component: Layout,
 });
 
 function Layout() {
-    const { saveCharacter } = useCharacterEditorStore();
+    const { gameState } = useGameStore();
+    const { saveCharacter, draftCharacter, generateRandomDraftCharacter } =
+        useCharacterEditorStore();
+
+    useEffect(() => {
+        if (!draftCharacter && gameState != null) {
+            generateRandomDraftCharacter();
+        }
+    }, [draftCharacter, gameState, generateRandomDraftCharacter]);
 
     return (
         <div className='flex relative items-center w-screen h-screen text-white'>
@@ -30,4 +40,3 @@ function Layout() {
         </div>
     );
 }
-    

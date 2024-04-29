@@ -37,12 +37,9 @@ type CharacterInstanceInfo = CharacterInstance & {
 };
 
 interface CharacterEditorStoreState {
-    world: WorldInfo | null;
-    setWorld: (world: WorldInfo) => void;
-    setWorldByCampaignId: (campaignId: string) => void;
-
     draftCharacter: CharacterInstanceInfo | null;
     setDraftCharacter: (character: CharacterInstanceInfo) => void;
+    generateRandomDraftCharacter: () => void;
 
     availableCharacterAbilityPoints: number;
     setAvailableCharacterAbilityPoints: (points: number) => void;
@@ -58,33 +55,9 @@ interface CharacterEditorStoreState {
 
 export const useCharacterEditorStore = create<CharacterEditorStoreState>(
     (set, get) => ({
-        world: null,
-        setWorld: (world) => {
-            set({ world });
-            if (world && get().draftCharacter === null) {
-                set({ draftCharacter: getRandomCharacter(world) });
-            }
-        },
-        setWorldByCampaignId: async (campaignId) => {
-            const response = await fetch(
-                `/api/data/world?campaignId=${campaignId}`
-            );
-            if (!response.ok) {
-                console.error("Failed to fetch world");
-                return;
-            }
-
-            const data = await response.json();
-
-            set({ world: data[0] });
-
-            if (data[0] && get().draftCharacter === null) {
-                set({ draftCharacter: getRandomCharacter(data[0]) });
-            }
-        },
-
         draftCharacter: null,
         setDraftCharacter: (draftCharacter) => set({ draftCharacter }),
+        generateRandomDraftCharacter: getRandomCharacter,
 
         availableCharacterAbilityPoints: 27,
         setAvailableCharacterAbilityPoints: (points) =>
@@ -194,35 +167,31 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
     })
 );
 
-export const getRandomCharacter = (world: WorldInfo): CharacterInstanceInfo => {
-    const selectedCampaign =
-        useGameStore.getState().gameState?.selectedCampaign;
-    const user = useGameStore.getState().user;
+export const getRandomCharacter = (): CharacterInstanceInfo => {
+    const { user, gameState } = useGameStore.getState();
+    const { selectedCampaignInstance } = gameState;
+    const { campaign } = selectedCampaignInstance;
+    const { world } = campaign || { races: [], classes: [], backgrounds: [] };
 
-    const randomRace =
-        world.races[Math.floor(Math.random() * world.races.length)];
-    const randomClass =
-        world.classes[Math.floor(Math.random() * world.classes.length)];
-    const randomBackground =
-        world.backgrounds[Math.floor(Math.random() * world.backgrounds.length)];
+    const getRandomElement = (array: any[]) =>
+        array[Math.floor(Math.random() * array.length)];
+
+    const randomRace = getRandomElement(world.races);
+    const randomClass = getRandomElement(world.classes);
+    const randomBackground = getRandomElement(world.backgrounds);
 
     return {
         id: cuid(),
         userId: user?.id,
         characterId: null,
-        campaignInstanceId: selectedCampaign?.id,
-
+        campaignInstanceId: selectedCampaignInstance?.id,
         raceId: randomRace.id,
         race: randomRace,
-
         subraceId: null,
-
         classId: randomClass.id,
         class: randomClass,
-
         backgroundId: randomBackground.id,
         background: randomBackground,
-
         name: "Random Character",
         description: "A randomly generated character",
         imageUrl: "",

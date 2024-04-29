@@ -24,7 +24,8 @@ export const useGameStore = create<GameStore>((set) => ({
         if (!gameState) return;
         discordSdk.commands.setActivity({
             activity: {
-                details: gameState.selectedCampaign?.name || "New Campaign",
+                details:
+                    gameState.selectedCampaignInstance?.name || "New Campaign",
                 state: gameState.state === "LOBBY" ? "Lobby" : "In Game",
                 party: {
                     id: discordSdk.instanceId,
@@ -74,7 +75,7 @@ if (import.meta.env.VITE_DISCORD_EMBED_DEBUG) {
                     status: "NOT_READY",
                 },
             ],
-            selectedCampaign: {
+            selectedCampaignInstance: {
                 userId: "1077378222834073682",
                 campaignId: "clv8n2t2y0001i5bqmip6nuu1",
                 id: "clvcu9kz10000oxm3ux3c1crj",

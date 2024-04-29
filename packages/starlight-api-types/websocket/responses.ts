@@ -1,7 +1,7 @@
 import z from "zod";
 import { UserSchema } from "database/prisma/generated/zod";
 import { JsonPatchDocumentSchema } from "./patch";
-import { AudioWordTimingsZodSchema } from ".";
+import { AudioWordTimingsZodSchema } from "./audio";
 
 // ----- UserInfoResponse -----
 export type UserInfoResponse = z.infer<typeof UserInfoResponseZodSchema>;

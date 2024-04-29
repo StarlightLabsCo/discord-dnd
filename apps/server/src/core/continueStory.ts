@@ -57,13 +57,11 @@ export async function continueStory(instanceId: string) {
     }
 
     for await (const chunk of audioStream) {
-        console.log("Sending audio chunk");
-        console.log(chunk);
-
+        const base64Data = Buffer.from(chunk).toString("base64");
         const bufferAudioResponse = {
             type: "BufferAudioResponse",
             data: {
-                buffer: chunk.toString("base64"),
+                buffer: base64Data,
             },
         } as BufferAudioResponse;
 

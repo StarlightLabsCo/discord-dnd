@@ -145,12 +145,10 @@ export const useCharacterEditorStore = create<CharacterEditorStoreState>(
 
             const data = await response.json();
             if (data) {
-                console.log("Character saved successfully");
                 set({ draftCharacter: data });
 
                 const ws = useWebsocketStore.getState().ws;
                 if (ws) {
-                    console.log("Sending character select request");
                     ws.send(
                         JSON.stringify({
                             type: "CharacterSelectRequest",

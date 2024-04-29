@@ -43,7 +43,6 @@ export async function streamAudio(
     let wordTimings: AudioWordTimings | null = null;
     ws.onmessage = (event) => {
         console.log(`[11 Labs] Received message`);
-        console.log(event.data.toString());
         const data = JSON.parse(event.data.toString());
 
         if (data.audio) {
@@ -74,6 +73,7 @@ export async function streamAudio(
 
     ws.onclose = async (event) => {
         // Normal close
+        console.log(`[11 Labs] WebSocket closed with code ${event.code}`);
         if (event.code === 1000) {
             const finalAudioBuffer = Buffer.concat(audioBuffer);
             const audioUrl = await uploadPcmToR2(finalAudioBuffer);

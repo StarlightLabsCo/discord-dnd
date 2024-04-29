@@ -12,11 +12,8 @@ function Layout() {
     const navigate = useNavigate();
     const inGame = useGameStore().gameState?.state === "IN_GAME";
 
-    // TODO: does this make the game start message kinda redundant?
     useEffect(() => {
-        console.log(`In game: ${inGame}`);
         if (inGame) {
-            console.log("Navigating to game");
             navigate({
                 to: "/game",
             });

@@ -25,8 +25,6 @@ async function handleImagePost(req: Request) {
     );
     if (error) return error;
 
-    console.log("Generating image");
-
     // const startingItems = classes[data.classId].startingItems?.reduce(
     //     (acc: string[], item: Item) => {
     //         acc.push(item.name);

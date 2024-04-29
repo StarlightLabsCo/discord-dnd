@@ -18,7 +18,7 @@ RUN bun install --production --frozen-lockfile
 RUN bunx turbo run db:generate
 RUN bun build --compile --minify ./apps/server/index.ts --outfile server
 
-FROM oven/bun:canary-distroless as runner
+FROM oven/bun:slim as runner
 WORKDIR /usr/src/app
 
 COPY --from=builder /usr/src/app/server .

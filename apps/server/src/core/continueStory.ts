@@ -57,6 +57,10 @@ export async function continueStory(instanceId: string) {
     }
 
     for await (const chunk of audioStream) {
+        console.log("Sending audio chunk");
+        console.log(typeof chunk);
+        console.log(chunk.length);
+
         const bufferAudioResponse = {
             type: "BufferAudioResponse",
             data: {

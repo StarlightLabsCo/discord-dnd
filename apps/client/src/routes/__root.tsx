@@ -11,7 +11,7 @@ export const Route = createRootRoute({
 function App() {
     const auth = useDiscordStore((state) => state.auth);
     const connect = useWebsocketStore((state) => state.connect);
-    const setupAudio = useAudioStore((state) => state.setup);
+    const setupAudio = useAudioStore((state) => state.setupAudioNodes);
 
     useEffect(() => {
         setupDiscordSDK();

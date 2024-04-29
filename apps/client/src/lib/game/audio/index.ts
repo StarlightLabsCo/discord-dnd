@@ -13,9 +13,9 @@ type AudioStore = {
     setMusicVolume: (volume: number) => void;
     setSoundEffectsVolume: (volume: number) => void;
 
-    audioContext: AudioContext;
+    audioContext: AudioContext | null;
     bufferedPlayerNode: AudioWorkletNode | null;
-    setup: () => void;
+    setupAudioNodes: () => void;
 };
 
 export const useAudioStore = create<AudioStore>()(
@@ -33,13 +33,15 @@ export const useAudioStore = create<AudioStore>()(
             setSoundEffectsVolume: (volume: number) =>
                 set({ soundEffectsVolume: volume }),
 
-            audioContext: new AudioContext({
-                sampleRate: 44100,
-                latencyHint: "interactive",
-            }),
+            audioContext: null,
             bufferedPlayerNode: null,
-            setup: async () => {
-                const audioContext = get().audioContext;
+            setupAudioNodes: async () => {
+                const audioContext = new AudioContext({
+                    sampleRate: 44100,
+                    latencyHint: "interactive",
+                });
+
+                set({ audioContext });
 
                 // Create gain nodes for each audio type
                 const masterGainNode = audioContext.createGain();

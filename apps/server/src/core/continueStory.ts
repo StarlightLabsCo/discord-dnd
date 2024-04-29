@@ -6,8 +6,6 @@ import { getOpenAIMessages, getSystemPrompt } from "./utils";
 import { groq } from "@/lib/groq";
 import { db } from "@/lib/db";
 import { streamAudio } from "@/lib/elevenlabs";
-import type { BufferAudioResponse } from "starlight-api-types/websocket";
-import { server } from "index";
 
 export async function continueStory(instanceId: string) {
     const { instanceState, release } = await getInstanceState(instanceId);
@@ -48,23 +46,9 @@ export async function continueStory(instanceId: string) {
     updateInstanceState(instanceId, instanceState, release);
 
     // Stream audio to the client
-    const audioStream = await streamAudio(
-        completion.choices[0].message.content,
-        "1Tbay5PQasIwgSzUscmj"
+    await streamAudio(
+        instanceId,
+        "1Tbay5PQasIwgSzUscmj",
+        completion.choices[0].message.content
     );
-    if (!audioStream) {
-        return;
-    }
-
-    for await (const chunk of audioStream) {
-        const base64Data = Buffer.from(chunk).toString("base64");
-        const bufferAudioResponse = {
-            type: "BufferAudioResponse",
-            data: {
-                buffer: base64Data,
-            },
-        } as BufferAudioResponse;
-
-        server.publish(instanceId, JSON.stringify(bufferAudioResponse));
-    }
 }

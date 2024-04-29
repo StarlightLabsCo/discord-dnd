@@ -16,6 +16,5 @@ export async function handleBufferAudioResponse(response: BufferAudioResponse) {
         return;
     }
 
-    console.log(`Buffering audio... (${response.data.buffer.length} bytes)`);
     bufferBase64Audio(audioContext, bufferedPlayerNode, response.data.buffer);
 }

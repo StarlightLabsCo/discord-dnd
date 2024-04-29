@@ -1,8 +1,15 @@
+import { server } from "index";
+import type { BufferAudioResponse } from "starlight-api-types/websocket";
+
 if (!process.env.ELEVENLABS_API_KEY) {
     throw new Error("ELEVENLABS_API_KEY is not set");
 }
 
-export async function streamAudio(text: string, voiceId: string) {
+export async function streamAudio(
+    instanceId: string,
+    voiceId: string,
+    text: string
+) {
     const response = await fetch(
         `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?output_format=pcm_44100`,
         {
@@ -26,5 +33,19 @@ export async function streamAudio(text: string, voiceId: string) {
         throw new Error(`Failed to stream audio: ${response.statusText}`);
     }
 
-    return response.body;
+    if (!response.body) {
+        throw new Error("Response body is null");
+    }
+
+    for await (const chunk of response.body) {
+        const base64Data = Buffer.from(chunk).toString("base64");
+        const bufferAudioResponse = {
+            type: "BufferAudioResponse",
+            data: {
+                buffer: base64Data,
+            },
+        } as BufferAudioResponse;
+
+        server.publish(instanceId, JSON.stringify(bufferAudioResponse));
+    }
 }

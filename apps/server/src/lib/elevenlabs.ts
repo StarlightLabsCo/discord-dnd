@@ -26,7 +26,7 @@ export async function streamAudio(
         console.log(`[11 Labs] Connected to WebSocket`);
         ws.send(
             JSON.stringify({
-                xi_api_key: process.env.ELEVEN_LABS_API_KEY,
+                xi_api_key: process.env.ELEVENLABS_API_KEY,
                 text: " ",
                 voice_settings: {
                     stability: 1,

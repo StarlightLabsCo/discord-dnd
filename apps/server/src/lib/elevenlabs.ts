@@ -19,7 +19,12 @@ export async function streamAudio(
     message: Message
 ) {
     let ws = new WebSocket(
-        `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=pcm_44100`
+        `wss://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream-input?model_id=eleven_multilingual_v2&output_format=pcm_44100`,
+        {
+            headers: {
+                Authorization: `Bearer ${process.env.ELEVENLABS_API_KEY}`,
+            },
+        }
     );
 
     ws.onopen = async () => {
@@ -31,7 +36,6 @@ export async function streamAudio(
                     stability: 1,
                     similarity_boost: true,
                 },
-                xi_api_key: process.env.ELEVEN_LABS_API_KEY,
             })
         );
 

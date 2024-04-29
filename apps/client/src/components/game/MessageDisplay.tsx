@@ -1,6 +1,7 @@
 import { Message } from "database";
 import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
+import { s3UrlRewriter } from "@/lib/discord/utils";
 
 type FormattedTextProps = {
     text: string;
@@ -29,7 +30,11 @@ export function MessageDisplay({ message, className }: MessageDisplayProps) {
         <div className={cn("flex gap-x-[1.5vw]", className)}>
             <div className='shrink-0'>
                 <img
-                    src={character ? character.imageUrl : "/r2/dm.webp"}
+                    src={
+                        character
+                            ? s3UrlRewriter(character.imageUrl)
+                            : "/r2/dm.webp"
+                    }
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>

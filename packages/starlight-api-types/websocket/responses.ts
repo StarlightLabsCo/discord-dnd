@@ -1,6 +1,5 @@
 import z from "zod";
 import { UserSchema } from "database/prisma/generated/zod";
-import { InstanceStateSchema } from "./state";
 import { JsonPatchDocumentSchema } from "./patch";
 
 // ----- UserInfoResponse -----
@@ -42,7 +41,7 @@ export const ErrorResponseZodSchema = z.object({
 const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
-    BufferAudio: BufferAudioResponseZodSchema,
+    BufferAudioResponse: BufferAudioResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

@@ -6,17 +6,16 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const { streamedMessageWordTimings, audioStartTime } = useAudioStore();
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     useEffect(() => {
         let frameId: number;
 
         const updateWordIndex = () => {
+            const { streamedMessageWordTimings, audioStartTime } =
+                useAudioStore.getState();
             if (streamedMessageWordTimings && audioStartTime) {
-                const currentTime = Date.now();
-                const startTime = audioStartTime.getTime();
-                const elapsedTime = currentTime - startTime;
+                const elapsedTime = Date.now() - audioStartTime.getTime();
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(
@@ -32,7 +31,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         return () => {
             cancelAnimationFrame(frameId);
         };
-    }, [streamedMessageWordTimings, audioStartTime]);
+    }, []);
 
     const lines = text.split("\n");
     const words = lines.map((line) => line.split(" "));

@@ -51,7 +51,11 @@ export async function addUserToInstanceState(
             connectedPlayers: [],
             selectedCampaignInstance: selectedCampaign,
             streamedMessageId: null,
-            streamedMessageWordTimings: null,
+            streamedMessageWordTimings: {
+                words: [],
+                wordStartTimesMs: [],
+                wordDurationsMs: [],
+            },
         };
     }
 

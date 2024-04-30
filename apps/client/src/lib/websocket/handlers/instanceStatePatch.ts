@@ -12,6 +12,8 @@ export async function handleInstanceStatePatchResponse(
 
     const currentState = gameState || {};
 
+    console.log(`[InstanceStatePatch]`, response.data);
+
     const newState = applyPatch(
         currentState,
         response.data as Operation[]

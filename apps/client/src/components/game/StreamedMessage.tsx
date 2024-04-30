@@ -25,7 +25,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             const { streamedMessageWordTimings } = gameState;
             if (!streamedMessageWordTimings) return;
             console.log(
-                `[StreamedMessage] streamedMessageWordTimings is not null`
+                `[StreamedMessage] streamedMessageWordTimings is not null` // <-- This line never gets logged
             );
 
             const { audioStartTime } = useAudioStore.getState();

@@ -15,7 +15,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const frameRef = useRef<number | null>(null);
 
     const streamedWordTimings =
-        useGameStore().gameState?.streamedMessageWordTimings;
+        useGameStore.getState().gameState?.streamedMessageWordTimings;
 
     useEffect(() => {
         if (!streamedWordTimings || frameRef.current) {
@@ -26,12 +26,21 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     }, [streamedWordTimings]);
 
     const animate = () => {
+        const streamedWordTimings =
+            useGameStore.getState().gameState?.streamedMessageWordTimings;
+
         const startTime = useAudioStore.getState().audioStartTime;
         if (!streamedWordTimings || !startTime) return;
 
         const parsedWordTimings = JSON.parse(
             streamedWordTimings
         ) as AudioWordTimings;
+
+        console.log(
+            "[StreamedMessage] Word Timings Length",
+            parsedWordTimings.words.length
+        );
+        console.log(`[StreamedMessage] words: ${words}`);
 
         const elapsedTime = Date.now() - startTime.getTime();
         const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(

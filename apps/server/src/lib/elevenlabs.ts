@@ -38,7 +38,8 @@ export async function streamAudio(
             })
         );
 
-        ws.send(JSON.stringify({ text: message.content, flush: true }));
+        ws.send(JSON.stringify({ text: message.content + " ", flush: true }));
+
         console.log(`[11 Labs] Sent initial messages`);
     };
 
@@ -157,7 +158,8 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
     let wordStartTime = charTimings.charStartTimesMs[0];
     let wordDuration = 0;
 
-    const isDelimiter = (char: string) => [" ", ",", "."].includes(char);
+    const isDelimiter = (char: string) =>
+        [" ", ",", ".", "!", "?", ";", ":"].includes(char);
 
     charTimings.chars.forEach((char: string, i: number) => {
         wordDuration += charTimings.charDurationsMs[i];
@@ -167,10 +169,7 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
             if (word !== "") {
                 words.push(word);
                 wordStartTimesMs.push(wordStartTime);
-                wordDurationsMs.push(
-                    wordDuration -
-                        (isDelimiter(char) ? charTimings.charDurationsMs[i] : 0)
-                );
+                wordDurationsMs.push(wordDuration);
             }
 
             wordIndex = i + 1;

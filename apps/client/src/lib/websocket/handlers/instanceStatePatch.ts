@@ -8,7 +8,19 @@ import { Operation, applyPatch } from "fast-json-patch";
 export async function handleInstanceStatePatchResponse(
     response: InstanceStatePatchResponse
 ) {
-    console.log(JSON.stringify(response.data, null, 2));
+    const logObject = (label: string, object: any) => {
+        const stringified = JSON.stringify(object, null, 2);
+        const maxChunkSize = 1000;
+        for (
+            let offset = 0;
+            offset < stringified.length;
+            offset += maxChunkSize
+        ) {
+            const chunk = stringified.slice(offset, offset + maxChunkSize);
+            console.log(`${label} (cont. ${offset / maxChunkSize})`, chunk);
+        }
+    };
+    logObject("[InstanceStatePatch] response.data:", response.data);
 
     const { gameState, setGameState } = useGameStore.getState();
     const currentState = gameState || {};
@@ -20,25 +32,28 @@ export async function handleInstanceStatePatchResponse(
         false
     ).newDocument;
 
-    console.log(`[InstanceStatePatch] newState:`);
-    console.log(JSON.stringify(newState, null, 2));
+    logObject("[InstanceStatePatch] newState:", newState);
 
     console.log(
         `[InstanceStatePatch] gameState:`,
         gameState !== null ? "exists" : "null"
     );
 
-    console.log(`[InstanceStatePatch] gameState?.streamedMessageWordTimings:`);
-    console.log(JSON.stringify(gameState?.streamedMessageWordTimings, null, 2));
+    logObject(
+        "[InstanceStatePatch] gameState?.streamedMessageWordTimings:",
+        gameState?.streamedMessageWordTimings
+    );
 
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
-    console.log(`[InstanceStatePatch] validatedInstanceState:`);
-    console.log(JSON.stringify(validatedInstanceState, null, 2));
+    logObject(
+        "[InstanceStatePatch] validatedInstanceState:",
+        validatedInstanceState
+    );
 
     if (validatedInstanceState.success) {
         setGameState(validatedInstanceState.data);
     } else {
-        console.error(JSON.stringify(validatedInstanceState.error, null, 2));
+        logObject("[InstanceStatePatch] Error:", validatedInstanceState.error);
     }
 }

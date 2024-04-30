@@ -8,18 +8,15 @@ import { Operation, applyPatch } from "fast-json-patch";
 export async function handleInstanceStatePatchResponse(
     response: InstanceStatePatchResponse
 ) {
-    const { gameState, setGameState } = useGameStore.getState();
+    console.log(response.data);
 
+    const { gameState, setGameState } = useGameStore.getState();
     const currentState = gameState || {};
 
-    console.log(`[InstanceStatePatch]`, response.data);
-
-    const patchResults = applyPatch(currentState, response.data as Operation[]);
-
-    console.log(`[InstanceStatePatch] patchResults:`);
-    console.log(patchResults);
-
-    const newState = patchResults.newDocument;
+    const newState = applyPatch(
+        currentState,
+        response.data as Operation[]
+    ).newDocument;
 
     console.log(`[InstanceStatePatch] gameState?.streamedMessageWordTimings:`);
     console.log(gameState?.streamedMessageWordTimings);

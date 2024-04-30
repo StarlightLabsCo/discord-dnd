@@ -16,36 +16,28 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         useGameStore.getState().gameState?.streamedMessageId;
 
     useEffect(() => {
+        const gameState = useGameStore.getState().gameState;
+        if (!gameState) return;
+
+        const { streamedMessageWordTimings } = gameState;
+        if (!streamedMessageWordTimings) return;
+
+        const parsedStreamedMessageWordTimings = JSON.parse(
+            streamedMessageWordTimings
+        ) as AudioWordTimings;
+
         let frameId: number;
         const updateWordIndex = () => {
-            console.log(`[StreamedMessage] updateWordIndex`);
-            const gameState = useGameStore.getState().gameState;
-            if (!gameState) return;
-            console.log(`[StreamedMessage] gameState is not null`);
-
-            const { streamedMessageWordTimings } = gameState;
-            if (!streamedMessageWordTimings) return;
-            console.log(
-                `[StreamedMessage] streamedMessageWordTimings is not null` // <-- This line never gets logged
-            );
-
-            const parsedStreamedMessageWordTimings = JSON.parse(
-                streamedMessageWordTimings
-            ) as AudioWordTimings;
-
             const { audioStartTime } = useAudioStore.getState();
             if (!audioStartTime) return;
-            console.log(`[StreamedMessage] audioStartTime is not null`);
 
             if (parsedStreamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
-                console.log(`[StreamedMessage] elapsedTime: ${elapsedTime}`);
 
                 const newWordIndex =
                     parsedStreamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
-                console.log(`[StreamedMessage] newWordIndex: ${newWordIndex}`);
                 setCurrentWordIndex(newWordIndex - 1);
             }
             frameId = requestAnimationFrame(updateWordIndex);

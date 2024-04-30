@@ -9,7 +9,7 @@ type StreamedMessageProps = {
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
-    console.log(`currentWordIndex: ${currentWordIndex}`);
+    console.log(`[StreamedMessage] currentWordIndex: ${currentWordIndex}`);
 
     const streamedMessageId =
         useGameStore.getState().gameState?.streamedMessageId;
@@ -17,28 +17,30 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     useEffect(() => {
         let frameId: number;
         const updateWordIndex = () => {
-            console.log(`updateWordIndex`);
+            console.log(`[StreamedMessage] updateWordIndex`);
             const gameState = useGameStore.getState().gameState;
             if (!gameState) return;
-            console.log(`gameState is not null`);
+            console.log(`[StreamedMessage] gameState is not null`);
 
             const { streamedMessageWordTimings } = gameState;
             if (!streamedMessageWordTimings) return;
-            console.log(`streamedMessageWordTimings is not null`);
+            console.log(
+                `[StreamedMessage] streamedMessageWordTimings is not null`
+            );
 
             const { audioStartTime } = useAudioStore.getState();
             if (!audioStartTime) return;
-            console.log(`audioStartTime is not null`);
+            console.log(`[StreamedMessage] audioStartTime is not null`);
 
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
-                console.log(`elapsedTime: ${elapsedTime}`);
+                console.log(`[StreamedMessage] elapsedTime: ${elapsedTime}`);
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
-                console.log(`newWordIndex: ${newWordIndex}`);
+                console.log(`[StreamedMessage] newWordIndex: ${newWordIndex}`);
                 setCurrentWordIndex(newWordIndex - 1);
             }
             frameId = requestAnimationFrame(updateWordIndex);
@@ -47,7 +49,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         updateWordIndex();
 
         return () => {
-            console.log(`cancelAnimationFrame`);
+            console.log(`[StreamedMessage] cancelAnimationFrame`);
             cancelAnimationFrame(frameId);
         };
     }, [streamedMessageId]);

@@ -60,7 +60,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='flex flex-wrap gap-x-[0.3vw] gap-y-[1vh]'>
+        <div className='flex flex-wrap gap-x-[0.3vw] gap-y-[0.3vh]'>
             {words.map((word, index) => {
                 if (word === "\n") {
                     return <br key={`streamed-message-word-${index}`} />;

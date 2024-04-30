@@ -51,7 +51,7 @@ export async function uploadImageToR2(imageURL: string) {
         throw new Error("Failed to upload image to R2");
     }
 
-    return `${process.env.S3_PUBLIC_URL}/${key}.png`;
+    return `https://${process.env.S3_PUBLIC_URL}/${key}.png`;
 }
 
 export async function uploadPcmToR2(pcmBuffer: Buffer) {
@@ -70,5 +70,5 @@ export async function uploadPcmToR2(pcmBuffer: Buffer) {
         throw new Error("Failed to upload PCM audio to R2");
     }
 
-    return `${process.env.S3_PUBLIC_URL}/${key}.pcm`;
+    return `https://${process.env.S3_PUBLIC_URL}/${key}.pcm`;
 }

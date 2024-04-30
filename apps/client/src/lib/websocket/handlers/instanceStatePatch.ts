@@ -14,10 +14,12 @@ export async function handleInstanceStatePatchResponse(
 
     console.log(`[InstanceStatePatch]`, response.data);
 
-    const newState = applyPatch(
-        currentState,
-        response.data as Operation[]
-    ).newDocument;
+    const patchResults = applyPatch(currentState, response.data as Operation[]);
+
+    console.log(`[InstanceStatePatch] patchResults:`);
+    console.log(patchResults);
+
+    const newState = patchResults.newDocument;
 
     console.log(`[InstanceStatePatch] gameState?.streamedMessageWordTimings:`);
     console.log(gameState?.streamedMessageWordTimings);

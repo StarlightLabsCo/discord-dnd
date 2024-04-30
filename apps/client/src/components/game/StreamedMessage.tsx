@@ -11,8 +11,10 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
     console.log(`currentWordIndex: ${currentWordIndex}`);
 
+    const streamedMessageId =
+        useGameStore.getState().gameState?.streamedMessageId;
+
     useEffect(() => {
-        console.log(`useEffect`);
         let frameId: number;
         const updateWordIndex = () => {
             console.log(`updateWordIndex`);
@@ -48,11 +50,11 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             console.log(`cancelAnimationFrame`);
             cancelAnimationFrame(frameId);
         };
-    }, []);
+    }, [streamedMessageId]);
 
     const words = text.split(" ");
     return (
-        <div className='flex flex-wrap w-full'>
+        <div className='flex flex-wrap'>
             {words.map((word, index) => {
                 if (word === "\n") {
                     return <br key={`streamed-message-word-${index}`} />;

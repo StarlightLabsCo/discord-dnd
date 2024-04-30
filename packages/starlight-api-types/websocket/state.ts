@@ -76,6 +76,6 @@ export const InstanceStateSchema = z.object({
         })
     ),
     streamedMessageId: z.string().nullable(),
-    streamedMessageWordTimings: AudioWordTimingsZodSchema,
+    streamedMessageWordTimings: z.string().nullable(),
 });
 export type InstanceState = z.infer<typeof InstanceStateSchema>;

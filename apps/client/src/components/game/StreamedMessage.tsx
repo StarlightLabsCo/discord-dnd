@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAudioStore } from "@/lib/game/audio";
 import { cn } from "@/lib/tailwind/utils";
 import { useGameStore } from "@/lib/game";
+import { AudioWordTimings } from "starlight-api-types/websocket";
 
 type StreamedMessageProps = {
     text: string;
@@ -28,16 +29,20 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                 `[StreamedMessage] streamedMessageWordTimings is not null` // <-- This line never gets logged
             );
 
+            const parsedStreamedMessageWordTimings = JSON.parse(
+                streamedMessageWordTimings
+            ) as AudioWordTimings;
+
             const { audioStartTime } = useAudioStore.getState();
             if (!audioStartTime) return;
             console.log(`[StreamedMessage] audioStartTime is not null`);
 
-            if (streamedMessageWordTimings && audioStartTime) {
+            if (parsedStreamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
                 console.log(`[StreamedMessage] elapsedTime: ${elapsedTime}`);
 
                 const newWordIndex =
-                    streamedMessageWordTimings.wordStartTimesMs.findIndex(
+                    parsedStreamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
                 console.log(`[StreamedMessage] newWordIndex: ${newWordIndex}`);

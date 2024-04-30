@@ -50,6 +50,8 @@ export async function addUserToInstanceState(
             state: "LOBBY",
             connectedPlayers: [],
             selectedCampaignInstance: selectedCampaign,
+            streamedMessageId: null,
+            streamedMessageWordTimings: null,
         };
     }
 

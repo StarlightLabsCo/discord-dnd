@@ -38,8 +38,16 @@ export async function streamAudio(
             })
         );
 
-        ws.send(JSON.stringify({ text: message.content + " ", flush: true }));
-
+        const parts = message.content.split(".");
+        parts.forEach((part, index) => {
+            if (index === parts.length - 1) {
+                ws.send(
+                    JSON.stringify({ text: part.trim() + " ", flush: true })
+                );
+            } else {
+                ws.send(JSON.stringify({ text: part.trim() + " " }));
+            }
+        });
         console.log(`[11 Labs] Sent initial messages`);
     };
 

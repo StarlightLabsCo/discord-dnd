@@ -28,9 +28,13 @@ export async function continueStory(instanceId: string) {
         messages: [systemPrompt, ...formattedMessages],
     });
 
+    // TODO: make this a function
+    const formattedCompletion =
+        completion.choices[0].message.content.replaceAll("Dungeon Master:", "");
+
     const newMessage = await db.message.create({
         data: {
-            content: completion.choices[0].message.content,
+            content: formattedCompletion,
             instance: {
                 connect: {
                     id: campaignInstance.id,

@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
@@ -10,8 +9,7 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const lines = text.split("\n");
-
+    const words = text.split(" ");
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     const frameRef = useRef<number | null>(null);
@@ -51,25 +49,31 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='text-white font-light text-[1.1vw] max-w-full'>
-            {lines.map((line, lineIndex) => (
-                <React.Fragment key={`line-${lineIndex}`}>
-                    {line.split(" ").map((word, index) => (
-                        <span
-                            key={`streamed-message-word-${lineIndex}-${index}`}
-                            className={cn(
-                                "transition-opacity duration-500 inline",
-                                currentWordIndex >= index
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                            )}
-                        >
-                            {word + " "}
-                        </span>
-                    ))}
-                    {lineIndex < lines.length - 1 && <br />}
-                </React.Fragment>
-            ))}
+        <div className='text-white font-light text-[1.1vw]'>
+            {words.map((word, index) => {
+                return word.split("\n").map((segment, i) => {
+                    if (segment === "") {
+                        return <br key={`streamed-message-br-${index}-${i}`} />;
+                    } else {
+                        return (
+                            <span
+                                key={`streamed-message-word-${index}-${i}`}
+                                className={cn(
+                                    "transition-opacity duration-500 inline",
+                                    currentWordIndex >= index
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                )}
+                            >
+                                {segment +
+                                    (i < word.split("\n").length - 1
+                                        ? ""
+                                        : " ")}
+                            </span>
+                        );
+                    }
+                });
+            })}
         </div>
     );
 };

@@ -29,8 +29,9 @@ export async function continueStory(instanceId: string) {
     });
 
     // TODO: make this a function
-    const formattedCompletion =
-        completion.choices[0].message.content.replaceAll("Dungeon Master:", "");
+    const formattedCompletion = completion.choices[0].message.content
+        .replaceAll("Dungeon Master:", "")
+        .trim();
 
     const newMessage = await db.message.create({
         data: {

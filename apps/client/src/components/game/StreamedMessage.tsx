@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
@@ -9,7 +10,8 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const words = text.split(" ");
+    const lines = text.split("\n");
+
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     const frameRef = useRef<number | null>(null);
@@ -49,14 +51,12 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='text-white font-light text-[1.1vw]'>
-            {words.map((word, index) => {
-                if (word === "\n") {
-                    return <br key={`streamed-message-word-${index}`} />;
-                } else {
-                    return (
+        <div className='text-white font-light text-[1.1vw] max-w-full'>
+            {lines.map((line, lineIndex) => (
+                <React.Fragment key={`line-${lineIndex}`}>
+                    {line.split(" ").map((word, index) => (
                         <span
-                            key={`streamed-message-word-${index}`}
+                            key={`streamed-message-word-${lineIndex}-${index}`}
                             className={cn(
                                 "transition-opacity duration-500 inline",
                                 currentWordIndex >= index
@@ -66,9 +66,10 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         >
                             {word + " "}
                         </span>
-                    );
-                }
-            })}
+                    ))}
+                    {lineIndex < lines.length - 1 && <br />}
+                </React.Fragment>
+            ))}
         </div>
     );
 };

@@ -58,7 +58,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
-                                "transition-opacity duration-200 inline",
+                                "transition-opacity duration-500 inline",
                                 currentWordIndex >= index
                                     ? "opacity-100"
                                     : "opacity-0"

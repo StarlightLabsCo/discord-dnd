@@ -18,6 +18,9 @@ export async function handleInstanceStatePatchResponse(
         response.data as Operation[]
     ).newDocument;
 
+    console.log(`[InstanceStatePatch] newState:`);
+    console.log(newState);
+
     console.log(
         `[InstanceStatePatch] gameState:`,
         gameState !== null ? "exists" : "null"

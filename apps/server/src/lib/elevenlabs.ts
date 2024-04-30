@@ -38,7 +38,7 @@ export async function streamAudio(
             })
         );
 
-        const parts = message.content.split("\n");
+        const parts = message.content.split("\n").filter((part) => part !== "");
         parts.forEach((part, index) => {
             if (index === parts.length - 1) {
                 ws.send(JSON.stringify({ text: part, flush: true }));

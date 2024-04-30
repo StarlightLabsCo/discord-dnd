@@ -9,6 +9,7 @@ type StreamedMessageProps = {
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
+    console.log(`currentWordIndex: ${currentWordIndex}`);
 
     useEffect(() => {
         let frameId: number;
@@ -24,11 +25,13 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
 
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
+                console.log(`elapsedTime: ${elapsedTime}`);
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
+                console.log(`newWordIndex: ${newWordIndex}`);
                 setCurrentWordIndex(newWordIndex - 1);
             }
             frameId = requestAnimationFrame(updateWordIndex);

@@ -13,12 +13,8 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         const updateWordIndex = () => {
             const { streamedMessageWordTimings, audioStartTime } =
                 useAudioStore.getState();
-            let startTime = audioStartTime;
-            if (typeof startTime === "string") {
-                startTime = new Date(startTime);
-            }
-            if (streamedMessageWordTimings && startTime) {
-                const elapsedTime = Date.now() - startTime.getTime();
+            if (streamedMessageWordTimings && audioStartTime) {
+                const elapsedTime = Date.now() - audioStartTime.getTime();
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(

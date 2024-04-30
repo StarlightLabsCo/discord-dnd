@@ -38,14 +38,12 @@ export async function streamAudio(
             })
         );
 
-        const parts = message.content.split(".");
+        const parts = message.content.split("\n");
         parts.forEach((part, index) => {
             if (index === parts.length - 1) {
-                ws.send(
-                    JSON.stringify({ text: part.trim() + " ", flush: true })
-                );
+                ws.send(JSON.stringify({ text: part, flush: true }));
             } else {
-                ws.send(JSON.stringify({ text: part.trim() + " " }));
+                ws.send(JSON.stringify({ text: part }));
             }
         });
         console.log(`[11 Labs] Sent initial messages`);
@@ -70,6 +68,7 @@ export async function streamAudio(
         }
 
         if (data.normalizedAlignment) {
+            console.log(data.normalizedAlignment);
             wordTimings = processNormalizedAlignment(
                 wordTimings,
                 data.normalizedAlignment

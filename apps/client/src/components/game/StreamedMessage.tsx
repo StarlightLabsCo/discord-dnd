@@ -37,7 +37,12 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(
             (time: number) => time > elapsedTime
         );
+
+        console.log(`[StreamedMessage] Elapsed time: ${elapsedTime}`);
+        console.log(`[StreamedMessage] Word index: ${wordIndex}`);
+
         if (wordIndex === -1) {
+            console.log("[StreamedMessage] Finished streaming message");
             setCurrentWordIndex(words.length);
             cancelAnimationFrame(frameRef.current!);
             return;

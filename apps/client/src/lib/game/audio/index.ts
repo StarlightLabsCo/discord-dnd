@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { setupBufferedPlayerProcessor } from "./playback";
 import { AudioWordTimings } from "starlight-api-types/websocket";
 
@@ -83,7 +83,7 @@ export const useAudioStore = create<AudioStore>()(
         }),
         {
             name: "audio-settings",
-            getStorage: () => localStorage,
+            storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
                 masterVolume: state.masterVolume,
                 dialogueVolume: state.dialogueVolume,

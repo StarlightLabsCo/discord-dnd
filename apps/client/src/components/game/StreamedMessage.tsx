@@ -17,11 +17,13 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
 
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
+                console.log("elapsedTime", elapsedTime);
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
+                console.log("newWordIndex", newWordIndex);
                 setCurrentWordIndex(newWordIndex - 1);
             }
             frameId = requestAnimationFrame(updateWordIndex);
@@ -41,17 +43,19 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                 if (word == "\n") {
                     return <br key={`streamed-message-word-${index}`} />;
                 } else {
-                    <span
-                        key={`streamed-message-word-${index}`}
-                        className={cn(
-                            "transition-opacity duration-200",
-                            currentWordIndex >= index
-                                ? "opacity-100"
-                                : "opacity-0"
-                        )}
-                    >
-                        {word}
-                    </span>;
+                    return (
+                        <span
+                            key={`streamed-message-word-${index}`}
+                            className={cn(
+                                "transition-opacity duration-200",
+                                currentWordIndex >= index
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                            )}
+                        >
+                            {word}
+                        </span>
+                    );
                 }
             })}
         </>

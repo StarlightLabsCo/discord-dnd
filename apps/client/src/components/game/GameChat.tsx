@@ -9,8 +9,17 @@ export function GameChat() {
 
     return (
         <div className='grow w-3/5 max-w-[60%] flex flex-col gap-y-[5vh] pt-[4vh]'>
-            {messages.map((message) => {
-                return <MessageDisplay key={message.id} message={message} />;
+            {messages.map((message, index) => {
+                const streamed =
+                    index === messages.length - 1 &&
+                    message.characterInstanceId == null;
+                return (
+                    <MessageDisplay
+                        key={message.id}
+                        message={message}
+                        streamed={streamed}
+                    />
+                );
             })}
         </div>
     );

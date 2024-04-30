@@ -7,52 +7,53 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const [currentWordIndices, setCurrentWordIndices] = useState<number[]>([]);
+    const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     useEffect(() => {
         let frameId: number;
-        const updateWordIndices = () => {
+        const updateWordIndex = () => {
             const { streamedMessageWordTimings, audioStartTime } =
                 useAudioStore.getState();
+
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
-                const newWordIndices =
-                    streamedMessageWordTimings.wordStartTimesMs
-                        .map((time, index) => (elapsedTime > time ? index : -1))
-                        .filter((index) => index !== -1);
-                setCurrentWordIndices(newWordIndices);
+
+                const newWordIndex =
+                    streamedMessageWordTimings.wordStartTimesMs.findIndex(
+                        (time) => time > elapsedTime
+                    );
+                setCurrentWordIndex(newWordIndex - 1);
             }
-            frameId = requestAnimationFrame(updateWordIndices);
+            frameId = requestAnimationFrame(updateWordIndex);
         };
 
-        updateWordIndices();
+        updateWordIndex();
 
         return () => {
             cancelAnimationFrame(frameId);
         };
     }, []);
 
-    const lines = text.split("\n");
-    const words = lines.map((line) => line.split(" "));
-
-    const displayedLines = words.map((lineWords, lineIndex) => {
-        const displayedWords = lineWords.map((word, wordIndex) => {
-            const isVisible = currentWordIndices.includes(wordIndex);
-            const visibility = isVisible ? "opacity-100" : "opacity-0";
-            return (
-                <span
-                    key={wordIndex}
-                    className={cn(
-                        "transition-opacity duration-200",
-                        visibility
-                    )}
-                >
-                    {word}{" "}
-                </span>
-            );
-        });
-        return <div key={lineIndex}>{displayedWords}</div>;
-    });
-
-    return <>{displayedLines}</>;
+    const words = text.split(" ");
+    return (
+        <>
+            {words.map((word, index) => {
+                if (word == "\n") {
+                    return <br key={`streamed-message-word-${index}`} />;
+                } else {
+                    <span
+                        key={`streamed-message-word-${index}`}
+                        className={cn(
+                            "transition-opacity duration-200",
+                            currentWordIndex >= index
+                                ? "opacity-100"
+                                : "opacity-0"
+                        )}
+                    >
+                        {word}
+                    </span>;
+                }
+            })}
+        </>
+    );
 };

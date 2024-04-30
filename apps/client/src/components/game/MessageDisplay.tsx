@@ -2,18 +2,9 @@ import { Message } from "database";
 import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
 import { s3UrlRewriter } from "@/lib/discord/utils";
-
-type FormattedTextProps = {
-    text: string;
-};
-
-function FormattedText({ text }: FormattedTextProps) {
-    const content = text
-        .split("\n")
-        .map((line, i) => <div key={i}>{line}</div>);
-
-    return <>{content}</>;
-}
+import { useAudioStore } from "@/lib/game/audio";
+import { StreamedMessage } from "./StreamedMessage";
+import { NonStreamedMessage } from "./NonStreamedMessage";
 
 type MessageDisplayProps = {
     message: Message;
@@ -25,6 +16,9 @@ export function MessageDisplay({ message, className }: MessageDisplayProps) {
         useGameStore().gameState?.selectedCampaignInstance.characterInstances.find(
             (ci) => ci.id === message.characterInstanceId
         );
+
+    const { streamedMessageId } = useAudioStore();
+    const isStreamed = streamedMessageId === message.id;
 
     return (
         <div className={cn("flex gap-x-[1.5vw]", className)}>
@@ -39,7 +33,11 @@ export function MessageDisplay({ message, className }: MessageDisplayProps) {
                 />
             </div>
             <div className='text-white font-light text-[1.1vw] flex flex-col gap-y-[2vh]'>
-                <FormattedText text={message.content} />
+                {isStreamed ? (
+                    <StreamedMessage text={message.content} />
+                ) : (
+                    <NonStreamedMessage text={message.content} />
+                )}
             </div>
         </div>
     );

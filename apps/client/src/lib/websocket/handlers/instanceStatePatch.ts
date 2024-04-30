@@ -18,10 +18,18 @@ export async function handleInstanceStatePatchResponse(
         response.data as Operation[]
     ).newDocument;
 
+    console.log(
+        `[InstanceStatePatch] gameState:`,
+        gameState !== null ? "exists" : "null"
+    );
+
     console.log(`[InstanceStatePatch] gameState?.streamedMessageWordTimings:`);
     console.log(gameState?.streamedMessageWordTimings);
 
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
+
+    console.log(`[InstanceStatePatch] validatedInstanceState:`);
+    console.log(validatedInstanceState);
 
     if (validatedInstanceState.success) {
         setGameState(validatedInstanceState.data);

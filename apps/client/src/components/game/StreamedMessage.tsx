@@ -47,14 +47,16 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             `[StreamedMessage] wordStartTimesMs: ${parsedWordTimings.wordStartTimesMs}`
         );
 
-        if (wordIndex === -1) {
-            console.log("[StreamedMessage] Finished streaming message");
-            setCurrentWordIndex(words.length);
-            cancelAnimationFrame(frameRef.current!);
-            return;
-        }
+        // if (wordIndex === -1) {
+        //     console.log("[StreamedMessage] Finished streaming message");
+        //     setCurrentWordIndex(words.length);
+        //     cancelAnimationFrame(frameRef.current!);
+        //     return;
+        // }
 
-        setCurrentWordIndex(wordIndex - 1);
+        if (wordIndex > currentWordIndex) {
+            setCurrentWordIndex(wordIndex - 1);
+        }
 
         frameRef.current = requestAnimationFrame(animate);
     };

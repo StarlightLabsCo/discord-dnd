@@ -12,16 +12,21 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     console.log(`currentWordIndex: ${currentWordIndex}`);
 
     useEffect(() => {
+        console.log(`useEffect`);
         let frameId: number;
         const updateWordIndex = () => {
+            console.log(`updateWordIndex`);
             const gameState = useGameStore.getState().gameState;
             if (!gameState) return;
+            console.log(`gameState is not null`);
 
             const { streamedMessageWordTimings } = gameState;
             if (!streamedMessageWordTimings) return;
+            console.log(`streamedMessageWordTimings is not null`);
 
             const { audioStartTime } = useAudioStore.getState();
             if (!audioStartTime) return;
+            console.log(`audioStartTime is not null`);
 
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
@@ -40,6 +45,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         updateWordIndex();
 
         return () => {
+            console.log(`cancelAnimationFrame`);
             cancelAnimationFrame(frameId);
         };
     }, []);

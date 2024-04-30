@@ -12,7 +12,7 @@ import {
     UserSchema,
     WorldSchema,
 } from "database/prisma/generated/zod";
-import { AudioWordTimingsZodSchema } from ".";
+import { AudioWordTimingsZodSchema } from "./audio";
 
 // GAME STATE
 export const GameStateSchema = z.enum(["LOBBY", "IN_GAME"]);

@@ -53,7 +53,16 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             {words.map((word, index) => {
                 return word.split("\n").map((segment, i) => {
                     if (segment === "") {
-                        return <br key={`streamed-message-br-${index}-${i}`} />;
+                        return (
+                            <>
+                                <br
+                                    key={`streamed-message-br1-${index}-${i}`}
+                                />
+                                <br
+                                    key={`streamed-message-br2-${index}-${i}`}
+                                />
+                            </>
+                        );
                     } else {
                         return (
                             <span

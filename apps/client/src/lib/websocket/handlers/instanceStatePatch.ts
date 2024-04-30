@@ -15,7 +15,9 @@ export async function handleInstanceStatePatchResponse(
 
     const newState = applyPatch(
         currentState,
-        response.data as Operation[]
+        response.data as Operation[],
+        true,
+        false
     ).newDocument;
 
     console.log(`[InstanceStatePatch] newState:`);

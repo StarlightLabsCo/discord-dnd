@@ -23,10 +23,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         }
 
         frameRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (frameRef.current) cancelAnimationFrame(frameRef.current);
-        };
     }, [streamedWordTimings]);
 
     const animate = () => {
@@ -41,11 +37,11 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(
             (time: number) => time > elapsedTime
         );
-        // if (wordIndex === -1) {
-        //     setCurrentWordIndex(words.length);
-        //     cancelAnimationFrame(frameRef.current!);
-        //     return;
-        // }
+        if (wordIndex === -1) {
+            setCurrentWordIndex(words.length);
+            cancelAnimationFrame(frameRef.current!);
+            return;
+        }
 
         setCurrentWordIndex(wordIndex - 1);
 

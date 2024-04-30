@@ -19,6 +19,10 @@ export async function handleInstanceStatePatchResponse(
         response.data as Operation[]
     ).newDocument;
 
+    console.log(
+        `[InstanceStatePatch] gameState?.streamedMessageWordTimings: ${gameState?.streamedMessageWordTimings}`
+    );
+
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
 
     if (validatedInstanceState.success) {

@@ -36,12 +36,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             streamedWordTimings
         ) as AudioWordTimings;
 
-        console.log(
-            "[StreamedMessage] Word Timings Length",
-            parsedWordTimings.words.length
-        );
-        console.log(`[StreamedMessage] words: ${words}`);
-
         const elapsedTime = Date.now() - startTime.getTime();
         const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(
             (time: number) => time > elapsedTime
@@ -49,6 +43,9 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
 
         console.log(`[StreamedMessage] Elapsed time: ${elapsedTime}`);
         console.log(`[StreamedMessage] Word index: ${wordIndex}`);
+        console.log(
+            `[StreamedMessage] wordStartTimesMs: ${parsedWordTimings.wordStartTimesMs}`
+        );
 
         if (wordIndex === -1) {
             console.log("[StreamedMessage] Finished streaming message");

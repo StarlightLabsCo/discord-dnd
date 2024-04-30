@@ -43,7 +43,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
 
     const words = text.split(" ");
     return (
-        <>
+        <div className='flex flex-wrap w-full'>
             {words.map((word, index) => {
                 if (word === "\n") {
                     return <br key={`streamed-message-word-${index}`} />;
@@ -63,6 +63,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                     );
                 }
             })}
-        </>
+        </div>
     );
 };

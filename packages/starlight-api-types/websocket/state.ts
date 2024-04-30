@@ -12,6 +12,7 @@ import {
     UserSchema,
     WorldSchema,
 } from "database/prisma/generated/zod";
+import { AudioWordTimingsZodSchema } from ".";
 
 // GAME STATE
 export const GameStateSchema = z.enum(["LOBBY", "IN_GAME"]);
@@ -74,5 +75,7 @@ export const InstanceStateSchema = z.object({
             ),
         })
     ),
+    streamedMessageId: z.string().nullable(),
+    streamedMessageWordTimings: z.union([AudioWordTimingsZodSchema, z.null()]),
 });
 export type InstanceState = z.infer<typeof InstanceStateSchema>;

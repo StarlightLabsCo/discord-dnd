@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAudioStore } from "@/lib/game/audio";
 import { cn } from "@/lib/tailwind/utils";
+import { useGameStore } from "@/lib/game";
 
 type StreamedMessageProps = {
     text: string;
@@ -12,18 +13,22 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     useEffect(() => {
         let frameId: number;
         const updateWordIndex = () => {
-            const { streamedMessageWordTimings, audioStartTime } =
-                useAudioStore.getState();
+            const gameState = useGameStore.getState().gameState;
+            if (!gameState) return;
+
+            const { streamedMessageWordTimings } = gameState;
+            if (!streamedMessageWordTimings) return;
+
+            const { audioStartTime } = useAudioStore.getState();
+            if (!audioStartTime) return;
 
             if (streamedMessageWordTimings && audioStartTime) {
                 const elapsedTime = Date.now() - audioStartTime.getTime();
-                console.log("elapsedTime", elapsedTime);
 
                 const newWordIndex =
                     streamedMessageWordTimings.wordStartTimesMs.findIndex(
                         (time) => time > elapsedTime
                     );
-                console.log("newWordIndex", newWordIndex);
                 setCurrentWordIndex(newWordIndex - 1);
             }
             frameId = requestAnimationFrame(updateWordIndex);
@@ -40,20 +45,20 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     return (
         <>
             {words.map((word, index) => {
-                if (word == "\n") {
+                if (word === "\n") {
                     return <br key={`streamed-message-word-${index}`} />;
                 } else {
                     return (
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
-                                "transition-opacity duration-200",
+                                "transition-opacity duration-200 inline",
                                 currentWordIndex >= index
                                     ? "opacity-100"
                                     : "opacity-0"
                             )}
                         >
-                            {word}
+                            {word + " "}
                         </span>
                     );
                 }

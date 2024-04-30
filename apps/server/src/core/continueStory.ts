@@ -43,6 +43,7 @@ export async function continueStory(instanceId: string) {
     });
 
     instanceState.selectedCampaignInstance.messages.push(newMessage);
+    instanceState.streamedMessageId = newMessage.id;
     updateInstanceState(instanceId, instanceState, release);
 
     await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);

@@ -4,10 +4,13 @@ import type {
     AudioCharacterTimings,
     AudioWordTimings,
     BufferAudioResponse,
-    WordTimingsResponse,
 } from "starlight-api-types/websocket";
 import { uploadPcmToR2 } from "./cloudflare";
 import { db } from "./db";
+import {
+    getInstanceState,
+    updateInstanceState,
+} from "@/api/websocket/instanceState";
 
 if (!process.env.ELEVENLABS_API_KEY) {
     throw new Error("ELEVENLABS_API_KEY is not set");
@@ -112,22 +115,23 @@ function publishAudio(
     server.publish(instanceId, JSON.stringify(response));
 }
 
-function publishWordTimings(
+async function publishWordTimings(
     instanceId: string,
     messageId: string,
     wordTimings: AudioWordTimings
 ) {
     console.log(`[11 Labs] Publishing word timings for message ${messageId}`);
 
-    const response = {
-        type: "WordTimingsResponse",
-        data: {
-            messageId,
-            wordTimings,
-        },
-    } as WordTimingsResponse;
+    const { instanceState, release } = await getInstanceState(instanceId);
+    if (!instanceState) {
+        release();
+        return;
+    }
 
-    server.publish(instanceId, JSON.stringify(response));
+    instanceState.streamedMessageId = messageId;
+    instanceState.streamedMessageWordTimings = wordTimings;
+
+    updateInstanceState(instanceId, instanceState, release);
 }
 
 /* -------- Processing -------- */

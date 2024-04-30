@@ -31,16 +31,6 @@ export const BufferAudioResponseZodSchema = z.object({
     }),
 });
 
-export type WordTimingsResponse = z.infer<typeof WordTimingsResponseZodSchema>;
-
-export const WordTimingsResponseZodSchema = z.object({
-    type: z.literal("WordTimingsResponse"),
-    data: z.object({
-        messageId: z.string(),
-        wordTimings: AudioWordTimingsZodSchema,
-    }),
-});
-
 export type ErrorResponse = z.infer<typeof ErrorResponseZodSchema>;
 
 export const ErrorResponseZodSchema = z.object({
@@ -55,7 +45,6 @@ const responseTypeToSchema = {
     UserInfoResponse: UserInfoResponseZodSchema,
     InstanceStatePatchResponse: InstanceStatePatchResponseZodSchema,
     BufferAudioResponse: BufferAudioResponseZodSchema,
-    WordTimingsResponse: WordTimingsResponseZodSchema,
     ErrorResponse: ErrorResponseZodSchema,
 };
 

@@ -21,7 +21,6 @@ export async function handleBufferAudioResponse(response: BufferAudioResponse) {
 
     if (response.data.start) {
         clearBufferedPlayerNodeBuffer(bufferedPlayerNode);
-        useAudioStore.setState({ streamedMessageId: response.data.messageId });
         useAudioStore.setState({ audioStartTime: new Date() });
     }
 

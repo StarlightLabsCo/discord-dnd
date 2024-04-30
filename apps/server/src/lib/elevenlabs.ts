@@ -169,11 +169,9 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
         [" ", ",", ".", "!", "?", ";", ":"].includes(char);
 
     charTimings.chars.forEach((char: string, i: number) => {
-        wordDuration += charTimings.charDurationsMs[i];
-
-        if (isDelimiter(char) || i === charTimings.chars.length - 1) {
-            let word = charTimings.chars.slice(wordIndex, i).join("");
-            if (word !== "") {
+        if (isDelimiter(char)) {
+            if (wordIndex < i) {
+                let word = charTimings.chars.slice(wordIndex, i).join("");
                 words.push(word);
                 wordStartTimesMs.push(wordStartTime);
                 wordDurationsMs.push(wordDuration);
@@ -183,10 +181,20 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
             if (i + 1 < charTimings.charStartTimesMs.length) {
                 wordStartTime = charTimings.charStartTimesMs[i + 1];
             }
-
             wordDuration = 0;
+        } else {
+            wordDuration += charTimings.charDurationsMs[i];
         }
     });
+
+    if (wordIndex < charTimings.chars.length) {
+        let word = charTimings.chars.slice(wordIndex).join("");
+        if (word !== "") {
+            words.push(word);
+            wordStartTimesMs.push(wordStartTime!);
+            wordDurationsMs.push(wordDuration);
+        }
+    }
 
     const audioWordTimings: AudioWordTimings = {
         words,

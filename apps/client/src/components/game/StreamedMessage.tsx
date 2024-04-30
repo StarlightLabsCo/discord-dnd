@@ -10,11 +10,12 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
 
     useEffect(() => {
         let frameId: number;
-
         const updateWordIndex = () => {
             const { streamedMessageWordTimings, audioStartTime } =
                 useAudioStore.getState();
             if (streamedMessageWordTimings && audioStartTime) {
+                console.log(`Audio start time: ${audioStartTime}`);
+                console.log(`Type of audioStartTime: ${typeof audioStartTime}`);
                 const elapsedTime = Date.now() - audioStartTime.getTime();
 
                 const newWordIndex =

@@ -14,8 +14,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
             const { streamedMessageWordTimings, audioStartTime } =
                 useAudioStore.getState();
             if (streamedMessageWordTimings && audioStartTime) {
-                console.log(`Audio start time: ${audioStartTime}`);
-                console.log(`Type of audioStartTime: ${typeof audioStartTime}`);
                 const elapsedTime = Date.now() - audioStartTime.getTime();
 
                 const newWordIndex =

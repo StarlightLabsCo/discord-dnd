@@ -84,6 +84,12 @@ export const useAudioStore = create<AudioStore>()(
         {
             name: "audio-settings",
             getStorage: () => localStorage,
+            partialize: (state) => ({
+                masterVolume: state.masterVolume,
+                dialogueVolume: state.dialogueVolume,
+                musicVolume: state.musicVolume,
+                soundEffectsVolume: state.soundEffectsVolume,
+            }),
         }
     )
 );

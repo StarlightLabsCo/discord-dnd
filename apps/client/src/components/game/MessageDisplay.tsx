@@ -33,7 +33,7 @@ export function MessageDisplay({
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>
-            <div className='text-white font-light text-[1.1vw] flex flex-col gap-y-[2vh]'>
+            <div className='text-white font-light text-[1.1vw] flex flex-col gap-y-[2vh] max-w-full'>
                 {streamed ? (
                     <StreamedMessage text={message.content} />
                 ) : (

@@ -4,28 +4,11 @@ import {
     InstanceStateSchema,
 } from "starlight-api-types/websocket";
 import { Operation, applyPatch } from "fast-json-patch";
+import { logObject } from "@/lib/utils";
 
 export async function handleInstanceStatePatchResponse(
     response: InstanceStatePatchResponse
 ) {
-    const logObject = (label: string, object: any) => {
-        if (object === undefined || object === null) {
-            console.log(`${label}:`, object);
-            return;
-        }
-        const stringified = JSON.stringify(object, null, 2);
-        const maxChunkSize = 1000;
-        for (
-            let offset = 0;
-            offset < stringified.length;
-            offset += maxChunkSize
-        ) {
-            const chunk = stringified.slice(offset, offset + maxChunkSize);
-            console.log(`${label} (cont. ${offset / maxChunkSize})`, chunk);
-        }
-    };
-    logObject("[InstanceStatePatch] response.data:", response.data);
-
     const { gameState, setGameState } = useGameStore.getState();
     const currentState = gameState || {};
 
@@ -36,24 +19,7 @@ export async function handleInstanceStatePatchResponse(
         false
     ).newDocument;
 
-    logObject("[InstanceStatePatch] newState:", newState);
-
-    console.log(
-        `[InstanceStatePatch] gameState:`,
-        gameState !== null ? "exists" : "null"
-    );
-
-    logObject(
-        "[InstanceStatePatch] gameState?.streamedMessageWordTimings:",
-        gameState?.streamedMessageWordTimings
-    );
-
     const validatedInstanceState = InstanceStateSchema.safeParse(newState);
-
-    logObject(
-        "[InstanceStatePatch] validatedInstanceState:",
-        validatedInstanceState
-    );
 
     if (validatedInstanceState.success) {
         setGameState(validatedInstanceState.data);

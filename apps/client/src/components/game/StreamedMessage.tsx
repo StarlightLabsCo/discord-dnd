@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useAudioStore } from "@/lib/game/audio";
-import { cn } from "@/lib/tailwind/utils";
+import { useEffect, useRef, useState } from "react";
 import { useGameStore } from "@/lib/game";
+import { cn } from "@/lib/tailwind/utils";
+import { useAudioStore } from "@/lib/game/audio";
 import { AudioWordTimings } from "starlight-api-types/websocket";
 
 type StreamedMessageProps = {
@@ -9,49 +9,49 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
+    const words = text.split(" ");
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
-    console.log(`[StreamedMessage] currentWordIndex: ${currentWordIndex}`);
 
-    const streamedMessageId =
-        useGameStore.getState().gameState?.streamedMessageId;
+    const frameRef = useRef<number | null>(null);
+
+    const streamedWordTimings =
+        useGameStore().gameState?.streamedMessageWordTimings;
 
     useEffect(() => {
-        const gameState = useGameStore.getState().gameState;
-        if (!gameState) return;
+        if (!streamedWordTimings || frameRef.current) {
+            return;
+        }
 
-        const { streamedMessageWordTimings } = gameState;
-        if (!streamedMessageWordTimings) return;
-
-        const parsedStreamedMessageWordTimings = JSON.parse(
-            streamedMessageWordTimings
-        ) as AudioWordTimings;
-
-        let frameId: number;
-        const updateWordIndex = () => {
-            const { audioStartTime } = useAudioStore.getState();
-            if (!audioStartTime) return;
-
-            if (parsedStreamedMessageWordTimings && audioStartTime) {
-                const elapsedTime = Date.now() - audioStartTime.getTime();
-
-                const newWordIndex =
-                    parsedStreamedMessageWordTimings.wordStartTimesMs.findIndex(
-                        (time) => time > elapsedTime
-                    );
-                setCurrentWordIndex(newWordIndex - 1);
-            }
-            frameId = requestAnimationFrame(updateWordIndex);
-        };
-
-        updateWordIndex();
+        frameRef.current = requestAnimationFrame(animate);
 
         return () => {
-            console.log(`[StreamedMessage] cancelAnimationFrame`);
-            cancelAnimationFrame(frameId);
+            if (frameRef.current) cancelAnimationFrame(frameRef.current);
         };
-    }, [streamedMessageId]);
+    }, [streamedWordTimings]);
 
-    const words = text.split(" ");
+    const animate = () => {
+        const startTime = useAudioStore.getState().audioStartTime;
+        if (!streamedWordTimings || !startTime) return;
+
+        const parsedWordTimings = JSON.parse(
+            streamedWordTimings
+        ) as AudioWordTimings;
+
+        const elapsedTime = Date.now() - startTime.getTime();
+        const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(
+            (time: number) => time > elapsedTime
+        );
+        if (wordIndex === -1) {
+            setCurrentWordIndex(words.length);
+            cancelAnimationFrame(frameRef.current!);
+            return;
+        }
+
+        setCurrentWordIndex(wordIndex - 1);
+
+        frameRef.current = requestAnimationFrame(animate);
+    };
+
     return (
         <div className='flex flex-wrap'>
             {words.map((word, index) => {

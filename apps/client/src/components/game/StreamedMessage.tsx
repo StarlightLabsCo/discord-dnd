@@ -41,11 +41,11 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         const wordIndex = parsedWordTimings.wordStartTimesMs.findIndex(
             (time: number) => time > elapsedTime
         );
-        if (wordIndex === -1) {
-            setCurrentWordIndex(words.length);
-            cancelAnimationFrame(frameRef.current!);
-            return;
-        }
+        // if (wordIndex === -1) {
+        //     setCurrentWordIndex(words.length);
+        //     cancelAnimationFrame(frameRef.current!);
+        //     return;
+        // }
 
         setCurrentWordIndex(wordIndex - 1);
 
@@ -53,7 +53,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='flex flex-wrap'>
+        <div className='flex flex-wrap gap-x-[0.3vw] gap-y-[1vh]'>
             {words.map((word, index) => {
                 if (word === "\n") {
                     return <br key={`streamed-message-word-${index}`} />;

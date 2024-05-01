@@ -43,7 +43,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         );
 
         if (wordIndex > currentWordIndex) {
-            setCurrentWordIndex(wordIndex);
+            setCurrentWordIndex(wordIndex - 1);
         }
 
         frameRef.current = requestAnimationFrame(animate);
@@ -77,7 +77,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
-                                "transition-opacity duration-500 inline",
+                                "transition-opacity duration-[400ms] inline",
                                 currentWordIndex + newLineOffset >= index
                                     ? "opacity-100"
                                     : "opacity-0"

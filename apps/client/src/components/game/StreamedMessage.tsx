@@ -45,7 +45,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         );
 
         if (wordIndex > currentWordIndex) {
-            setCurrentWordIndex(wordIndex - 1);
+            setCurrentWordIndex(wordIndex);
         }
 
         frameRef.current = requestAnimationFrame(animate);

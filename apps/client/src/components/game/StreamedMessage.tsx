@@ -10,7 +10,9 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const words = text.split(/(\s+|\b)/);
+    const words = text.split(/([ ,.!?;:]+)/);
+    console.log(`words: ${words}`);
+
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     const frameRef = useRef<number | null>(null);
@@ -50,7 +52,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='text-white font-light text-[1.1vw] flex flex-wrap'>
+        <div className='text-white font-light text-[1.1vw] max-w-full'>
             {words.map((word, index) => {
                 if (word === "\n") {
                     return (

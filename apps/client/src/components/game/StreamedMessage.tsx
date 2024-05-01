@@ -10,7 +10,7 @@ type StreamedMessageProps = {
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const words = text.split(/(\s|[,.!?;:])/).filter((word) => word.length > 0);
+    const words = text.split(/(\s|[,.!?;:])/);
     console.log(words);
 
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
@@ -45,7 +45,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         );
 
         if (wordIndex > currentWordIndex) {
-            setCurrentWordIndex(wordIndex);
+            setCurrentWordIndex(wordIndex - 1);
         }
 
         frameRef.current = requestAnimationFrame(animate);
@@ -76,7 +76,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
-                                "transition-opacity duration-[400] inline",
+                                "transition-opacity duration-500 inline",
                                 currentWordIndex >= index
                                     ? "opacity-100"
                                     : "opacity-0"

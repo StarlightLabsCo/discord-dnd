@@ -38,7 +38,7 @@ export async function streamAudio(
             })
         );
 
-        ws.send(JSON.stringify({ text: message.content, flush: true }));
+        ws.send(JSON.stringify({ text: message.content + " ", flush: true }));
         console.log(`[11 Labs] Sent initial messages`);
     };
 

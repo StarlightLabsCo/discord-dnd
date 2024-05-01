@@ -146,7 +146,9 @@ async function publishWordTimings(
 }
 
 /* -------- Processing -------- */
-function charToWordTimings(charTimings: AudioCharacterTimings) {
+function charToWordTimings(
+    charTimings: AudioCharacterTimings
+): AudioWordTimings {
     let words: string[] = [];
     let wordStartTimesMs: number[] = [];
     let wordDurationsMs: number[] = [];
@@ -161,29 +163,36 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
     charTimings.chars.forEach((char: string, i: number) => {
         if (isDelimiter(char)) {
             if (wordIndex < i) {
+                // Add the word before the delimiter
                 let word = charTimings.chars.slice(wordIndex, i).join("");
                 words.push(word);
                 wordStartTimesMs.push(wordStartTime);
                 wordDurationsMs.push(wordDuration);
             }
+            // Add the delimiter as a separate word
+            words.push(char);
+            wordStartTimesMs.push(charTimings.charStartTimesMs[i]);
+            wordDurationsMs.push(charTimings.charDurationsMs[i]);
 
+            // Reset for the next word
             wordIndex = i + 1;
-            if (i + 1 < charTimings.charStartTimesMs.length) {
-                wordStartTime = charTimings.charStartTimesMs[i + 1];
-            }
+            wordStartTime = charTimings.charStartTimesMs[i + 1] || 0;
             wordDuration = 0;
         } else {
+            if (i === wordIndex) {
+                // Start of a new word
+                wordStartTime = charTimings.charStartTimesMs[i];
+            }
             wordDuration += charTimings.charDurationsMs[i];
         }
     });
 
+    // Add the last word if it ends at the last character
     if (wordIndex < charTimings.chars.length) {
         let word = charTimings.chars.slice(wordIndex).join("");
-        if (word !== "") {
-            words.push(word);
-            wordStartTimesMs.push(wordStartTime!);
-            wordDurationsMs.push(wordDuration);
-        }
+        words.push(word);
+        wordStartTimesMs.push(wordStartTime);
+        wordDurationsMs.push(wordDuration);
     }
 
     const audioWordTimings: AudioWordTimings = {

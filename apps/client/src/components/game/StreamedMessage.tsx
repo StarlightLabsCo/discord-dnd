@@ -49,28 +49,31 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     };
 
     return (
-        <div className='text-white font-light text-[1.1vw]'>
+        <div className='text-white font-light text-[1.1vw] flex flex-wrap'>
             {words.map((word, index) => {
-                if (word === "\n") {
+                if (word == "\n") {
                     return (
                         <>
+                            <br key={`streamed-message-word-${index}-0`} />
                             <br key={`streamed-message-word-${index}-1`} />
-                            <br key={`streamed-message-word-${index}-2`} />
                         </>
                     );
                 } else {
                     return (
-                        <span
-                            key={`streamed-message-word-${index}`}
-                            className={cn(
-                                "transition-opacity duration-500 inline",
-                                currentWordIndex >= index
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                            )}
-                        >
-                            {word}
-                        </span>
+                        <>
+                            <span
+                                key={`streamed-message-word-${index}`}
+                                className={cn(
+                                    "transition-opacity duration-500 inline",
+                                    currentWordIndex >= index
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                )}
+                            >
+                                {word}
+                            </span>
+                            {index < words.length - 1 && " "}
+                        </>
                     );
                 }
             })}

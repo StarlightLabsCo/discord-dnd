@@ -1,4 +1,4 @@
-import * as debug from "./debug.json";
+import { timings } from "./data";
 
 type AudioCharacterTimings = {
     chars: string[];
@@ -61,24 +61,70 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
     return audioWordTimings;
 }
 
+function applyOffsetToTimings(
+    priorAudioWordTimings: AudioWordTimings,
+    newAudioWordTimings: AudioWordTimings
+): AudioWordTimings {
+    const lastWordStartTimeMs =
+        priorAudioWordTimings.wordStartTimesMs[
+            priorAudioWordTimings.wordStartTimesMs.length - 1
+        ]; // The bug here is I offset by the end of the last word, but this is not the correct offset. The correct offset is the end of the last char timing
+
+    const lastWordDurationMs =
+        priorAudioWordTimings.wordDurationsMs[
+            priorAudioWordTimings.wordDurationsMs.length - 1
+        ];
+
+    const offset = lastWordStartTimeMs! + lastWordDurationMs!;
+
+    const adjustedWordStartTimesMs = newAudioWordTimings.wordStartTimesMs.map(
+        (time) => time + offset
+    );
+
+    const combinedWordTimings: AudioWordTimings = {
+        words: [...priorAudioWordTimings.words, ...newAudioWordTimings.words],
+        wordStartTimesMs: [
+            ...priorAudioWordTimings.wordStartTimesMs,
+            ...adjustedWordStartTimesMs,
+        ],
+        wordDurationsMs: [
+            ...priorAudioWordTimings.wordDurationsMs,
+            ...newAudioWordTimings.wordDurationsMs,
+        ],
+    };
+
+    return combinedWordTimings;
+}
+
 function main() {
-    const timings = debug as AudioCharacterTimings;
+    const timingArray = timings as AudioCharacterTimings[];
+    const firstTiming = timingArray[0] as AudioCharacterTimings;
+    const firstWordTimings = charToWordTimings(firstTiming);
 
-    console.log(`Character Timings:`);
-    console.log(timings);
+    const secondTiming = timingArray[1] as AudioCharacterTimings;
+    const secondWordTimings = charToWordTimings(secondTiming);
 
-    console.log(`Length: ${timings.chars.length} words`);
-    console.log(`Length: ${timings.charStartTimesMs.length} start times`);
-    console.log(`Length: ${timings.charDurationsMs.length} durations`);
+    const combinedWordTimings = applyOffsetToTimings(
+        firstWordTimings,
+        secondWordTimings
+    );
 
-    console.log(`-----------------`);
+    console.log(`First character timings:`);
+    console.log(firstTiming);
+    console.log(`Second character timings:`);
+    console.log(secondTiming);
 
-    console.log(`Word Timings:`);
-    const wordTimings = charToWordTimings(timings);
-    console.log(wordTimings);
-    console.log(`Length: ${wordTimings.words.length} words`);
-    console.log(`Length: ${wordTimings.wordStartTimesMs.length} start times`);
-    console.log(`Length: ${wordTimings.wordDurationsMs.length} durations`);
+    console.log(`---`);
+
+    console.log(`First word timings:`);
+    console.log(firstWordTimings);
+    console.log(`Second word timings:`);
+    console.log(secondWordTimings);
+
+    const isWordCountCorrect =
+        firstWordTimings.words.length + secondWordTimings.words.length ===
+        combinedWordTimings.words.length;
+    console.log(`Word count check: ${isWordCountCorrect}`);
 }
 
 main();

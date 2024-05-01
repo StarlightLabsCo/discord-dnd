@@ -50,7 +50,16 @@ export async function streamAudio(
     };
 
     let audioBuffer: Buffer[] = [];
-    let wordTimings: AudioWordTimings | null = null;
+    let characterTimings: AudioCharacterTimings = {
+        chars: [],
+        charStartTimesMs: [],
+        charDurationsMs: [],
+    };
+    let wordTimings: AudioWordTimings = {
+        words: [],
+        wordStartTimesMs: [],
+        wordDurationsMs: [],
+    };
     ws.onmessage = (event) => {
         console.log(`[11 Labs] Received message`);
         const data = JSON.parse(event.data.toString());
@@ -68,11 +77,12 @@ export async function streamAudio(
         }
 
         if (data.normalizedAlignment) {
-            console.log(data.normalizedAlignment);
-            wordTimings = processNormalizedAlignment(
-                wordTimings,
+            characterTimings = applyOffsetToCharTimings(
+                characterTimings,
                 data.normalizedAlignment
             );
+
+            wordTimings = charToWordTimings(characterTimings);
 
             publishWordTimings(instanceId, message.id, wordTimings);
         }
@@ -143,19 +153,6 @@ async function publishWordTimings(
 }
 
 /* -------- Processing -------- */
-function processNormalizedAlignment(
-    wordTimings: AudioWordTimings | null,
-    charTimings: AudioCharacterTimings
-) {
-    const newWordTimings = charToWordTimings(charTimings);
-    if (!wordTimings) {
-        return newWordTimings;
-    }
-
-    const offsetWordTimings = applyOffsetToTimings(wordTimings, newWordTimings);
-    return offsetWordTimings;
-}
-
 function charToWordTimings(charTimings: AudioCharacterTimings) {
     let words: string[] = [];
     let wordStartTimesMs: number[] = [];
@@ -205,37 +202,37 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
     return audioWordTimings;
 }
 
-function applyOffsetToTimings(
-    priorAudioWordTimings: AudioWordTimings,
-    newAudioWordTimings: AudioWordTimings
-): AudioWordTimings {
-    const lastWordStartTimeMs =
-        priorAudioWordTimings.wordStartTimesMs[
-            priorAudioWordTimings.wordStartTimesMs.length - 1
-        ];
+function applyOffsetToCharTimings(
+    priorAudioCharTimings: AudioCharacterTimings,
+    newAudioCharTimings: AudioCharacterTimings
+) {
+    const lastCharStartTimeMs =
+        priorAudioCharTimings.charStartTimesMs[
+            priorAudioCharTimings.charStartTimesMs.length - 1
+        ] || 0;
 
-    const lastWordDurationMs =
-        priorAudioWordTimings.wordDurationsMs[
-            priorAudioWordTimings.wordDurationsMs.length - 1
-        ];
+    const lastCharDurationMs =
+        priorAudioCharTimings.charDurationsMs[
+            priorAudioCharTimings.charDurationsMs.length - 1
+        ] || 0;
 
-    const offset = lastWordStartTimeMs + lastWordDurationMs;
+    const offset = lastCharStartTimeMs + lastCharDurationMs;
 
-    const adjustedWordStartTimesMs = newAudioWordTimings.wordStartTimesMs.map(
+    const adjustedCharStartTimesMs = newAudioCharTimings.charStartTimesMs.map(
         (time) => time + offset
     );
 
-    const combinedWordTimings: AudioWordTimings = {
-        words: [...priorAudioWordTimings.words, ...newAudioWordTimings.words],
-        wordStartTimesMs: [
-            ...priorAudioWordTimings.wordStartTimesMs,
-            ...adjustedWordStartTimesMs,
+    const combinedCharTimings: AudioCharacterTimings = {
+        chars: [...priorAudioCharTimings.chars, ...newAudioCharTimings.chars],
+        charStartTimesMs: [
+            ...priorAudioCharTimings.charStartTimesMs,
+            ...adjustedCharStartTimesMs,
         ],
-        wordDurationsMs: [
-            ...priorAudioWordTimings.wordDurationsMs,
-            ...newAudioWordTimings.wordDurationsMs,
+        charDurationsMs: [
+            ...priorAudioCharTimings.charDurationsMs,
+            ...newAudioCharTimings.charDurationsMs,
         ],
     };
 
-    return combinedWordTimings;
+    return combinedCharTimings;
 }

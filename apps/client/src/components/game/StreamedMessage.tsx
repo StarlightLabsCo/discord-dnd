@@ -51,37 +51,28 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     return (
         <div className='text-white font-light text-[1.1vw]'>
             {words.map((word, index) => {
-                return word.split("\n").map((segment, i) => {
-                    if (segment === "") {
-                        return (
-                            <>
-                                <br
-                                    key={`streamed-message-br1-${index}-${i}`}
-                                />
-                                <br
-                                    key={`streamed-message-br2-${index}-${i}`}
-                                />
-                            </>
-                        );
-                    } else {
-                        return (
-                            <span
-                                key={`streamed-message-word-${index}-${i}`}
-                                className={cn(
-                                    "transition-opacity duration-500 inline",
-                                    currentWordIndex >= index
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                )}
-                            >
-                                {segment +
-                                    (i < word.split("\n").length - 1
-                                        ? ""
-                                        : " ")}
-                            </span>
-                        );
-                    }
-                });
+                if (word === "\n") {
+                    return (
+                        <>
+                            <br key={`streamed-message-word-${index}-1`} />
+                            <br key={`streamed-message-word-${index}-2`} />
+                        </>
+                    );
+                } else {
+                    return (
+                        <span
+                            key={`streamed-message-word-${index}`}
+                            className={cn(
+                                "transition-opacity duration-500 inline",
+                                currentWordIndex >= index
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                            )}
+                        >
+                            {word}
+                        </span>
+                    );
+                }
             })}
         </div>
     );

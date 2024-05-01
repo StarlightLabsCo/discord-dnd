@@ -30,7 +30,7 @@ export async function continueStory(instanceId: string) {
 
     // TODO: make this a function
     const formattedCompletion = completion.choices[0].message.content
-        .replaceAll("Dungeon Master:", "")
+        .replace(/Dungeon Master:\s?/, "")
         .trim();
 
     const newMessage = await db.message.create({

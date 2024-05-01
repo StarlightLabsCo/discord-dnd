@@ -3,13 +3,14 @@ import { useGameStore } from "@/lib/game";
 import { cn } from "@/lib/tailwind/utils";
 import { useAudioStore } from "@/lib/game/audio";
 import { AudioWordTimings } from "starlight-api-types/websocket";
+import React from "react";
 
 type StreamedMessageProps = {
     text: string;
 };
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
-    const words = text.split(" ");
+    const words = text.split(/(\s+|\b)/);
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     const frameRef = useRef<number | null>(null);
@@ -51,30 +52,37 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     return (
         <div className='text-white font-light text-[1.1vw] flex flex-wrap'>
             {words.map((word, index) => {
-                if (word == " ") return null;
-                else if (word == "\n") {
+                if (word === "\n") {
                     return (
-                        <>
-                            <br key={`streamed-message-word-${index}-0`} />
-                            <br key={`streamed-message-word-${index}-1`} />
-                        </>
+                        <React.Fragment
+                            key={`streamed-message-newline-${index}`}
+                        >
+                            <br />
+                            <br />
+                        </React.Fragment>
+                    );
+                } else if (word.trim() === "") {
+                    return (
+                        <span
+                            key={`streamed-message-space-${index}`}
+                            className='inline'
+                        >
+                            {word}
+                        </span>
                     );
                 } else {
                     return (
-                        <>
-                            <span
-                                key={`streamed-message-word-${index}`}
-                                className={cn(
-                                    "transition-opacity duration-500 inline",
-                                    currentWordIndex >= index
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                )}
-                            >
-                                {word}
-                            </span>
-                            {index < words.length - 1 && " "}
-                        </>
+                        <span
+                            key={`streamed-message-word-${index}`}
+                            className={cn(
+                                "transition-opacity duration-500 inline",
+                                currentWordIndex >= index
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                            )}
+                        >
+                            {word}
+                        </span>
                     );
                 }
             })}

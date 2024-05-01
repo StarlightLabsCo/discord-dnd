@@ -11,7 +11,7 @@ type StreamedMessageProps = {
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const words = text.split(/([ ,.!?;:]+)/);
-    console.log(`words: ${words}`);
+    console.log(words);
 
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 

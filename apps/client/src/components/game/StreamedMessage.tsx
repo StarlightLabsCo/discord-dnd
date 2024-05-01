@@ -63,6 +63,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                             key={`streamed-message-newline-${index}`}
                         >
                             <br />
+                            <br />
                         </React.Fragment>
                     );
                 } else if (word.trim() === "") {

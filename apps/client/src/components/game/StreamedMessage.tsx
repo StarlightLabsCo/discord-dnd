@@ -51,7 +51,8 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     return (
         <div className='text-white font-light text-[1.1vw] flex flex-wrap'>
             {words.map((word, index) => {
-                if (word == "\n") {
+                if (word == " ") return null;
+                else if (word == "\n") {
                     return (
                         <>
                             <br key={`streamed-message-word-${index}-0`} />

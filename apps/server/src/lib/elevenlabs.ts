@@ -141,7 +141,7 @@ async function publishWordTimings(
 
     instanceState.streamedMessageId = messageId;
     instanceState.streamedMessageWordTimings = JSON.stringify(wordTimings);
-    console.log(wordTimings);
+    console.log(JSON.stringify(wordTimings.words));
 
     updateInstanceState(instanceId, instanceState, release);
 }

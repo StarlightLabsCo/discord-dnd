@@ -11,8 +11,6 @@ type StreamedMessageProps = {
 
 export const StreamedMessage = ({ text }: StreamedMessageProps) => {
     const words = text.split(/(\s|[,.!?;:])/).filter((word) => word.length > 0);
-
-    const [newLineOffset, setNewLineOffset] = useState(0);
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 
     const frameRef = useRef<number | null>(null);
@@ -55,7 +53,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         <div className='text-white font-light text-[1.1vw] max-w-full'>
             {words.map((word, index) => {
                 if (word === "\n") {
-                    setNewLineOffset(newLineOffset + 1);
                     return (
                         <React.Fragment
                             key={`streamed-message-newline-${index}`}
@@ -73,6 +70,9 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         </span>
                     );
                 } else {
+                    const newLineOffset = words
+                        .slice(0, index)
+                        .filter((w) => w === "\n").length;
                     return (
                         <span
                             key={`streamed-message-word-${index}`}

@@ -60,7 +60,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                             key={`streamed-message-newline-${index}`}
                         >
                             <br />
-                            <br />
                         </React.Fragment>
                     );
                 } else if (word.trim() === "") {
@@ -77,7 +76,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
-                                "transition-opacity duration-500 inline",
+                                "transition-opacity duration-200 inline",
                                 currentWordIndex >= index
                                     ? "opacity-100"
                                     : "opacity-0"

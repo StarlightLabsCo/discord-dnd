@@ -48,7 +48,7 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         );
 
         if (wordIndex > currentWordIndex) {
-            setCurrentWordIndex(wordIndex - 1);
+            setCurrentWordIndex(wordIndex); // normally this would be wordIndex - 1, but 11 labs adds a space in the beginning of the words.
         }
 
         frameRef.current = requestAnimationFrame(animate);

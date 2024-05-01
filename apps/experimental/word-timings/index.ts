@@ -61,70 +61,68 @@ function charToWordTimings(charTimings: AudioCharacterTimings) {
     return audioWordTimings;
 }
 
-function applyOffsetToTimings(
-    priorAudioWordTimings: AudioWordTimings,
-    newAudioWordTimings: AudioWordTimings
-): AudioWordTimings {
-    const lastWordStartTimeMs =
-        priorAudioWordTimings.wordStartTimesMs[
-            priorAudioWordTimings.wordStartTimesMs.length - 1
-        ]; // The bug here is I offset by the end of the last word, but this is not the correct offset. The correct offset is the end of the last char timing
+function applyOffsetToCharTimings(
+    priorAudioCharTimings: AudioCharacterTimings,
+    newAudioCharTimings: AudioCharacterTimings
+) {
+    const lastCharStartTimeMs =
+        priorAudioCharTimings.charStartTimesMs[
+            priorAudioCharTimings.charStartTimesMs.length - 1
+        ] || 0;
 
-    const lastWordDurationMs =
-        priorAudioWordTimings.wordDurationsMs[
-            priorAudioWordTimings.wordDurationsMs.length - 1
-        ];
+    const lastCharDurationMs =
+        priorAudioCharTimings.charDurationsMs[
+            priorAudioCharTimings.charDurationsMs.length - 1
+        ] || 0;
 
-    const offset = lastWordStartTimeMs! + lastWordDurationMs!;
+    const offset = lastCharStartTimeMs + lastCharDurationMs;
 
-    const adjustedWordStartTimesMs = newAudioWordTimings.wordStartTimesMs.map(
+    const adjustedCharStartTimesMs = newAudioCharTimings.charStartTimesMs.map(
         (time) => time + offset
     );
 
-    const combinedWordTimings: AudioWordTimings = {
-        words: [...priorAudioWordTimings.words, ...newAudioWordTimings.words],
-        wordStartTimesMs: [
-            ...priorAudioWordTimings.wordStartTimesMs,
-            ...adjustedWordStartTimesMs,
+    const combinedCharTimings: AudioCharacterTimings = {
+        chars: [...priorAudioCharTimings.chars, ...newAudioCharTimings.chars],
+        charStartTimesMs: [
+            ...priorAudioCharTimings.charStartTimesMs,
+            ...adjustedCharStartTimesMs,
         ],
-        wordDurationsMs: [
-            ...priorAudioWordTimings.wordDurationsMs,
-            ...newAudioWordTimings.wordDurationsMs,
+        charDurationsMs: [
+            ...priorAudioCharTimings.charDurationsMs,
+            ...newAudioCharTimings.charDurationsMs,
         ],
     };
 
-    return combinedWordTimings;
+    return combinedCharTimings;
 }
 
 function main() {
     const timingArray = timings as AudioCharacterTimings[];
     const firstTiming = timingArray[0] as AudioCharacterTimings;
-    const firstWordTimings = charToWordTimings(firstTiming);
-
     const secondTiming = timingArray[1] as AudioCharacterTimings;
-    const secondWordTimings = charToWordTimings(secondTiming);
 
-    const combinedWordTimings = applyOffsetToTimings(
-        firstWordTimings,
-        secondWordTimings
-    );
-
-    console.log(`First character timings:`);
+    console.log("First Timing:");
+    console.log("--------------------");
     console.log(firstTiming);
-    console.log(`Second character timings:`);
+    console.log("--------------------\n");
+
+    console.log("Second Timing:");
+    console.log("--------------------");
     console.log(secondTiming);
+    console.log("--------------------\n");
 
-    console.log(`---`);
+    const combinedTimings = applyOffsetToCharTimings(firstTiming, secondTiming);
 
-    console.log(`First word timings:`);
-    console.log(firstWordTimings);
-    console.log(`Second word timings:`);
-    console.log(secondWordTimings);
+    console.log("Combined Character Timings:");
+    console.log("--------------------");
+    console.log(combinedTimings);
+    console.log("--------------------\n");
 
-    const isWordCountCorrect =
-        firstWordTimings.words.length + secondWordTimings.words.length ===
-        combinedWordTimings.words.length;
-    console.log(`Word count check: ${isWordCountCorrect}`);
+    const combinedWordTimings = charToWordTimings(combinedTimings);
+
+    console.log("Combined Word Timings:");
+    console.log("--------------------");
+    console.log(combinedWordTimings);
+    console.log("--------------------\n");
 }
-
 main();

@@ -70,15 +70,12 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
                         </span>
                     );
                 } else {
-                    const newLineOffset = words
-                        .slice(0, index)
-                        .filter((w) => w === "\n").length;
                     return (
                         <span
                             key={`streamed-message-word-${index}`}
                             className={cn(
                                 "transition-opacity duration-[400ms] inline",
-                                currentWordIndex + newLineOffset >= index
+                                currentWordIndex >= index
                                     ? "opacity-100"
                                     : "opacity-0"
                             )}

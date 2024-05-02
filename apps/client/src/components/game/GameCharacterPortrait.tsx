@@ -20,7 +20,7 @@ export function GameCharacterPortrait({
         (player) => player.user?.id === user?.id
     );
 
-    const { playerMenuDialogOpen, setPlayerMenuDialogOpen } = useGameStore();
+    const { setPlayerMenuDialogOpen } = useGameStore();
 
     return (
         <>
@@ -36,7 +36,7 @@ export function GameCharacterPortrait({
                     {isCurrentUser && (
                         <div
                             onClick={() => setPlayerMenuDialogOpen(true)}
-                            className='flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 text-white bg-black/30 group-hover:opacity-100 rounded-[1vw]'
+                            className='cursor-pointer hover:scale-120 flex absolute inset-0 z-20 flex-col justify-center items-center w-full h-full opacity-0 text-white bg-black/30 group-hover:opacity-100 rounded-[1vw]'
                         >
                             Inventory
                         </div>

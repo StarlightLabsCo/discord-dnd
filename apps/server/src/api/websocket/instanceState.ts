@@ -53,7 +53,6 @@ export async function addUserToInstanceState(
             streamedMessageId: null,
             streamedMessageWordTimings: null,
             rollDiceDialogOpen: false,
-            playerMenuDialogOpen: true,
         };
     }
 

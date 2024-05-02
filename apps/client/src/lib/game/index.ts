@@ -10,6 +10,9 @@ type GameStore = {
 
     gameState: InstanceState | null;
     setGameState: (state: InstanceState) => void;
+
+    playerMenuDialogOpen: boolean;
+    setPlayerMenuDialogOpen: (open: boolean) => void;
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -40,4 +43,8 @@ export const useGameStore = create<GameStore>((set) => ({
             },
         });
     },
+
+    playerMenuDialogOpen: false,
+    setPlayerMenuDialogOpen: (open: boolean) =>
+        set({ playerMenuDialogOpen: open }),
 }));

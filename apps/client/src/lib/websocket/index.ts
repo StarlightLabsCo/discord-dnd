@@ -45,9 +45,20 @@ async function connect(set: WebSocketStoreSet, get: () => WebSocketStore) {
             return;
         }
 
-        const ws = new WebSocket(
-            `wss://${location.host}/api/ws?access_token=${access_token}&instanceId=${instanceId}`
-        );
+        let ws: WebSocket | null;
+        if (import.meta.env.VITE_HOST) {
+            // DEBUG
+            console.log(
+                `[DiscordD&D WS] Connecting to ${import.meta.env.VITE_HOST}`
+            );
+            ws = new WebSocket(
+                `ws://${import.meta.env.VITE_HOST}/api/ws?access_token=${access_token}&instanceId=${instanceId}`
+            );
+        } else {
+            ws = new WebSocket(
+                `wss://${location.host}/api/ws?access_token=${access_token}&instanceId=${instanceId}`
+            );
+        }
 
         ws.onopen = () => {
             console.log(`[DiscordD&D WS] Connected`);

@@ -1,26 +1,26 @@
 {
-  "name": "server",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "bun index.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0",
-    "@repo/typescript-config": "*"
-  },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.552.0",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "async-mutex": "^0.5.0",
-    "database": "workspace:*",
-    "fast-json-patch": "^3.1.1",
-    "groq-sdk": "^0.3.2",
-    "openai": "^4.33.0",
-    "openpipe": "^0.10.0",
-    "starlight-api-types": "workspace:*"
-  }
+    "name": "server",
+    "module": "index.ts",
+    "type": "module",
+    "scripts": {
+        "dev": "bun --hot index.ts"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0",
+        "@repo/typescript-config": "*"
+    },
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.552.0",
+        "@paralleldrive/cuid2": "^2.2.2",
+        "async-mutex": "^0.5.0",
+        "database": "workspace:*",
+        "fast-json-patch": "^3.1.1",
+        "groq-sdk": "^0.3.2",
+        "openai": "^4.33.0",
+        "openpipe": "^0.10.0",
+        "starlight-api-types": "workspace:*"
+    }
 }

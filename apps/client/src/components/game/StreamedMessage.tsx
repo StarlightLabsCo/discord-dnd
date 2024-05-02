@@ -14,7 +14,6 @@ export const StreamedMessage = ({ text }: StreamedMessageProps) => {
         .replaceAll("\n\n", "\n") // Eleven Labs collapses double newlines into 1 pause in audio - so need to account for that
         .split(/(\s|[,.!?;:])/)
         .filter((word) => word.length > 0);
-    console.log(JSON.stringify(words));
 
     const [currentWordIndex, setCurrentWordIndex] = useState(-1);
 

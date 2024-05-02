@@ -1,6 +1,22 @@
 import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 
 export async function handleTokenRequest(req: Request) {
+    // DEBUG
+    if (process.env.STARLIGHT_DEBUG) {
+        return new Response(
+            JSON.stringify({
+                access_token: "mock_token",
+            }),
+            {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*",
+                },
+            }
+        );
+    }
+
     if (!process.env.DISCORD_CLIENT_ID) {
         console.error("DISCORD_CLIENT_ID is required");
         return new Response("Internal Server Error", { status: 500 });

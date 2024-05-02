@@ -18,14 +18,13 @@ const useDiscordStore = create<DiscordStore>((set) => ({
 }));
 
 // ---- Setup Discord SDK ----
-// TODO: remove debug flag
+// DEBUG
 const discordSdk: DiscordSDK | DiscordSDKMock = import.meta.env
     .VITE_DISCORD_EMBED_DEBUG
     ? new DiscordSDKMock(import.meta.env.VITE_DISCORD_CLIENT_ID, "1234", "5678")
     : new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
 
-const instanceId = discordSdk.instanceId;
-useDiscordStore.getState().setInstanceId(instanceId);
+useDiscordStore.getState().setInstanceId(discordSdk.instanceId);
 
 async function setupDiscordSDK() {
     await discordSdk.ready();

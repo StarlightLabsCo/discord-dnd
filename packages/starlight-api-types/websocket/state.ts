@@ -77,5 +77,6 @@ export const InstanceStateSchema = z.object({
     ),
     streamedMessageId: z.string().nullable(),
     streamedMessageWordTimings: z.string().nullable(),
+    rollDiceDialogOpen: z.boolean(),
 });
 export type InstanceState = z.infer<typeof InstanceStateSchema>;

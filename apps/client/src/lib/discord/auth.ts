@@ -32,15 +32,30 @@ export async function authenticate() {
         ],
     });
 
-    const response = await fetch("/api/token", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            code,
-        }),
-    });
+    // DEBUG
+    let response;
+    if (import.meta.env.VITE_HOST) {
+        response = await fetch(`http://${import.meta.env.VITE_HOST}/api/token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                code,
+            }),
+        });
+    } else {
+        response = await fetch("/api/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                code,
+            }),
+        });
+    }
+
     const { access_token } = await response.json();
 
     const auth = await discordSdk.commands.authenticate({

@@ -11,6 +11,8 @@ type MessageDisplayProps = {
     className?: string;
 };
 
+const placeholderDMImage = "https://r2.starlightlabs.co/dm.webp";
+
 export function MessageDisplay({
     message,
     streamed,
@@ -28,7 +30,7 @@ export function MessageDisplay({
                     src={
                         character
                             ? s3UrlRewriter(character.imageUrl)
-                            : "/r2/dm.webp"
+                            : s3UrlRewriter(placeholderDMImage)
                     }
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />

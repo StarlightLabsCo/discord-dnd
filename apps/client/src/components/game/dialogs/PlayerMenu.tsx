@@ -65,7 +65,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                 className='w-full aspect-square object-cover rounded-xl'
                             />
                             <div
-                                className='mt-[1vw] rounded-xl h-full grid max-w-full max-h-full'
+                                className='mt-[1vw] rounded-xl grow-0 grid overflow-hidden'
                                 style={{
                                     gridTemplateColumns: `repeat(${columns}, 1fr)`,
                                     gridTemplateRows: `repeat(${rows}, 1fr)`,

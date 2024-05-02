@@ -10,9 +10,6 @@ type PlayerMenuProps = {
 
 export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
     const { playerMenuDialogOpen, setPlayerMenuDialogOpen } = useGameStore();
-    const [columns, setColumns] = useState(6);
-    const [rows, setRows] = useState(3);
-    const [gap, setGap] = useState(0.2);
 
     if (!playerMenuDialogOpen) return null;
 
@@ -53,7 +50,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                         </div>
                     </div>
                     {/* Character Stats & Profile Image & Inventory */}
-                    <div className='grid grid-cols-2 grid-rows-[95%_5%] py-[1vw] gap-[1vw] w-full h-full'>
+                    <div className='grid grid-cols-2 grid-rows-[96%_4%] my-[1vw] gap-[1vw] w-full h-full'>
                         {/* Character Stats */}
                         <div className='bg-[#040E16] rounded-xl row-span-1'>
                             Column 1, Row 1
@@ -65,27 +62,25 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                 className='w-full aspect-square object-cover rounded-xl'
                             />
                             <div
-                                className='mt-[1vw] rounded-xl grow-0 grid overflow-hidden'
+                                className='mt-auto rounded-xl grow-0 grid overflow-hidden'
                                 style={{
-                                    gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                                    gridTemplateRows: `repeat(${rows}, 1fr)`,
-                                    gap: `${gap}vw`,
+                                    gridTemplateColumns: `repeat(6, 1fr)`,
+                                    gridTemplateRows: `repeat(4, 1fr)`,
+                                    gap: `0.4vw`,
                                 }}
                             >
-                                {Array.from({ length: rows * columns }).map(
-                                    (_, index) => (
-                                        <div
-                                            key={index}
-                                            className='bg-[#040E16] w-full aspect-square rounded-md'
-                                        ></div>
-                                    )
-                                )}
+                                {Array.from({ length: 24 }).map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className='bg-[#040E16] w-full aspect-square rounded-md'
+                                    ></div>
+                                ))}
                             </div>
                         </div>
                         {/* Bottom Info Bar */}
                         <div className='col-span-2 row-span-1 grid grid-cols-2 grid-rows-1 gap-x-[1vw]'>
                             <div />
-                            <div className='flex items-center gap-[0.4vw] w-full'>
+                            <div className='flex items-center gap-[0.5vw] w-full'>
                                 <div className='text-white text-[0.7vw]'>
                                     Capacity
                                 </div>
@@ -101,46 +96,6 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                     {characterInstance.strength * 15} lbs
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    {/* Debug Sliders */}
-                    <div className='fixed bottom-10 left-10 flex space-x-4 text-white'>
-                        <div>
-                            <label>Columns: {columns}</label>
-                            <input
-                                type='range'
-                                min='1'
-                                max='10'
-                                value={columns}
-                                onChange={(e) =>
-                                    setColumns(parseInt(e.target.value))
-                                }
-                            />
-                        </div>
-                        <div>
-                            <label>Rows: {rows}</label>
-                            <input
-                                type='range'
-                                min='1'
-                                max='10'
-                                value={rows}
-                                onChange={(e) =>
-                                    setRows(parseInt(e.target.value))
-                                }
-                            />
-                        </div>
-                        <div>
-                            <label>Gap: {gap}vw</label>
-                            <input
-                                type='range'
-                                min='0'
-                                max='1'
-                                step='0.1'
-                                value={gap}
-                                onChange={(e) =>
-                                    setGap(parseFloat(e.target.value))
-                                }
-                            />
                         </div>
                     </div>
                 </div>

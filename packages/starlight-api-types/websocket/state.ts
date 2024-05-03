@@ -4,11 +4,14 @@ import {
     CampaignInstanceSchema,
     CampaignSchema,
     CharacterInstanceSchema,
+    ClassFeatureSchema,
     ClassSchema,
+    FeatSchema,
     ItemSchema,
     MessageSchema,
     ProficiencySchema,
     RaceSchema,
+    RacialTraitSchema,
     UserSchema,
     WorldSchema,
 } from "database/prisma/generated/zod";
@@ -41,8 +44,25 @@ export const InstanceStateSchema = z.object({
                 z.object({
                     world: WorldSchema.merge(
                         z.object({
-                            races: z.array(RaceSchema),
-                            classes: z.array(ClassSchema),
+                            races: z.array(
+                                RaceSchema.merge(
+                                    z.object({
+                                        racialTraits:
+                                            z.array(RacialTraitSchema),
+                                    })
+                                )
+                            ),
+                            classes: z.array(
+                                ClassSchema.merge(
+                                    z.object({
+                                        proficiencies:
+                                            z.array(ProficiencySchema),
+                                        startingEquipment: z.array(ItemSchema),
+                                        classFeatures:
+                                            z.array(ClassFeatureSchema),
+                                    })
+                                )
+                            ),
                             backgrounds: z.array(
                                 BackgroundSchema.merge(
                                     z.object({
@@ -60,6 +80,9 @@ export const InstanceStateSchema = z.object({
                 CharacterInstanceSchema.merge(
                     z.object({
                         user: z.union([UserSchema, z.null()]),
+                        proficiencies: z.array(ProficiencySchema),
+                        feats: z.array(FeatSchema),
+                        inventory: z.array(ItemSchema),
                     })
                 )
             ),

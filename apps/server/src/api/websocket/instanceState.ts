@@ -87,8 +87,18 @@ async function findOrCreateCampaignForUser(user: User) {
                 include: {
                     world: {
                         include: {
-                            races: true,
-                            classes: true,
+                            races: {
+                                include: {
+                                    racialTraits: true,
+                                },
+                            },
+                            classes: {
+                                include: {
+                                    proficiencies: true,
+                                    classFeatures: true,
+                                    startingEquipment: true,
+                                },
+                            },
                             backgrounds: {
                                 include: {
                                     proficiencies: true,
@@ -102,6 +112,20 @@ async function findOrCreateCampaignForUser(user: User) {
             characterInstances: {
                 include: {
                     user: true,
+                    race: {
+                        include: {
+                            racialTraits: true,
+                        },
+                    },
+                    class: {
+                        include: {
+                            proficiencies: true,
+                            classFeatures: true,
+                        },
+                    },
+                    proficiencies: true,
+                    feats: true,
+                    inventory: true,
                 },
             },
             messages: {
@@ -143,8 +167,18 @@ async function findOrCreateCampaignForUser(user: User) {
                     include: {
                         world: {
                             include: {
-                                races: true,
-                                classes: true,
+                                races: {
+                                    include: {
+                                        racialTraits: true,
+                                    },
+                                },
+                                classes: {
+                                    include: {
+                                        proficiencies: true,
+                                        classFeatures: true,
+                                        startingEquipment: true,
+                                    },
+                                },
                                 backgrounds: {
                                     include: {
                                         proficiencies: true,
@@ -158,6 +192,20 @@ async function findOrCreateCampaignForUser(user: User) {
                 characterInstances: {
                     include: {
                         user: true,
+                        race: {
+                            include: {
+                                racialTraits: true,
+                            },
+                        },
+                        class: {
+                            include: {
+                                proficiencies: true,
+                                classFeatures: true,
+                            },
+                        },
+                        proficiencies: true,
+                        feats: true,
+                        inventory: true,
                     },
                 },
                 messages: {

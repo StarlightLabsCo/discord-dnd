@@ -695,6 +695,7 @@ model CharacterInstance {
     experience       Int           @default(0)
     proficiencyBonus Int           @default(2)
     proficiencies    Proficiency[]
+    feats            Feat[]
 
     strength     Int @default(8)
     dexterity    Int @default(8)
@@ -710,8 +711,6 @@ model CharacterInstance {
     size CharacterSize @default(MEDIUM)
 
     speed Int @default(25)
-
-    feats Feat[]
 
     inventory                 Item[]
     spells                    Spell[]

@@ -2,7 +2,6 @@ import { useGameStore } from "@/lib/game";
 import { GameCharacterPortrait } from "./GameCharacterPortrait";
 
 export function PartyDisplay() {
-    const user = useGameStore().user;
     const partyMembers =
         useGameStore().gameState?.selectedCampaignInstance?.characterInstances;
 
@@ -13,7 +12,6 @@ export function PartyDisplay() {
                     key={characterInstance.id}
                     user={characterInstance.user}
                     characterInstance={characterInstance}
-                    isCurrentUser={user?.id === characterInstance.user?.id}
                 />
             ))}
         </div>

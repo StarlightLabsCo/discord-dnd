@@ -2,7 +2,7 @@ import { cn } from "@/lib/tailwind/utils";
 import { useCharacterEditorStore } from "@/lib/game/characterEditor";
 import { AbilityScoreDisplay } from "./AbilityScoreDisplay";
 import { ItemPreview } from "./ItemPreview";
-import { ProficiencyPreview } from "./SkillPreview";
+import { ProficiencyPreview } from "../../ProficiencyPreview";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 import { Proficiency } from "database";
 

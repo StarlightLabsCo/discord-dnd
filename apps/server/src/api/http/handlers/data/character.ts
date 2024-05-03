@@ -9,6 +9,7 @@ export async function handleCharacterRequest(req: Request) {
     } else if (req.method === "POST") {
         return POST(req);
     } else if (req.method === "OPTIONS") {
+        // TODO: wtf is this?
         if (process.env.NODE_ENV === "development") {
             return new Response(null, {
                 headers: {
@@ -40,7 +41,50 @@ async function POST(request: Request) {
 
     const existingCharacter = await db.characterInstance.findUnique({
         where: { id: characterData.id },
+        include: {
+            proficiencies: true,
+            feats: true,
+        },
     });
+
+    const race = await db.race.findUnique({
+        where: { id: characterData.raceId },
+        include: {
+            racialTraits: {
+                include: {
+                    proficiencies: true,
+                },
+            },
+        },
+    });
+
+    const characterClass = await db.class.findUnique({
+        where: { id: characterData.classId },
+        include: {
+            classFeatures: true,
+            proficiencies: true,
+            startingEquipment: true,
+        },
+    });
+
+    const background = await db.background.findUnique({
+        where: { id: characterData.backgroundId },
+        include: {
+            proficiencies: true,
+            startingEquipment: true,
+        },
+    });
+
+    const combinedProficiencies = [
+        ...(race?.racialTraits.flatMap((trait) => trait.proficiencies) || []),
+        ...(characterClass?.proficiencies || []),
+        ...(background?.proficiencies || []),
+    ].map((prof) => ({ id: prof.id }));
+
+    const combinedInventory = [
+        ...(characterClass?.startingEquipment || []),
+        ...(background?.startingEquipment || []),
+    ].map((item) => ({ id: item.id }));
 
     const baseData = {
         ...characterData,
@@ -70,6 +114,13 @@ async function POST(request: Request) {
         currentLocation: characterData.currentLocationId
             ? { connect: { id: characterData.currentLocationId } }
             : undefined,
+
+        inventory: {
+            connect: combinedInventory,
+        },
+        proficiencies: {
+            connect: combinedProficiencies,
+        },
     };
 
     if (existingCharacter) {

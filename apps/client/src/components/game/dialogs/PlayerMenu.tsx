@@ -4,14 +4,7 @@ import { AbilityScoreDisplay } from "@/components/lobby/character/AbilityScoreDi
 import { ItemPreview } from "@/components/lobby/character/ItemPreview";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 import { useGameStore } from "@/lib/game";
-import {
-    CharacterInstance,
-    $Enums,
-    User,
-    Feat,
-    Proficiency,
-    Item,
-} from "database";
+import { CharacterInstance, User, Feat, Proficiency, Item } from "database";
 
 type PlayerMenuProps = {
     characterInstance: CharacterInstance & {
@@ -55,7 +48,8 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
     };
 
     // Get the correct icon based on characterInstance.hitDieType
-    const DiceIcon = diceIcons[$Enums.Dice[characterInstance.hitDieType]];
+    const DiceIcon =
+        diceIcons[characterInstance.hitDieType as keyof typeof diceIcons];
 
     return (
         <div className='fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center'>
@@ -187,11 +181,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                     <DiceIcon className='w-[2.5vw] h-[2.5vw]' />
                                     <div className='flex flex-col items-center'>
                                         <div className='text-white font-black text-[1vw]'>
-                                            {
-                                                $Enums.Dice[
-                                                    characterInstance.hitDieType as keyof typeof $Enums.Dice
-                                                ]
-                                            }
+                                            {characterInstance.hitDieType}
                                         </div>
                                         <div className='text-[#A5A5A5] text-[0.5vw]'>
                                             Hit Dice

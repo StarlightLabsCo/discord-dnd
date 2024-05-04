@@ -201,26 +201,25 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                             </div>
 
                             <div className='w-full h-full grid grid-cols-2 gap-x-[0.5vw]'>
-                                <div className='flex flex-col w-full h-full items-center text-[0.7vw]'>
+                                <div className='flex flex-col w-full h-full items-center text-[0.7vw] gap-y-[0.5vh]'>
                                     <div className='text-white'>
                                         Proficiencies
                                     </div>
-                                    <div className='flex flex-col gap-y-[0.5vh]'>
+                                    <div className='flex gap-[0.5vh]'>
                                         {characterInstance.proficiencies.map(
                                             (proficiency) => (
                                                 <ProficiencyPreview
                                                     key={proficiency.id}
                                                     proficiency={proficiency}
+                                                    className='h-[2vw] w-[2vw]'
                                                 />
                                             )
                                         )}
                                     </div>
                                 </div>
-                                <div className='flex flex-col w-full h-full items-center text-[0.7vw]'>
+                                <div className='flex flex-col w-full h-full items-center text-[0.7vw] gap-y-[0.5vh]'>
                                     <div className='text-white'>Features</div>
-                                    <div className='flex flex-col gap-y-[0.5vh]'>
-                                        {}
-                                    </div>
+                                    <div className='flex  gap-[0.5vh]'>{}</div>
                                 </div>
                             </div>
                         </div>
@@ -231,7 +230,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                 className='w-full aspect-square object-cover rounded-xl'
                             />
                             <div
-                                className='mt-auto rounded-xl grow-0 grid overflow-hidden'
+                                className='mt-auto rounded-xl grow-0 grid'
                                 style={{
                                     gridTemplateColumns: `repeat(6, 1fr)`,
                                     gridTemplateRows: `repeat(4, 1fr)`,

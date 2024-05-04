@@ -88,6 +88,7 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                                         <ProficiencyPreview
                                             key={skill.id}
                                             proficiency={skill}
+                                            className='h-[3vw] w-[3vw]'
                                         />
                                     );
                                 }
@@ -101,7 +102,11 @@ export function CharacterPreview({ className }: CharacterPreviewProps) {
                         <div className='flex gap-x-[1.5vw]'>
                             {draftCharacter.background.startingEquipment.map(
                                 (item) => (
-                                    <ItemPreview key={item.id} item={item} />
+                                    <ItemPreview
+                                        key={item.id}
+                                        item={item}
+                                        className=' h-[3vw] w-[3vw]'
+                                    />
                                 )
                             )}
                         </div>

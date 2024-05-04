@@ -14,7 +14,7 @@ export function ProficiencyPreview({
     return (
         <div className={cn("relative group", className)}>
             <img
-                className='cursor-pointer h-[3vw] w-[3vw] aspect-square rounded-[0.4vw]'
+                className='cursor-pointer h-full w-full aspect-square rounded-[0.4vw]'
                 src={s3UrlRewriter(proficiency.imageUrl)}
                 alt={proficiency.name}
             />

@@ -11,7 +11,7 @@ export function ItemPreview({ item, className }: ItemPreviewProps) {
     return (
         <div className={cn("relative group", className)}>
             <img
-                className='cursor-pointer h-[3vw] w-[3vw] aspect-square rounded-[0.4vw]'
+                className='cursor-pointer w-full h-full aspect-square rounded-[0.4vw]'
                 src={s3UrlRewriter(item.imageUrl)}
                 alt={item.name}
             />

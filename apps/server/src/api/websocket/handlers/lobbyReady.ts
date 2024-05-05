@@ -57,8 +57,18 @@ export async function handleLobbyReadyRequest(
                         include: {
                             world: {
                                 include: {
-                                    races: true,
-                                    classes: true,
+                                    races: {
+                                        include: {
+                                            racialTraits: true,
+                                        },
+                                    },
+                                    classes: {
+                                        include: {
+                                            proficiencies: true,
+                                            classFeatures: true,
+                                            startingEquipment: true,
+                                        },
+                                    },
                                     backgrounds: {
                                         include: {
                                             proficiencies: true,
@@ -77,6 +87,20 @@ export async function handleLobbyReadyRequest(
                     characterInstances: {
                         include: {
                             user: true,
+                            race: {
+                                include: {
+                                    racialTraits: true,
+                                },
+                            },
+                            class: {
+                                include: {
+                                    proficiencies: true,
+                                    classFeatures: true,
+                                },
+                            },
+                            proficiencies: true,
+                            feats: true,
+                            inventory: true,
                         },
                     },
                 },

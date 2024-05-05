@@ -5,6 +5,7 @@ import { ItemPreview } from "@/components/lobby/character/ItemPreview";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 import { useGameStore } from "@/lib/game";
 import { CharacterInstance, User, Feat, Proficiency, Item } from "database";
+import { useEffect, useCallback } from "react";
 
 type PlayerMenuProps = {
     characterInstance: CharacterInstance & {
@@ -18,6 +19,25 @@ type PlayerMenuProps = {
 export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
     const { playerMenuDialogOpen, setPlayerMenuDialogOpen, gameState } =
         useGameStore();
+
+    const handleClose = useCallback(() => {
+        setPlayerMenuDialogOpen(false);
+    }, [setPlayerMenuDialogOpen]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                handleClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [handleClose]); // Include handleClose in the dependency array
+
     if (!playerMenuDialogOpen) return null;
 
     const world = gameState?.selectedCampaignInstance?.campaign?.world || null;
@@ -32,10 +52,6 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
         (c) => c.id === characterInstance.classId
     );
     if (!characterClass) return null;
-
-    const handleClose = () => {
-        setPlayerMenuDialogOpen(false);
-    };
 
     // Mapping from Dice enum to corresponding Icons
     const diceIcons = {
@@ -80,7 +96,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                     }}
                                 />
                             </div>
-                            <div className='text-white text-[0.6vw] '>XP</div>
+                            <div className='text-white text-[0.6vw]'>XP</div>
                         </div>
                     </div>
                     {/* Character Stats & Profile Image & Inventory */}
@@ -91,7 +107,11 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
                                 <div className='text-white font-medium text-[0.8vw]'>
                                     {characterRace.name}
                                 </div>
-                                <div className='w-[5vw] h-[5vw] bg-white'></div>
+                                <img
+                                    src={s3UrlRewriter(characterClass.imageUrl)}
+                                    className='w-[5vw] h-[5vw]'
+                                />
+
                                 <div className='text-white text-[0.7vw]'>
                                     Level {characterInstance.level}{" "}
                                     {characterClass.name}

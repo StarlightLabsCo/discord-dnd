@@ -8,6 +8,10 @@
         "db:push": {
             "cache": false
         },
+        "admin": {
+            "dependsOn": ["db:generate"],
+            "cache": false
+        },
         "build": {
             "dependsOn": ["^build"]
         },

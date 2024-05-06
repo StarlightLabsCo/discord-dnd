@@ -1,16 +1,55 @@
 import { useGameStore } from "@/lib/game";
 
-export function RollDiceDialog() {
-    const rollDiceDialogOpen = useGameStore().gameState?.rollDiceDialogOpen;
+import { useEffect, useRef } from "react";
+import { initThreeJS } from "@/lib/threejs";
 
-    if (!rollDiceDialogOpen) return null;
+export function RollDiceDialog() {
+    const { gameState, setGameState } = useGameStore();
+    const rollDiceDialogOpen = gameState?.rollDiceDialogOpen;
+    const threeRootElement = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (rollDiceDialogOpen && threeRootElement.current) {
+            initThreeJS(threeRootElement);
+        }
+    }, [rollDiceDialogOpen, threeRootElement]);
+
+    const openDialog = () => {
+        if (gameState) {
+            setGameState({ ...gameState, rollDiceDialogOpen: true });
+        }
+    };
 
     return (
-        <div className='fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center'>
-            <div className='bg-white p-8 rounded-lg shadow-xl'>
-                {/* Content of the dialog box can be added here */}
-                <p>Roll the dice!</p>
-            </div>
-        </div>
+        <>
+            <button
+                className='fixed bottom-2 right-2 text-white z-20'
+                onClick={openDialog}
+            >
+                Open Dialog
+            </button>
+
+            {rollDiceDialogOpen && (
+                <div className='fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center'>
+                    <div className='bg-[#01131D] border-[0.1vw] border-white p-[1vw] rounded-2xl shadow-xl relative w-[45%] h-3/4'>
+                        <button
+                            className='absolute -top-6 -right-6 text-[#A5A5A5] cursor-pointer w-[1.5vw] h-[1.5vw]'
+                            onClick={() =>
+                                setGameState({
+                                    ...gameState,
+                                    rollDiceDialogOpen: false,
+                                })
+                            }
+                        >
+                            X
+                        </button>
+                        <div
+                            className='h-full w-full'
+                            ref={threeRootElement}
+                        ></div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

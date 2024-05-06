@@ -5,6 +5,7 @@ import { Icons } from "@/components/Icons";
 import { GameChat } from "@/components/game/GameChat";
 import { GameChatInput } from "@/components/game/GameChatInput";
 import { PartyDisplay } from "@/components/game/PartyDisplay";
+import { RollDiceDialog } from "@/components/game/dialogs/RollDice";
 
 export const Route = createFileRoute("/game")({
     component: () => <GameLayout />,
@@ -36,6 +37,7 @@ function GameLayout() {
                 </div>
                 <div className='shrink-0 w-1/5 h-full border-l border-white'></div>
             </div>
+            <RollDiceDialog />
         </div>
     );
 }

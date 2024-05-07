@@ -64,7 +64,7 @@ export class SceneManager {
 
     private buildCamera(aspect: number): THREE.PerspectiveCamera {
         const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-        camera.position.z = 5;
+        camera.position.z = 3;
         return camera;
     }
 

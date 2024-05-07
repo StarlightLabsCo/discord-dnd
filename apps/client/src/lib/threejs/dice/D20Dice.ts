@@ -6,26 +6,55 @@ export class D20Dice implements SceneSubject {
 
     private dice!: THREE.Mesh;
     private edges!: THREE.LineSegments;
-    private debugLines!: THREE.LineSegments;
 
     private numberOrder = [
-        1, 6, 8, 15, 17, 19, 3, 10, 12, 20, 5, 7, 9, 11, 13, 18, 2, 4, 14, 16,
+        1, 12, 2, 13, 3, 14, 4, 15, 5, 16, 6, 17, 7, 18, 8, 19, 9, 20, 10, 11,
     ];
 
-    private rolling = false;
-    private rollVelocity = new THREE.Vector3();
+    private faceIndexToNumberIndex = {
+        0: 13,
+        1: 12,
+        2: 11,
+        3: 10,
+        4: 14,
+        5: 17,
+        6: 18,
+        7: 19,
+        8: 15,
+        9: 16,
+        10: 3,
+        11: 2,
+        12: 1,
+        13: 0,
+        14: 4,
+        15: 8,
+        16: 9,
+        17: 5,
+        18: 6,
+        19: 7,
+    };
+
+    private DiceState = {
+        Ready: "Ready",
+        Rolling: "Rolling",
+        Transition: "Transition",
+        Stopped: "Stopped",
+    } as const;
+
+    private state: keyof typeof this.DiceState = this.DiceState.Ready;
+
+    private bounceTime = 0;
+
+    private translationalVelocity = new THREE.Vector3();
     private angularVelocity = new THREE.Vector3();
-    private rollAcceleration = new THREE.Vector3(0, 0, -9.81);
-    private rollDeceleration = 0.95;
-    private angularDeceleration = 0.95;
     private bounceFactor = 0.7;
     private groundLevel = 0;
-    private maxZ = 4;
+
+    private chosenNumber = -1;
 
     constructor(scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
         this.camera = camera;
         this.init(scene);
-        this.initDebugLines(scene);
     }
 
     async init(scene: THREE.Scene) {
@@ -44,6 +73,8 @@ export class D20Dice implements SceneSubject {
             linewidth: 1,
         });
         this.edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+
+        this.setNumberToCamera(20);
 
         scene.add(this.dice);
         scene.add(this.edges);
@@ -83,10 +114,14 @@ export class D20Dice implements SceneSubject {
 
             context.textAlign = "center";
             context.textBaseline = "middle";
-            context.font = `bold ${tileSize / 3}px Arial`;
+            context.font = `bold ${tileSize / 3.1}px Arial`;
             context.fillStyle = "orange";
+            let displayNumber = this.numberOrder[i].toString();
+            if (displayNumber === "6" || displayNumber === "9") {
+                displayNumber += ".";
+            }
             context.fillText(
-                this.numberOrder[i].toString(),
+                displayNumber,
                 (u + 0.5) * tileSize,
                 canvas.height - (v + 0.5) * tileSize
             );
@@ -99,259 +134,154 @@ export class D20Dice implements SceneSubject {
     }
 
     update(deltaTime: number): void {
-        if (this.rolling) {
-            this.rollDice(deltaTime);
-        } else {
-            this.bounce(deltaTime);
+        switch (this.state) {
+            case this.DiceState.Ready:
+                this.bounceStep(deltaTime);
+                break;
+            case this.DiceState.Rolling:
+                this.rollStep(deltaTime);
+                break;
+            case this.DiceState.Stopped:
+                break;
         }
-        this.updateDebugLines();
     }
 
-    private rollDice(deltaTime: number) {
-        console.log(`----> deltaTime: ${deltaTime} <-----`);
-        console.log(`this.rollVelocity: `);
-        console.log(this.rollVelocity);
-        console.log(`this.angularVelocity: `);
-        console.log(this.angularVelocity);
-        console.log(`this.dice.position: `);
-        console.log(this.dice.position);
-        console.log(`this.dice.rotation: `);
-        console.log(this.dice.rotation);
-
-        this.rollVelocity.add(
-            this.rollAcceleration.clone().multiplyScalar(deltaTime)
-        );
+    private rollStep(deltaTime: number) {
         this.dice.position.add(
-            this.rollVelocity.clone().multiplyScalar(deltaTime)
+            this.translationalVelocity.clone().multiplyScalar(deltaTime)
         );
 
-        const angle = this.angularVelocity.length() * deltaTime;
+        const angle = this.angularVelocity.length();
         const axis = this.angularVelocity.normalize();
         const quaternionDelta = new THREE.Quaternion().setFromAxisAngle(
             axis,
             angle
         );
-        this.dice.quaternion.multiplyQuaternions(
-            quaternionDelta,
-            this.dice.quaternion
-        );
-
-        this.angularVelocity.multiplyScalar(this.angularDeceleration);
-        this.rollVelocity.multiplyScalar(this.rollDeceleration);
+        this.dice.quaternion.multiply(quaternionDelta);
 
         if (this.dice.position.z < this.groundLevel) {
             this.dice.position.z = this.groundLevel;
-            this.rollVelocity.z = -this.rollVelocity.z * this.bounceFactor;
-            this.angularVelocity.multiplyScalar(this.bounceFactor);
+            this.translationalVelocity.z =
+                -this.translationalVelocity.z * this.bounceFactor;
         }
 
         this.constrainAndBounceWithinBounds();
         this.edges.position.copy(this.dice.position);
         this.edges.rotation.copy(this.dice.rotation);
-
-        // Zero out velocities if they are very low to stop the dice
-        if (
-            this.rollVelocity.length() < 0.05 ||
-            this.angularVelocity.length() < 0.05
-        ) {
-            this.rollVelocity.set(0, 0, 0);
-            this.angularVelocity.set(0, 0, 0);
-            this.rolling = false;
-            this.alignFaceToCamera(
-                this.camera.getWorldDirection(new THREE.Vector3())
-            );
-        }
-    }
-
-    private initDebugLines(scene: THREE.Scene) {
-        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-        const geometry = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-1, -1, 0),
-            new THREE.Vector3(1, -1, 0),
-            new THREE.Vector3(1, 1, 0),
-            new THREE.Vector3(-1, 1, 0),
-            new THREE.Vector3(-1, -1, 0),
-        ]);
-        this.debugLines = new THREE.LineSegments(geometry, material);
-        scene.add(this.debugLines);
-    }
-
-    private updateDebugLines() {
-        const vFOV = (this.camera.fov * Math.PI) / 180;
-        const height = 2 * Math.tan(vFOV / 2) * this.camera.position.z;
-        const width = height * this.camera.aspect;
-        const halfWidth = width / 2;
-        const halfHeight = height / 2;
-
-        const points = [
-            new THREE.Vector3(
-                this.camera.position.x - halfWidth,
-                this.camera.position.y - halfHeight,
-                0
-            ),
-            new THREE.Vector3(
-                this.camera.position.x + halfWidth,
-                this.camera.position.y - halfHeight,
-                0
-            ),
-            new THREE.Vector3(
-                this.camera.position.x + halfWidth,
-                this.camera.position.y + halfHeight,
-                0
-            ),
-            new THREE.Vector3(
-                this.camera.position.x - halfWidth,
-                this.camera.position.y + halfHeight,
-                0
-            ),
-            new THREE.Vector3(
-                this.camera.position.x - halfWidth,
-                this.camera.position.y - halfHeight,
-                0
-            ),
-        ];
-
-        this.debugLines.geometry.setFromPoints(points);
     }
 
     private constrainAndBounceWithinBounds() {
-        const frustum = new THREE.Frustum();
-        const projScreenMatrix = new THREE.Matrix4();
-        projScreenMatrix.multiplyMatrices(
-            this.camera.projectionMatrix,
-            this.camera.matrixWorldInverse
-        );
-        frustum.setFromProjectionMatrix(projScreenMatrix);
+        const halfWidth =
+            this.camera.aspect *
+            Math.tan((this.camera.fov * Math.PI) / 360) *
+            Math.abs(this.camera.position.z);
+        const halfHeight =
+            Math.tan((this.camera.fov * Math.PI) / 360) *
+            Math.abs(this.camera.position.z);
 
         const diceBounds = new THREE.Box3().setFromObject(this.dice);
-        const center = diceBounds.getCenter(new THREE.Vector3());
+        const min = diceBounds.min;
+        const max = diceBounds.max;
 
-        const vFOV = (this.camera.fov * Math.PI) / 180;
-        const height = 2 * Math.tan(vFOV / 2) * this.camera.position.z;
-        const width = height * this.camera.aspect;
-
-        const halfWidth = width / 2;
-        const halfHeight = height / 2;
-
-        const minX = this.camera.position.x - halfWidth + diceBounds.min.x;
-        const maxX = this.camera.position.x + halfWidth - diceBounds.max.x;
-        const minY = this.camera.position.y - halfHeight + diceBounds.min.y;
-        const maxY = this.camera.position.y + halfHeight - diceBounds.max.y;
-
-        const clampedX = Math.max(minX, Math.min(maxX, center.x));
-        const clampedY = Math.max(minY, Math.min(maxY, center.y));
-        const clampedZ = Math.max(
-            this.groundLevel,
-            Math.min(this.maxZ, center.z)
-        );
-
-        this.dice.position.set(clampedX, clampedY, clampedZ);
-
-        if (center.x <= minX || center.x >= maxX) {
-            this.rollVelocity.x = -this.rollVelocity.x * this.bounceFactor;
+        // Check and handle X boundaries
+        if (min.x < -halfWidth) {
+            this.dice.position.x += -halfWidth - min.x;
+            this.translationalVelocity.x =
+                -this.translationalVelocity.x * this.bounceFactor;
+        } else if (max.x > halfWidth) {
+            this.dice.position.x += halfWidth - max.x;
+            this.translationalVelocity.x =
+                -this.translationalVelocity.x * this.bounceFactor;
         }
-        if (center.y <= minY || center.y >= maxY) {
-            this.rollVelocity.y = -this.rollVelocity.y * this.bounceFactor;
-        }
-        if (center.z <= this.groundLevel || center.z >= this.maxZ) {
-            this.rollVelocity.z = -this.rollVelocity.z * this.bounceFactor;
+
+        // Check and handle Y boundaries
+        if (min.y < -halfHeight) {
+            this.dice.position.y += -halfHeight - min.y;
+            this.translationalVelocity.y =
+                -this.translationalVelocity.y * this.bounceFactor;
+        } else if (max.y > halfHeight) {
+            this.dice.position.y += halfHeight - max.y;
+            this.translationalVelocity.y =
+                -this.translationalVelocity.y * this.bounceFactor;
         }
     }
 
-    private bounce(delta: number) {
-        const bounceMagnitude = 0.5;
-        const bounceSpeed = 4;
+    private easeInOutElastic(x: number): number {
+        const c5 = (2 * Math.PI) / 4.5;
 
-        const bounce =
-            Math.sin(delta * ((2 * Math.PI) / bounceSpeed)) ** 3 *
-            bounceMagnitude;
+        return x === 0
+            ? 0
+            : x === 1
+              ? 1
+              : x < 0.5
+                ? -(
+                      Math.pow(2, 20 * x - 10) *
+                      Math.sin((20 * x - 11.125) * c5)
+                  ) / 2
+                : (Math.pow(2, -20 * x + 10) *
+                      Math.sin((20 * x - 11.125) * c5)) /
+                      2 +
+                  1;
+    }
 
-        this.dice.position.z = Math.max(0, bounce);
-        this.edges.position.z = Math.max(0, bounce);
+    private bounceStep(delta: number) {
+        this.bounceTime += delta;
+        const duration = 2;
+        const pauseDuration = 1;
+        const effectiveDuration = duration + pauseDuration;
+        const normalizedTime = (this.bounceTime % effectiveDuration) / duration;
+
+        if (normalizedTime <= 1) {
+            const bounceValue = this.easeInOutElastic(
+                normalizedTime * 2 <= 1
+                    ? normalizedTime * 2
+                    : 2 - normalizedTime * 2
+            );
+
+            this.dice.position.z = bounceValue / 3;
+            this.edges.position.z = bounceValue / 3;
+        } else {
+            this.dice.position.z = 0;
+            this.edges.position.z = 0;
+        }
+
+        if (this.bounceTime >= effectiveDuration) {
+            this.bounceTime = 0;
+        }
     }
 
     private roll() {
-        this.rolling = true;
-        const translationalMagnitude = 50; // Increased translational magnitude for more energetic movement
-        const angularMagnitude = 20; // Increased angular magnitude for more energetic rotation
+        this.state = this.DiceState.Rolling;
 
-        const angleX = Math.random() * 2 * Math.PI;
-        const angleY = Math.random() * 2 * Math.PI;
+        const xComponentMultiplier = 100;
+        const yComponentMultiplier = 100;
+        const zComponentMultiplier = 0.2;
 
-        this.rollVelocity.set(
-            translationalMagnitude * Math.sin(angleX),
-            translationalMagnitude * Math.sin(angleY),
-            translationalMagnitude * Math.cos(angleX)
+        const angularMagnitude = 400;
+
+        const theta = Math.PI / 4 + (Math.random() * Math.PI) / 2;
+        const phi = Math.PI / 4 + (Math.random() * Math.PI) / 2;
+
+        const translationalX =
+            xComponentMultiplier * Math.sin(phi) * Math.cos(theta);
+        const translationalY =
+            yComponentMultiplier * Math.sin(phi) * Math.sin(theta);
+        const translationalZ = zComponentMultiplier * Math.cos(phi);
+
+        this.translationalVelocity.set(
+            translationalX,
+            translationalY,
+            translationalZ
         );
 
-        const angularX = Math.random() * 2 * Math.PI;
-        const angularY = Math.random() * 2 * Math.PI;
-        const angularZ = Math.random() * 2 * Math.PI;
+        const angularX = angularMagnitude * (Math.random() < 0.5 ? -1 : 1);
+        const angularY = angularMagnitude * (Math.random() < 0.5 ? -1 : 1);
+        const angularZ = angularMagnitude * (Math.random() < 0.5 ? -1 : 1);
 
-        this.angularVelocity = new THREE.Vector3(
-            angularMagnitude * Math.sin(angularX),
-            angularMagnitude * Math.sin(angularY),
-            angularMagnitude * Math.sin(angularZ)
-        );
-    }
+        this.angularVelocity.set(angularX, angularY, angularZ);
 
-    private alignFaceToCamera(cameraDirection: THREE.Vector3) {
-        const geometry = this.dice.geometry as THREE.BufferGeometry;
-        const normals = geometry.getAttribute("normal");
-        const indices = geometry.getIndex();
-        if (!indices) return;
-
-        let closestFaceIndex = -1;
-        let maxDot = -Infinity;
-
-        for (let i = 0; i < indices.count; i += 3) {
-            const normal = new THREE.Vector3(
-                (normals.getX(indices.getX(i)) +
-                    normals.getX(indices.getX(i + 1)) +
-                    normals.getX(indices.getX(i + 2))) /
-                    3,
-                (normals.getY(indices.getX(i)) +
-                    normals.getY(indices.getX(i + 1)) +
-                    normals.getY(indices.getX(i + 2))) /
-                    3,
-                (normals.getZ(indices.getX(i)) +
-                    normals.getZ(indices.getX(i + 1)) +
-                    normals.getZ(indices.getX(i + 2))) /
-                    3
-            ).normalize();
-
-            const dot = normal.dot(cameraDirection);
-            if (dot > maxDot) {
-                maxDot = dot;
-                closestFaceIndex = i;
-            }
-        }
-
-        if (closestFaceIndex !== -1) {
-            const targetNormal = new THREE.Vector3(
-                (normals.getX(indices.getX(closestFaceIndex)) +
-                    normals.getX(indices.getX(closestFaceIndex + 1)) +
-                    normals.getX(indices.getX(closestFaceIndex + 2))) /
-                    3,
-                (normals.getY(indices.getX(closestFaceIndex)) +
-                    normals.getY(indices.getX(closestFaceIndex + 1)) +
-                    normals.getY(indices.getX(closestFaceIndex + 2))) /
-                    3,
-                (normals.getZ(indices.getX(closestFaceIndex)) +
-                    normals.getZ(indices.getX(closestFaceIndex + 1)) +
-                    normals.getZ(indices.getX(closestFaceIndex + 2))) /
-                    3
-            ).normalize();
-
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(
-                targetNormal,
-                cameraDirection
-            );
-            this.dice.quaternion.multiplyQuaternions(
-                quaternion,
-                this.dice.quaternion
-            );
-        }
+        this.dice.position.add(this.translationalVelocity);
+        this.dice.rotation.set(angularX, angularY, angularZ);
     }
 
     getInteractiveObjects(): THREE.Object3D[] {
@@ -359,6 +289,88 @@ export class D20Dice implements SceneSubject {
     }
 
     onClick(): void {
+        if (this.state !== this.DiceState.Ready) return;
+
+        this.chosenNumber = Math.floor(Math.random() * 20) + 1;
+        console.log(this.chosenNumber);
         this.roll();
+        setTimeout(() => {
+            this.state = this.DiceState.Transition;
+            this.dice.position.set(0, 0, 0);
+            this.edges.position.set(0, 0, 0);
+            this.setNumberToCamera(this.chosenNumber);
+            this.state = this.DiceState.Stopped;
+        }, 1000);
+    }
+
+    // ------ Utils ------
+    private processFace(
+        i1: number,
+        i2: number,
+        i3: number
+    ): { normal: THREE.Vector3; faceCenter: THREE.Vector3 } {
+        const positions = this.dice.geometry.getAttribute("position");
+        const normals = this.dice.geometry.getAttribute("normal");
+
+        const v1 = new THREE.Vector3(
+            positions.getX(i1),
+            positions.getY(i1),
+            positions.getZ(i1)
+        );
+        const v2 = new THREE.Vector3(
+            positions.getX(i2),
+            positions.getY(i2),
+            positions.getZ(i2)
+        );
+        const v3 = new THREE.Vector3(
+            positions.getX(i3),
+            positions.getY(i3),
+            positions.getZ(i3)
+        );
+
+        const faceCenter = new THREE.Vector3(
+            (v1.x + v2.x + v3.x) / 3,
+            (v1.y + v2.y + v3.y) / 3,
+            (v1.z + v2.z + v3.z) / 3
+        );
+
+        const normal = new THREE.Vector3(
+            (normals.getX(i1) + normals.getX(i2) + normals.getX(i3)) / 3,
+            (normals.getY(i1) + normals.getY(i2) + normals.getY(i3)) / 3,
+            (normals.getZ(i1) + normals.getZ(i2) + normals.getZ(i3)) / 3
+        ).normalize();
+
+        return { normal, faceCenter };
+    }
+
+    private getNumberNormal(number: number): THREE.Vector3 | undefined {
+        const index = this.numberOrder.indexOf(number);
+        const faceIndex = Object.keys(this.faceIndexToNumberIndex).find(
+            (key: string) =>
+                this.faceIndexToNumberIndex[
+                    key as unknown as keyof typeof this.faceIndexToNumberIndex
+                ] === index
+        );
+        if (!faceIndex) return;
+
+        const { normal } = this.processFace(
+            parseInt(faceIndex) * 3,
+            parseInt(faceIndex) * 3 + 1,
+            parseInt(faceIndex) * 3 + 2
+        );
+
+        return normal;
+    }
+
+    private setNumberToCamera(number: number) {
+        const normal = this.getNumberNormal(number);
+        if (!normal) return;
+
+        const quaternion = new THREE.Quaternion().setFromUnitVectors(
+            normal,
+            this.camera.getWorldDirection(new THREE.Vector3())
+        );
+        this.dice.quaternion.copy(quaternion);
+        this.edges.quaternion.copy(quaternion);
     }
 }

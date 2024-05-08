@@ -31,9 +31,9 @@ export class SceneManager {
         // Attach Scene Subjects
         this.createSceneSubjects();
 
-        // Attach Stats
-        this.stats = new Stats();
-        document.body.appendChild(this.stats.dom);
+        // Attach Stats (Debugging)
+        // this.stats = new Stats();
+        // document.body.appendChild(this.stats.dom);
 
         // Event Listeners
         this.setupEventListeners();
@@ -49,7 +49,9 @@ export class SceneManager {
         this.checkIntersects();
         this.sceneSubjects.forEach((subject) => subject.update(deltaTime));
         this.renderer.render(this.scene, this.camera);
-        this.stats.update();
+
+        // Update Stats (Debugging)
+        // this.stats.update();
     };
 
     private buildRenderer(width: number, height: number): THREE.WebGLRenderer {

@@ -4,7 +4,7 @@ export function getSystemPrompt() {
     const message = {
         role: "system",
         content:
-            "You are a Dungeon Master narrating a campaign for a group of players.",
+            "You are a Dungeon Master narrating a campaign for a group of players. You have the ability to initiate skill and ability checks by calling a function.",
     };
 
     return message;

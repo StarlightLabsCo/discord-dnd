@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { SceneSubject } from "../SceneSubject.js";
-
+import { useGameStore } from "@/lib/game/index.js";
 export class D20Dice implements SceneSubject {
     private camera!: THREE.PerspectiveCamera;
 
@@ -35,13 +35,12 @@ export class D20Dice implements SceneSubject {
     };
 
     private DiceState = {
-        Ready: "Ready",
-        Rolling: "Rolling",
-        Transition: "Transition",
-        Stopped: "Stopped",
+        ready: "ready",
+        rolling: "rolling",
+        complete: "complete",
     } as const;
 
-    private state: keyof typeof this.DiceState = this.DiceState.Ready;
+    private state: keyof typeof this.DiceState = this.DiceState.ready;
 
     private bounceTime = 0;
 
@@ -135,13 +134,13 @@ export class D20Dice implements SceneSubject {
 
     update(deltaTime: number): void {
         switch (this.state) {
-            case this.DiceState.Ready:
+            case this.DiceState.ready:
                 this.bounceStep(deltaTime);
                 break;
-            case this.DiceState.Rolling:
+            case this.DiceState.rolling:
                 this.rollStep(deltaTime);
                 break;
-            case this.DiceState.Stopped:
+            case this.DiceState.complete:
                 break;
         }
     }
@@ -251,7 +250,24 @@ export class D20Dice implements SceneSubject {
     }
 
     private roll() {
-        this.state = this.DiceState.Rolling;
+        this.state = this.DiceState.rolling;
+
+        // TODO: this needs to be a function that
+        useGameStore.setState((state) => {
+            if (!state.gameState) return state;
+            if (!state.gameState.rollDiceInfo) return state;
+
+            return {
+                ...state,
+                gameState: {
+                    ...state.gameState,
+                    rollDiceInfo: {
+                        ...state.gameState.rollDiceInfo,
+                        state: "rolling",
+                    },
+                },
+            };
+        });
 
         const xComponentMultiplier = 100;
         const yComponentMultiplier = 100;
@@ -289,17 +305,33 @@ export class D20Dice implements SceneSubject {
     }
 
     onClick(): void {
-        if (this.state !== this.DiceState.Ready) return;
+        if (this.state !== this.DiceState.ready) return;
 
         this.chosenNumber = Math.floor(Math.random() * 20) + 1;
-        console.log(this.chosenNumber);
         this.roll();
+
         setTimeout(() => {
-            this.state = this.DiceState.Transition;
             this.dice.position.set(0, 0, 0);
             this.edges.position.set(0, 0, 0);
             this.setNumberToCamera(this.chosenNumber);
-            this.state = this.DiceState.Stopped;
+            this.state = this.DiceState.complete;
+
+            useGameStore.setState((state) => {
+                if (!state.gameState) return state;
+                if (!state.gameState.rollDiceInfo) return state;
+
+                return {
+                    ...state,
+                    gameState: {
+                        ...state.gameState,
+                        rollDiceInfo: {
+                            ...state.gameState.rollDiceInfo,
+                            state: "complete",
+                            result: this.chosenNumber,
+                        },
+                    },
+                };
+            });
         }, 1000);
     }
 

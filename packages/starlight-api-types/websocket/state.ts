@@ -15,7 +15,6 @@ import {
     UserSchema,
     WorldSchema,
 } from "database/prisma/generated/zod";
-import { AudioWordTimingsZodSchema } from "./audio";
 
 // GAME STATE
 export const GameStateSchema = z.enum(["LOBBY", "IN_GAME"]);
@@ -34,6 +33,16 @@ export const LobbyPlayerSchema = z.object({
     status: LobbyPlayerStatusSchema,
 });
 export type LobbyPlayer = z.infer<typeof LobbyPlayerSchema>;
+
+export const RollDiceInfoSchema = z.object({
+    userId: z.string(),
+    check: z.string(),
+    subCheck: z.string(),
+    difficulty: z.number(),
+    state: z.enum(["ready", "rolling", "complete"]),
+    result: z.number().nullable(),
+});
+export type RollDiceInfo = z.infer<typeof RollDiceInfoSchema>;
 
 export const InstanceStateSchema = z.object({
     state: GameStateSchema,
@@ -100,6 +109,6 @@ export const InstanceStateSchema = z.object({
     ),
     streamedMessageId: z.string().nullable(),
     streamedMessageWordTimings: z.string().nullable(),
-    rollDiceDialogOpen: z.boolean(),
+    rollDiceInfo: z.union([RollDiceInfoSchema, z.null()]),
 });
 export type InstanceState = z.infer<typeof InstanceStateSchema>;

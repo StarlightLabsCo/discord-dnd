@@ -68,7 +68,7 @@ export function PlayerMenu({ characterInstance }: PlayerMenuProps) {
         diceIcons[characterInstance.hitDieType as keyof typeof diceIcons];
 
     return (
-        <div className='fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center'>
+        <div className='fixed inset-0 z-50 bg-black backdrop-blur bg-opacity-50 flex items-center justify-center'>
             <div className='bg-[#01131D] border-[0.1vw] border-white  p-[1vw] rounded-2xl shadow-xl relative w-[45%] h-3/4'>
                 <Icons.x
                     className='absolute -top-6 -right-6 text-[#A5A5A5] cursor-pointer w-[1.5vw] h-[1.5vw]'

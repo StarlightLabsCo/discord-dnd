@@ -52,7 +52,7 @@ export async function addUserToInstanceState(
             selectedCampaignInstance: selectedCampaign,
             streamedMessageId: null,
             streamedMessageWordTimings: null,
-            rollDiceDialogOpen: false,
+            rollDiceInfo: null,
         };
     }
 

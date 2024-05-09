@@ -14,7 +14,7 @@ export function GameChat() {
 
     return (
         <div className='grow w-3/5 max-w-[60%] flex flex-col gap-y-[2vh] pt-[4vh]'>
-            {messages.map((message) => {
+            {messages.map((message, index) => {
                 if (message.characterInstance) {
                     const messageWithCharacterInstance = {
                         ...message,
@@ -24,14 +24,14 @@ export function GameChat() {
                     if (message.id === streamedMessageId) {
                         return (
                             <CharacterStreamedMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={messageWithCharacterInstance}
                             />
                         );
                     } else {
                         return (
                             <CharacterStaticMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={messageWithCharacterInstance}
                             />
                         );
@@ -45,7 +45,7 @@ export function GameChat() {
                     ) {
                         return (
                             <DMStreamedMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={message}
                             />
                         );
@@ -55,7 +55,7 @@ export function GameChat() {
                     ) {
                         return (
                             <DMStaticMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={message}
                             />
                         );
@@ -65,14 +65,14 @@ export function GameChat() {
                     ) {
                         return (
                             <DMToolCallMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={message}
                             />
                         );
                     } else if (parsedMessage.role == "tool") {
                         return (
                             <DMToolCallResultMessage
-                                key={message.id}
+                                key={`${message.id}-${index}`}
                                 message={message}
                             />
                         );

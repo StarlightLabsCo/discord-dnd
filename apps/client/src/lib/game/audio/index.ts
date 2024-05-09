@@ -3,6 +3,11 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { setupBufferedPlayerProcessor } from "./playback";
 
 type AudioStore = {
+    masterGainNode: AudioNode | null;
+    dialogueGainNode: AudioNode | null;
+    musicGainNode: AudioNode | null;
+    soundEffectsGain: AudioNode | null;
+
     masterVolume: number;
     dialogueVolume: number;
     musicVolume: number;
@@ -23,6 +28,11 @@ type AudioStore = {
 export const useAudioStore = create<AudioStore>()(
     persist(
         (set, get) => ({
+            masterGainNode: null,
+            dialogueGainNode: null,
+            musicGainNode: null,
+            soundEffectsGain: null,
+
             masterVolume: 0.75,
             dialogueVolume: 1,
             musicVolume: 1,
@@ -49,18 +59,22 @@ export const useAudioStore = create<AudioStore>()(
                 const masterGainNode = audioContext.createGain();
                 masterGainNode.gain.value = get().masterVolume;
                 masterGainNode.connect(audioContext.destination);
+                set({ masterGainNode });
 
                 const dialogueGainNode = audioContext.createGain();
                 dialogueGainNode.gain.value = get().dialogueVolume;
                 dialogueGainNode.connect(masterGainNode);
+                set({ dialogueGainNode });
 
                 const musicGainNode = audioContext.createGain();
                 musicGainNode.gain.value = get().musicVolume;
                 musicGainNode.connect(masterGainNode);
+                set({ musicGainNode });
 
                 const soundEffectsGain = audioContext.createGain();
                 soundEffectsGain.gain.value = get().soundEffectsVolume;
                 soundEffectsGain.connect(masterGainNode);
+                set({ soundEffectsGain });
 
                 // Setup the audio processor for streamed dialogue audio from 11 labs
                 const blobURL = setupBufferedPlayerProcessor();

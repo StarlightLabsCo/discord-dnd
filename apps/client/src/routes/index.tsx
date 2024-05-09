@@ -15,7 +15,7 @@ export function LoadingScreen() {
 
     useEffect(() => {
         if (user != null) {
-            navigate({ to: "/lobby/", replace: true });
+            navigate({ to: "/lobby", replace: true });
         }
     }, [user, navigate]);
 

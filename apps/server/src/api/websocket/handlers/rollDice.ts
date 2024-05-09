@@ -87,7 +87,6 @@ export async function handleRollDiceRequest(
             });
 
             instanceState.selectedCampaignInstance.messages.push(newMessage);
-
             updateInstanceState(instanceId, instanceState, release);
         }, 1500);
 

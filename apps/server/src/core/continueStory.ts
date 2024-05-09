@@ -31,6 +31,8 @@ export async function continueStory(instanceId: string) {
     });
 
     if (!completion.choices || completion.choices.length === 0) {
+        console.error("No completion choices");
+        console.error(completion);
         return null;
     }
 

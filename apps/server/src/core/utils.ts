@@ -42,9 +42,10 @@ export function getOpenAIMessages(
                 };
             } else if (parsedMessage.role === "tool") {
                 return {
-                    role: "tool",
-                    content: parsedMessage.content,
                     tool_call_id: parsedMessage.tool_call_id,
+                    role: "tool",
+                    name: parsedMessage.name,
+                    content: parsedMessage.content,
                 };
             }
         }

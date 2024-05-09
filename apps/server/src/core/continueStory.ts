@@ -2,7 +2,7 @@ import {
     getInstanceState,
     updateInstanceState,
 } from "@/api/websocket/instanceState";
-import { getOpenAIMessages, getSystemPrompt } from "./utils";
+import { getFormattedMessages, getSystemPrompt } from "./utils";
 import { groq } from "@/lib/groq";
 import { db } from "@/lib/db";
 import { streamAudio } from "@/lib/elevenlabs";
@@ -22,7 +22,7 @@ export async function continueStory(instanceId: string) {
     const systemPrompt = getSystemPrompt();
 
     const messages = campaignInstance.messages;
-    const formattedMessages = getOpenAIMessages(messages);
+    const formattedMessages = getFormattedMessages(messages);
 
     let completion = await groq.chat.completions.create({
         model: "llama3-70b-8192",

@@ -1,4 +1,5 @@
 import type { CharacterInstance, Message } from "database";
+import type { CompletionCreateParams } from "groq-sdk/resources/chat/index.mjs";
 
 export function getSystemPrompt() {
     const message = {
@@ -10,46 +11,53 @@ export function getSystemPrompt() {
     return message;
 }
 
-export function getOpenAIMessages(
+export function getFormattedMessages(
     messages: (Message & { characterInstance: CharacterInstance | null })[]
 ) {
-    const openAIMessages = messages.map((message) => {
-        const characterInstance = message.characterInstance;
-        if (characterInstance) {
-            return {
-                role: "user",
-                content: characterInstance.name + ": " + message.content,
-            };
-        } else {
-            const parsedMessage = JSON.parse(message.content);
-            if (parsedMessage.role === "assistant" && parsedMessage.content) {
+    let formattedMessages = messages
+        .map((message) => {
+            const characterInstance = message.characterInstance;
+            if (characterInstance) {
                 return {
-                    role: "assistant",
-                    content: "Dungeon Master" + ":" + parsedMessage.content,
+                    role: "user",
+                    content: characterInstance.name + ": " + message.content,
                 };
-            } else if (
-                parsedMessage.role === "assistant" &&
-                parsedMessage.tool_calls &&
-                parsedMessage.tool_calls.length > 0
-            ) {
-                return {
-                    role: "assistant",
-                    content:
-                        "Dungeon Master called " +
-                        parsedMessage.tool_calls[0].function.name +
-                        " with args " +
-                        parsedMessage.tool_calls[0].function.arguments,
-                };
-            } else if (parsedMessage.role === "tool") {
-                return {
-                    tool_call_id: parsedMessage.tool_call_id,
-                    role: "tool",
-                    name: parsedMessage.name,
-                    content: parsedMessage.content,
-                };
+            } else {
+                const parsedMessage = JSON.parse(message.content);
+                if (
+                    parsedMessage.role === "assistant" &&
+                    parsedMessage.content
+                ) {
+                    return {
+                        role: "assistant",
+                        content: "Dungeon Master" + ":" + parsedMessage.content,
+                    };
+                } else if (
+                    parsedMessage.role === "assistant" &&
+                    parsedMessage.tool_calls &&
+                    parsedMessage.tool_calls.length > 0
+                ) {
+                    return {
+                        role: "assistant",
+                        content:
+                            "Dungeon Master called " +
+                            parsedMessage.tool_calls[0].function.name +
+                            " with args " +
+                            parsedMessage.tool_calls[0].function.arguments,
+                    };
+                } else if (parsedMessage.role === "tool") {
+                    return {
+                        tool_call_id: parsedMessage.tool_call_id,
+                        role: "tool",
+                        name: parsedMessage.name,
+                        content: parsedMessage.content,
+                    };
+                } else {
+                    return undefined;
+                }
             }
-        }
-    });
+        })
+        .filter((message) => message !== undefined);
 
-    return openAIMessages;
+    return formattedMessages as CompletionCreateParams.Message[];
 }

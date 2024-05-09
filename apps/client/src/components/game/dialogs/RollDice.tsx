@@ -34,7 +34,7 @@ export function RollDiceDialog() {
             console.log(`Roll Dice Result: ${rollDiceInfo.result}`);
             setTimeout(() => {
                 setShowResult(true);
-            }, 1000);
+            }, 500);
 
             setTimeout(() => {
                 setShowResult(false);

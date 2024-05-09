@@ -5,6 +5,7 @@ import { RollDiceRequest } from "starlight-api-types/websocket/requests.js";
 import { useWebsocketStore } from "@/lib/websocket/index.js";
 import ready from "@/assets/sfx/dice/ready.mp3";
 import rolling from "@/assets/sfx/dice/rolling.mp3";
+import stopRolling from "@/assets/sfx/dice/stoprolling.mp3";
 import success from "@/assets/sfx/dice/success.mp3";
 import failure from "@/assets/sfx/dice/failure.mp3";
 import { useAudioStore } from "@/lib/game/audio/index.js";
@@ -163,7 +164,7 @@ export class D20Dice implements SceneSubject {
             rollDiceInfo.state === "complete" &&
             rollDiceInfo.result
         ) {
-            this.stopSoundEffect();
+            this.playStopRollingSoundEffect();
 
             this.dice.position.set(0, 0, 0);
             this.edges.position.set(0, 0, 0);
@@ -173,11 +174,11 @@ export class D20Dice implements SceneSubject {
             if (rollDiceInfo.result > rollDiceInfo.difficulty) {
                 setTimeout(() => {
                     this.playSuccessSoundEffect();
-                }, 700);
+                }, 500);
             } else {
                 setTimeout(() => {
                     this.playFailureSoundEffect();
-                }, 700);
+                }, 500);
             }
             return;
         }
@@ -401,6 +402,27 @@ export class D20Dice implements SceneSubject {
 
         if (audioContext && soundEffectsGain) {
             const response = await fetch(rolling);
+            const arrayBuffer = await response.arrayBuffer();
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            this.audioSource = audioContext.createBufferSource();
+            this.audioSource.buffer = audioBuffer;
+            this.audioSource.connect(soundEffectsGain);
+            soundEffectsGain.connect(audioContext.destination);
+            this.audioSource.start();
+            audioContext.resume();
+        }
+    };
+
+    private playStopRollingSoundEffect = async () => {
+        if (this.audioSource) {
+            this.stopSoundEffect();
+        }
+
+        const audioContext = useAudioStore.getState().audioContext;
+        const soundEffectsGain = useAudioStore.getState().soundEffectsGain;
+
+        if (audioContext && soundEffectsGain) {
+            const response = await fetch(stopRolling);
             const arrayBuffer = await response.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             this.audioSource = audioContext.createBufferSource();

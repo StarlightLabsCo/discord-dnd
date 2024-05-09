@@ -425,11 +425,11 @@ export class D20Dice implements SceneSubject {
             const response = await fetch(stopRolling);
             const arrayBuffer = await response.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            this.audioSource = audioContext.createBufferSource();
-            this.audioSource.buffer = audioBuffer;
-            this.audioSource.connect(soundEffectsGain);
+            const audioSource = audioContext.createBufferSource();
+            audioSource.buffer = audioBuffer;
+            audioSource.connect(soundEffectsGain);
             soundEffectsGain.connect(audioContext.destination);
-            this.audioSource.start();
+            audioSource.start();
             audioContext.resume();
         }
     };

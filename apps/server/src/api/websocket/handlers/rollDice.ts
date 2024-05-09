@@ -91,11 +91,17 @@ export async function handleRollDiceRequest(
             updateInstanceState(instanceId, instanceState, release);
         }, 1500);
 
-        if (rollDiceInfo.result == 20) {
+        if (rollDiceInfo.result === 20) {
+            console.log(
+                `Roll Dice Result: ${rollDiceInfo.result} - 10 seconds`
+            );
             setTimeout(async () => {
                 continueStory(instanceId);
-            }, 11000);
+            }, 10000);
         } else {
+            console.log(
+                `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`
+            );
             setTimeout(async () => {
                 continueStory(instanceId);
             }, 3000);

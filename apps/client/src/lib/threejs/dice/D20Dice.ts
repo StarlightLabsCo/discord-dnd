@@ -174,9 +174,7 @@ export class D20Dice implements SceneSubject {
 
             if (rollDiceInfo.result > rollDiceInfo.difficulty) {
                 if (rollDiceInfo.result === 20) {
-                    setTimeout(() => {
-                        this.playSoundEffect(criticalsuccess);
-                    }, 500);
+                    this.playSoundEffect(criticalsuccess);
                 } else {
                     setTimeout(() => {
                         this.playSoundEffect(success);

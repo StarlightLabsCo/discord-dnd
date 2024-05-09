@@ -43,7 +43,7 @@ export function RollDiceDialog() {
                         ...gameState,
                         rollDiceInfo: null,
                     });
-                }, 11000); // need more time for epic music
+                }, 8000);
             } else {
                 setTimeout(() => {
                     setShowResult(false);

@@ -95,7 +95,7 @@ export async function handleRollDiceRequest(
                 );
                 setTimeout(async () => {
                     continueStory(instanceId);
-                }, 10000);
+                }, 9000);
             } else {
                 console.log(
                     `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`

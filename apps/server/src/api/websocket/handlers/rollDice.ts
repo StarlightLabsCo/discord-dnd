@@ -91,7 +91,7 @@ export async function handleRollDiceRequest(
             updateInstanceState(instanceId, instanceState, release);
         }, 1500);
 
-        if (rollDiceInfo.result === 20) {
+        if (rollDiceInfo.result == 20) {
             setTimeout(async () => {
                 continueStory(instanceId);
             }, 11000);

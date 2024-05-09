@@ -66,8 +66,7 @@ export async function handleRollDiceRequest(
             }
 
             rollDiceInfo.state = "complete";
-            // rollDiceInfo.result = Math.floor(Math.random() * 20) + 1;
-            rollDiceInfo.result = 20; // For testing purposes
+            rollDiceInfo.result = Math.floor(Math.random() * 20) + 1;
 
             const newMessage = await db.message.create({
                 data: {

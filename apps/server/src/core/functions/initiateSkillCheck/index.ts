@@ -11,10 +11,10 @@ const definition = {
         parameters: {
             type: "object",
             properties: {
-                user_id: {
+                character_instance_id: {
                     type: "string",
                     description:
-                        "The ID of the user who you'd like to initiate the skill check for.",
+                        "The ID of the character instance who you'd like to initiate the skill check for.",
                 },
                 skill_name: {
                     type: "string",
@@ -34,7 +34,7 @@ const definition = {
 
 // --------- Args ---------
 const InitiateSkillCheckArgsSchema = z.object({
-    user_id: z.string(),
+    character_instance_id: z.string(),
     skill_name: z.string(),
     difficulty: z.number(),
 });
@@ -46,12 +46,14 @@ type InitiateSkillCheckFunctionArgs = z.infer<
 // --------- Implementation ---------
 const implementation = (
     instanceState: InstanceState,
+    toolCallId: string,
     args: InitiateSkillCheckFunctionArgs
 ) => {
     instanceState.rollDiceInfo = {
-        userId: args.user_id,
+        toolCallId: toolCallId,
+        characterInstanceId: args.character_instance_id,
         check: args.skill_name,
-        subCheck: "", // TODO: This is just a placeholder for now - replace with a lookup (e.g. "Charisma" for Persuasion)
+        subCheck: "",
         difficulty: args.difficulty,
         state: "ready",
         result: null,

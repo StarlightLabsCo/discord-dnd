@@ -1,0 +1,29 @@
+{
+    "id": "chatcmpl-1f4df43d-44cc-4692-b312-9aa74a7b5b0d",
+    "object": "chat.completion",
+    "created": 1715147959,
+    "model": "llama3-70b-8192",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "As you enter the tavern, the warm glow of the fire pit in the center of the room envelops you, and the murmur of hushed conversations dies down momentarily as patrons turn to regard the newcomer. The air is thick with the smell of roasting meat and freshly brewed ale. You notice a group of dwarves huddled in the corner, clinking mugs together in a toast. Near the fire pit, a lone figure sits with a lute, strumming a slow, mournful melody. Behind the bar, a stout barkeep polishes a mug with a dirty rag, eyeing you with a mixture of curiosity and suspicion.\n\nWhat would you like to do?"
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 1019,
+        "prompt_time": 1.315,
+        "completion_tokens": 139,
+        "completion_time": 0.456,
+        "total_tokens": 1158,
+        "total_time": 1.771
+    },
+    "system_fingerprint": "fp_87cbfbbc4d",
+    "x_groq": {
+        "id": "req_01hxbchs5cedf95ae9r0tq2048"
+    }
+}

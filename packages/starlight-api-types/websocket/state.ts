@@ -35,7 +35,8 @@ export const LobbyPlayerSchema = z.object({
 export type LobbyPlayer = z.infer<typeof LobbyPlayerSchema>;
 
 export const RollDiceInfoSchema = z.object({
-    userId: z.string(),
+    toolCallId: z.string(),
+    characterInstanceId: z.string(),
     check: z.string(),
     subCheck: z.string(),
     difficulty: z.number(),

@@ -6,6 +6,7 @@ import { handlePlayerConnect, handlePlayerDisconnect } from "./connection";
 import { handleLobbyReadyRequest } from "./handlers/lobbyReady";
 import { handleCharacterSelectRequest } from "./handlers/characterSelect";
 import { handleSendMessageRequest } from "./handlers/sendMessage";
+import { handleRollDiceRequest } from "./handlers/rollDice";
 
 export type WebSocketData = {
     user: User;
@@ -49,4 +50,5 @@ const handlers = {
     LobbyReadyRequest: handleLobbyReadyRequest,
     CharacterSelectRequest: handleCharacterSelectRequest,
     SendMessageRequest: handleSendMessageRequest,
+    RollDiceRequest: handleRollDiceRequest,
 };

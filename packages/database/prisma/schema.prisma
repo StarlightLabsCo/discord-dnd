@@ -636,7 +636,7 @@ model Message {
     characterInstanceId String?
     characterInstance   CharacterInstance? @relation(fields: [characterInstanceId], references: [id], onDelete: Cascade)
 
-    content String
+    content String // TODO: i have an issue where I'm not saving function calls, what if I just store the whole message response here?
 
     audioUrl         String?
     audioWordTimings String?

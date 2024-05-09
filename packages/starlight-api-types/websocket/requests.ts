@@ -29,10 +29,19 @@ export const SendMessageRequestZodSchema = z.object({
     }),
 });
 
+// changes DiceRollInfo state to "rolling"
+export type RollDiceRequest = z.infer<typeof RollDiceRequestZodSchema>;
+
+export const RollDiceRequestZodSchema = z.object({
+    type: z.literal("RollDiceRequest"),
+    data: z.object({}),
+});
+
 const requestTypeToSchema = {
     LobbyReadyRequest: LobbyReadyRequestZodSchema,
     CharacterSelectRequest: CharacterSelectRequestZodSchema,
     SendMessageRequest: SendMessageRequestZodSchema,
+    RollDiceRequest: RollDiceRequestZodSchema,
 };
 
 export function getRequestSchema(type: keyof typeof requestTypeToSchema) {

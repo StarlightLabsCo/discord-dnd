@@ -24,7 +24,7 @@ export async function continueStory(instanceId: string) {
     const messages = campaignInstance.messages;
     const formattedMessages = getOpenAIMessages(messages);
 
-    const completion = await groq.chat.completions.create({
+    let completion = await groq.chat.completions.create({
         model: "llama3-70b-8192",
         messages: [systemPrompt, ...formattedMessages],
         tools: Object.values(functions).map((f) => f.definition),
@@ -34,10 +34,45 @@ export async function continueStory(instanceId: string) {
         return null;
     }
 
+    // Process content before we save it
+    if (completion.choices[0].message.content) {
+        completion.choices[0].message.content =
+            completion.choices[0].message.content
+                .replace(/Dungeon Master:\s?/, "")
+                .trim();
+    }
+
+    // Save the completion as a message
+    const newMessage = await db.message.create({
+        data: {
+            content: JSON.stringify(completion.choices[0].message),
+            instance: {
+                connect: {
+                    id: campaignInstance.id,
+                },
+            },
+        },
+        include: {
+            characterInstance: true, // this will be null for DM messages
+        },
+    });
+
+    instanceState.selectedCampaignInstance.messages.push(newMessage);
+
+    // If the completion has a message, stream audio for it
+    if (completion.choices[0].message.content) {
+        instanceState.streamedMessageId = newMessage.id;
+        await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);
+    }
+
     // Go through any tool calls and handle them
     const toolCalls = completion.choices[0].message.tool_calls;
     if (toolCalls && toolCalls.length > 0) {
         for (const toolCall of toolCalls) {
+            if (!toolCall.id) {
+                continue;
+            }
+
             const name = toolCall.function?.name;
             if (!name || !functions[name as keyof typeof functions]) {
                 continue;
@@ -51,7 +86,11 @@ export async function continueStory(instanceId: string) {
                 const parsedArgs = JSON.parse(toolCall.function.arguments);
                 const argsValid = func.argsSchema.safeParse(parsedArgs);
                 if (argsValid.success) {
-                    func.implementation(instanceState, argsValid.data);
+                    func.implementation(
+                        instanceState,
+                        toolCall.id,
+                        argsValid.data
+                    );
                 } else {
                     console.error(
                         "Invalid arguments for function:",
@@ -60,35 +99,9 @@ export async function continueStory(instanceId: string) {
                     );
                 }
             } else {
-                func.implementation(instanceState);
+                func.implementation(instanceState, toolCall.id);
             }
         }
-    }
-
-    // If the completion has a message, add it to the campaign instance
-    if (completion.choices[0].message.content) {
-        const formattedCompletion = completion.choices[0].message.content
-            .replace(/Dungeon Master:\s?/, "")
-            .trim();
-
-        const newMessage = await db.message.create({
-            data: {
-                content: formattedCompletion,
-                instance: {
-                    connect: {
-                        id: campaignInstance.id,
-                    },
-                },
-            },
-            include: {
-                characterInstance: true,
-            },
-        });
-
-        instanceState.selectedCampaignInstance.messages.push(newMessage);
-        instanceState.streamedMessageId = newMessage.id;
-
-        await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);
     }
 
     updateInstanceState(instanceId, instanceState, release);

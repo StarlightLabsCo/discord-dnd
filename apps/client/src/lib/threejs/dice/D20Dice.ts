@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { SceneSubject } from "../SceneSubject.js";
 import { useGameStore } from "@/lib/game/index.js";
+import { RollDiceRequest } from "starlight-api-types/websocket/requests.js";
+import { useWebsocketStore } from "@/lib/websocket/index.js";
 export class D20Dice implements SceneSubject {
     private camera!: THREE.PerspectiveCamera;
 
@@ -146,6 +148,17 @@ export class D20Dice implements SceneSubject {
     }
 
     private rollStep(deltaTime: number) {
+        // check if the dice has stopped rolling
+        const state = useGameStore.getState().gameState?.rollDiceInfo?.state;
+        if (state === "complete") {
+            this.dice.position.set(0, 0, 0);
+            this.edges.position.set(0, 0, 0);
+            this.setNumberToCamera(this.chosenNumber);
+            this.state = this.DiceState.complete;
+            return;
+        }
+
+        // otherwise, continue rolling
         this.dice.position.add(
             this.translationalVelocity.clone().multiplyScalar(deltaTime)
         );
@@ -250,8 +263,6 @@ export class D20Dice implements SceneSubject {
     }
 
     private roll() {
-        this.state = this.DiceState.rolling;
-
         // TODO: this needs to be a function that
         useGameStore.setState((state) => {
             if (!state.gameState) return state;
@@ -307,32 +318,23 @@ export class D20Dice implements SceneSubject {
     onClick(): void {
         if (this.state !== this.DiceState.ready) return;
 
-        this.chosenNumber = Math.floor(Math.random() * 20) + 1;
+        const ws = useWebsocketStore.getState().ws;
+        if (!ws) {
+            console.error(
+                "No websocket connection found to send roll dice request."
+            );
+            return;
+        }
+
+        ws.send(
+            JSON.stringify({
+                type: "RollDiceRequest",
+                data: {},
+            } as RollDiceRequest)
+        );
+
         this.roll();
-
-        setTimeout(() => {
-            this.dice.position.set(0, 0, 0);
-            this.edges.position.set(0, 0, 0);
-            this.setNumberToCamera(this.chosenNumber);
-            this.state = this.DiceState.complete;
-
-            useGameStore.setState((state) => {
-                if (!state.gameState) return state;
-                if (!state.gameState.rollDiceInfo) return state;
-
-                return {
-                    ...state,
-                    gameState: {
-                        ...state.gameState,
-                        rollDiceInfo: {
-                            ...state.gameState.rollDiceInfo,
-                            state: "complete",
-                            result: this.chosenNumber,
-                        },
-                    },
-                };
-            });
-        }, 1000);
+        this.state = this.DiceState.rolling;
     }
 
     // ------ Utils ------

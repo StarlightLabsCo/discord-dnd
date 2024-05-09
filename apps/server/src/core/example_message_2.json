@@ -1,0 +1,38 @@
+{
+    "id": "chatcmpl-950c708a-0b90-4e3e-959a-58f3be0e0f15",
+    "object": "chat.completion",
+    "created": 1715148154,
+    "model": "llama3-70b-8192",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "tool_calls": [
+                    {
+                        "id": "call_2283",
+                        "type": "function",
+                        "function": {
+                            "name": "initiateSkillCheck",
+                            "arguments": "{\"difficulty\":15,\"skill_name\":\"Perception\",\"user_id\":\"Random Character\"}"
+                        }
+                    }
+                ]
+            },
+            "logprobs": null,
+            "finish_reason": "tool_calls"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 1191,
+        "prompt_time": 0.406,
+        "completion_tokens": 80,
+        "completion_time": 0.258,
+        "total_tokens": 1271,
+        "total_time": 0.664
+    },
+    "system_fingerprint": "fp_abd29e8833",
+    "x_groq": {
+        "id": "req_01hxbcqrp4fpcamhea0bqdsk57"
+    }
+}

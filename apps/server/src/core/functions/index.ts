@@ -16,7 +16,11 @@ export type LlmFunction = {
         };
     };
     argsSchema: ZodSchema<any>;
-    implementation: (instanceState: InstanceState, args?: any) => void;
+    implementation: (
+        instanceState: InstanceState,
+        toolCallId: string,
+        args?: any
+    ) => void;
 };
 export const functions: Record<string, LlmFunction> = {
     initiateSkillCheck,

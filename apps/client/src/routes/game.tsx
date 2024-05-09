@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import fantasyforgelogo from "@/assets/images/logos/fantasyforgelogocroppednotext.png";
 import { SettingsButton } from "@/components/lobby/SettingsButton";
 import { Icons } from "@/components/Icons";
-import { GameChat } from "@/components/game/GameChat";
-import { GameChatInput } from "@/components/game/GameChatInput";
+import { GameChat } from "@/components/game/chat/GameChat";
+import { GameChatInput } from "@/components/game/chat/GameChatInput";
 import { PartyDisplay } from "@/components/game/PartyDisplay";
 import { RollDiceDialog } from "@/components/game/dialogs/RollDice";
 

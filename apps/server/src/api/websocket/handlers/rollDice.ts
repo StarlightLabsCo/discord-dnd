@@ -94,7 +94,7 @@ export async function handleRollDiceRequest(
         if (rollDiceInfo.result === 20) {
             setTimeout(async () => {
                 continueStory(instanceId);
-            }, 7000);
+            }, 11000);
         } else {
             setTimeout(async () => {
                 continueStory(instanceId);

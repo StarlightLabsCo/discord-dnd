@@ -105,7 +105,7 @@ export async function handleRollDiceRequest(
                     continueStory(instanceId);
                 }, 2000);
             }
-        }, 1500);
+        }, 2000);
     } else {
         release();
         sendWsError(ws, `Invalid roll dice request`);

@@ -72,7 +72,7 @@ export async function handleRollDiceRequest(
                 data: {
                     content: JSON.stringify({
                         role: "tool",
-                        content: `Initiated a DC ${rollDiceInfo.difficulty} ${rollDiceInfo.check} check for ${characterInstance.name}. They rolled a ${rollDiceInfo.result}. Result: ${rollDiceInfo.result === 1 ? "critically failed" : rollDiceInfo.result === 20 ? "critically succeeded" : rollDiceInfo.result > rollDiceInfo.difficulty ? "succeeded" : "failed"}.`,
+                        content: `${characterInstance.name} rolled a ${rollDiceInfo.result} on the DC ${rollDiceInfo.difficulty} ${rollDiceInfo.check} check. Result: ${rollDiceInfo.result === 1 ? "Critically Failed" : rollDiceInfo.result === 20 ? "Critically Succeeded" : rollDiceInfo.result > rollDiceInfo.difficulty ? "Succeeded" : "Failed"}.`,
                         tool_call_id: rollDiceInfo.toolCallId,
                     }),
                     instance: {

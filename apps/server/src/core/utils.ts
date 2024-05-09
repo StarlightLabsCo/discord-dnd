@@ -14,12 +14,40 @@ export function getOpenAIMessages(
     messages: (Message & { characterInstance: CharacterInstance | null })[]
 ) {
     const openAIMessages = messages.map((message) => {
-        return {
-            role: message.characterInstance ? "user" : "assistant",
-            content: message.characterInstance
-                ? message.characterInstance.name + ": " + message.content
-                : "Dungeon Master" + ":" + message.content,
-        };
+        const characterInstance = message.characterInstance;
+        if (characterInstance) {
+            return {
+                role: "user",
+                content: characterInstance.name + ": " + message.content,
+            };
+        } else {
+            const parsedMessage = JSON.parse(message.content);
+            if (parsedMessage.role === "assistant" && parsedMessage.content) {
+                return {
+                    role: "assistant",
+                    content: "Dungeon Master" + ":" + parsedMessage.content,
+                };
+            } else if (
+                parsedMessage.role === "assistant" &&
+                parsedMessage.tool_calls &&
+                parsedMessage.tool_calls.length > 0
+            ) {
+                return {
+                    role: "assistant",
+                    content:
+                        "Dungeon Master called " +
+                        parsedMessage.tool_calls[0].function.name +
+                        " with args " +
+                        parsedMessage.tool_calls[0].function.arguments,
+                };
+            } else if (parsedMessage.role === "tool") {
+                return {
+                    role: "tool",
+                    content: parsedMessage.content,
+                    tool_call_id: parsedMessage.tool_call_id,
+                };
+            }
+        }
     });
 
     return openAIMessages;

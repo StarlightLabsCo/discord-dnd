@@ -7,7 +7,10 @@ type DMToolCallMessageProps = {
     className?: string;
 };
 
-export function DMToolCallMessage({ message, className }: DMToolCallMessageProps) {
+export function DMToolCallMessage({
+    message,
+    className,
+}: DMToolCallMessageProps) {
     const parsedMessage = JSON.parse(message.content);
     const toolCall = parsedMessage.tool_calls[0];
 
@@ -25,7 +28,7 @@ export function DMToolCallMessage({ message, className }: DMToolCallMessageProps
 
     return (
         <div className={cn("flex gap-x-[1.5vw]", className)}>
-            <div className='shrink-0 w-[3vw] h-[3vw]' />
+            <div className='shrink-0 w-[3vw]' />
             <div
                 className={cn(
                     "text-[#A5A5A5] font-light text-[0.8vw]",

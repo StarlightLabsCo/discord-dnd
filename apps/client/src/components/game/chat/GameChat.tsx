@@ -13,7 +13,7 @@ export function GameChat() {
     const streamedMessageId = useGameStore().gameState?.streamedMessageId;
 
     return (
-        <div className='grow w-3/5 max-w-[60%] flex flex-col gap-y-[5vh] pt-[4vh]'>
+        <div className='grow w-3/5 max-w-[60%] flex flex-col gap-y-[2vh] pt-[4vh]'>
             {messages.map((message) => {
                 if (message.characterInstance) {
                     const messageWithCharacterInstance = {

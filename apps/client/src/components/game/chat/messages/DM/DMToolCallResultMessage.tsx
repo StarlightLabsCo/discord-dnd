@@ -15,7 +15,7 @@ export function DMToolCallResultMessage({
 
     return (
         <div className={cn("flex gap-x-[1.5vw]", className)}>
-            <div className='shrink-0 w-[3vw] h-[3vw]' />
+            <div className='shrink-0 w-[3vw]' />
             <div
                 className={cn(
                     "text-[#A5A5A5] font-light text-[0.8vw]",

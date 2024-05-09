@@ -66,7 +66,8 @@ export async function handleRollDiceRequest(
             }
 
             rollDiceInfo.state = "complete";
-            rollDiceInfo.result = Math.floor(Math.random() * 20) + 1;
+            // rollDiceInfo.result = Math.floor(Math.random() * 20) + 1;
+            rollDiceInfo.result = 20; // For testing purposes
 
             const newMessage = await db.message.create({
                 data: {
@@ -90,9 +91,15 @@ export async function handleRollDiceRequest(
             updateInstanceState(instanceId, instanceState, release);
         }, 1500);
 
-        setTimeout(async () => {
-            continueStory(instanceId);
-        }, 4500);
+        if (rollDiceInfo.result === 20) {
+            setTimeout(async () => {
+                continueStory(instanceId);
+            }, 7000);
+        } else {
+            setTimeout(async () => {
+                continueStory(instanceId);
+            }, 3000);
+        }
     } else {
         release();
         sendWsError(ws, `Invalid roll dice request`);

@@ -6,6 +6,7 @@ import { useWebsocketStore } from "@/lib/websocket/index.js";
 import ready from "@/assets/sfx/dice/ready.mp3";
 import rolling from "@/assets/sfx/dice/rolling.mp3";
 import stopRolling from "@/assets/sfx/dice/stoprolling.mp3";
+import criticalsuccess from "@/assets/sfx/dice/criticalsuccess.mp3";
 import success from "@/assets/sfx/dice/success.mp3";
 import failure from "@/assets/sfx/dice/failure.mp3";
 import { useAudioStore } from "@/lib/game/audio/index.js";
@@ -87,7 +88,7 @@ export class D20Dice implements SceneSubject {
         scene.add(this.dice);
         scene.add(this.edges);
 
-        this.playReadySoundEffect();
+        this.playSoundEffect(ready);
     }
 
     private createNumbersTexture() {
@@ -172,12 +173,18 @@ export class D20Dice implements SceneSubject {
             this.state = this.DiceState.complete;
 
             if (rollDiceInfo.result > rollDiceInfo.difficulty) {
-                setTimeout(() => {
-                    this.playSuccessSoundEffect();
-                }, 500);
+                if (rollDiceInfo.result === 20) {
+                    setTimeout(() => {
+                        this.playSoundEffect(criticalsuccess);
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        this.playSoundEffect(success);
+                    }, 500);
+                }
             } else {
                 setTimeout(() => {
-                    this.playFailureSoundEffect();
+                    this.playSoundEffect(failure);
                 }, 500);
             }
             return;
@@ -288,7 +295,7 @@ export class D20Dice implements SceneSubject {
     }
 
     private roll() {
-        this.playRollingSoundEffect();
+        this.playSoundEffect(rolling);
 
         useGameStore.setState((state) => {
             if (!state.gameState) return state;
@@ -371,48 +378,6 @@ export class D20Dice implements SceneSubject {
         }
     };
 
-    private playReadySoundEffect = async () => {
-        if (this.audioSource) {
-            this.stopSoundEffect();
-        }
-
-        const audioContext = useAudioStore.getState().audioContext;
-        const soundEffectsGain = useAudioStore.getState().soundEffectsGain;
-
-        if (audioContext && soundEffectsGain) {
-            const response = await fetch(ready);
-            const arrayBuffer = await response.arrayBuffer();
-            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            this.audioSource = audioContext.createBufferSource();
-            this.audioSource.buffer = audioBuffer;
-            this.audioSource.connect(soundEffectsGain);
-            soundEffectsGain.connect(audioContext.destination);
-            this.audioSource.start();
-            audioContext.resume();
-        }
-    };
-
-    private playRollingSoundEffect = async () => {
-        if (this.audioSource) {
-            this.stopSoundEffect();
-        }
-
-        const audioContext = useAudioStore.getState().audioContext;
-        const soundEffectsGain = useAudioStore.getState().soundEffectsGain;
-
-        if (audioContext && soundEffectsGain) {
-            const response = await fetch(rolling);
-            const arrayBuffer = await response.arrayBuffer();
-            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            this.audioSource = audioContext.createBufferSource();
-            this.audioSource.buffer = audioBuffer;
-            this.audioSource.connect(soundEffectsGain);
-            soundEffectsGain.connect(audioContext.destination);
-            this.audioSource.start();
-            audioContext.resume();
-        }
-    };
-
     private playStopRollingSoundEffect = async () => {
         if (this.audioSource) {
             this.stopSoundEffect();
@@ -434,7 +399,7 @@ export class D20Dice implements SceneSubject {
         }
     };
 
-    private playSuccessSoundEffect = async () => {
+    private playSoundEffect = async (url: string) => {
         if (this.audioSource) {
             this.stopSoundEffect();
         }
@@ -443,28 +408,7 @@ export class D20Dice implements SceneSubject {
         const soundEffectsGain = useAudioStore.getState().soundEffectsGain;
 
         if (audioContext && soundEffectsGain) {
-            const response = await fetch(success);
-            const arrayBuffer = await response.arrayBuffer();
-            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            this.audioSource = audioContext.createBufferSource();
-            this.audioSource.buffer = audioBuffer;
-            this.audioSource.connect(soundEffectsGain);
-            soundEffectsGain.connect(audioContext.destination);
-            this.audioSource.start();
-            audioContext.resume();
-        }
-    };
-
-    private playFailureSoundEffect = async () => {
-        if (this.audioSource) {
-            this.stopSoundEffect();
-        }
-
-        const audioContext = useAudioStore.getState().audioContext;
-        const soundEffectsGain = useAudioStore.getState().soundEffectsGain;
-
-        if (audioContext && soundEffectsGain) {
-            const response = await fetch(failure);
+            const response = await fetch(url);
             const arrayBuffer = await response.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
             this.audioSource = audioContext.createBufferSource();

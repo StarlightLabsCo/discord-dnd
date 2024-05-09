@@ -36,13 +36,23 @@ export function RollDiceDialog() {
                 setShowResult(true);
             }, 500);
 
-            setTimeout(() => {
-                setShowResult(false);
-                setGameState({
-                    ...gameState,
-                    rollDiceInfo: null,
-                });
-            }, 3000);
+            if (rollDiceInfo.result == 20) {
+                setTimeout(() => {
+                    setShowResult(false);
+                    setGameState({
+                        ...gameState,
+                        rollDiceInfo: null,
+                    });
+                }, 7000); // need more time for epic music
+            } else {
+                setTimeout(() => {
+                    setShowResult(false);
+                    setGameState({
+                        ...gameState,
+                        rollDiceInfo: null,
+                    });
+                }, 3000);
+            }
         }
     }, [rollDiceInfo, setGameState, gameState]);
 

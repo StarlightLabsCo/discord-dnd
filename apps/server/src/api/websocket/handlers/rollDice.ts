@@ -89,23 +89,23 @@ export async function handleRollDiceRequest(
 
             instanceState.selectedCampaignInstance.messages.push(newMessage);
             updateInstanceState(instanceId, instanceState, release);
-        }, 1500);
 
-        if (rollDiceInfo.result === 20) {
-            console.log(
-                `Roll Dice Result: ${rollDiceInfo.result} - 10 seconds`
-            );
-            setTimeout(async () => {
-                continueStory(instanceId);
-            }, 10000);
-        } else {
-            console.log(
-                `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`
-            );
-            setTimeout(async () => {
-                continueStory(instanceId);
-            }, 3000);
-        }
+            if (rollDiceInfo.result === 20) {
+                console.log(
+                    `Roll Dice Result: ${rollDiceInfo.result} - 10 seconds`
+                );
+                setTimeout(async () => {
+                    continueStory(instanceId);
+                }, 10000);
+            } else {
+                console.log(
+                    `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`
+                );
+                setTimeout(async () => {
+                    continueStory(instanceId);
+                }, 2000);
+            }
+        }, 1500);
     } else {
         release();
         sendWsError(ws, `Invalid roll dice request`);

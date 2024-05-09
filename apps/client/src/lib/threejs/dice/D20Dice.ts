@@ -51,8 +51,6 @@ export class D20Dice implements SceneSubject {
     private bounceFactor = 0.7;
     private groundLevel = 0;
 
-    private chosenNumber = -1;
-
     constructor(scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
         this.camera = camera;
         this.init(scene);
@@ -149,11 +147,15 @@ export class D20Dice implements SceneSubject {
 
     private rollStep(deltaTime: number) {
         // check if the dice has stopped rolling
-        const state = useGameStore.getState().gameState?.rollDiceInfo?.state;
-        if (state === "complete") {
+        const rollDiceInfo = useGameStore.getState().gameState?.rollDiceInfo;
+        if (
+            rollDiceInfo &&
+            rollDiceInfo.state === "complete" &&
+            rollDiceInfo.result
+        ) {
             this.dice.position.set(0, 0, 0);
             this.edges.position.set(0, 0, 0);
-            this.setNumberToCamera(this.chosenNumber);
+            this.setNumberToCamera(rollDiceInfo.result);
             this.state = this.DiceState.complete;
             return;
         }

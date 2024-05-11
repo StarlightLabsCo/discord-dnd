@@ -6,6 +6,7 @@ import { GameChat } from "@/components/game/chat/GameChat";
 import { GameChatInput } from "@/components/game/chat/GameChatInput";
 import { PartyDisplay } from "@/components/game/PartyDisplay";
 import { RollDiceDialog } from "@/components/game/dialogs/RollDice";
+import { BeatInstanceDisplay } from "@/components/game/BeatInstanceDisplay";
 
 export const Route = createFileRoute("/game")({
     component: () => <GameLayout />,
@@ -35,7 +36,9 @@ function GameLayout() {
                     <GameChat />
                     <GameChatInput />
                 </div>
-                <div className='shrink-0 w-1/5 h-full border-l border-white'></div>
+                <div className='shrink-0 w-1/5 h-full border-l border-white'>
+                    <BeatInstanceDisplay />
+                </div>
             </div>
             <RollDiceDialog />
         </div>

@@ -38,6 +38,15 @@ export async function handleLobbyReadyRequest(
     ) {
         instanceState.state = "IN_GAME";
 
+        const beat = await db.beat.findUnique({
+            where: {
+                id: "clv8ohv9m0009i5bqwioopfmv",
+            },
+        });
+        if (!beat) {
+            throw new Error("No beat found");
+        }
+
         // If we're starting the campaign for the first time add all connected players to the party
         if (
             instanceState.selectedCampaignInstance?.characterInstances
@@ -50,6 +59,27 @@ export async function handleLobbyReadyRequest(
                         connect: instanceState.connectedPlayers.map((p) => ({
                             id: p.character!.id,
                         })),
+                    },
+                    storyBeatInstances: {
+                        create: [
+                            {
+                                beat: {
+                                    connect: {
+                                        id: beat.id,
+                                    },
+                                },
+                                name: beat.name,
+                                description: beat.description,
+                                imageUrl: beat.imageUrl,
+                                characterInstances: {
+                                    connect: instanceState.connectedPlayers.map(
+                                        (p) => ({
+                                            id: p.character!.id,
+                                        })
+                                    ),
+                                },
+                            },
+                        ],
                     },
                 },
                 include: {
@@ -79,11 +109,6 @@ export async function handleLobbyReadyRequest(
                             },
                         },
                     },
-                    messages: {
-                        include: {
-                            characterInstance: true,
-                        },
-                    },
                     characterInstances: {
                         include: {
                             user: true,
@@ -101,6 +126,15 @@ export async function handleLobbyReadyRequest(
                             proficiencies: true,
                             feats: true,
                             inventory: true,
+                        },
+                    },
+                    storyBeatInstances: {
+                        include: {
+                            messages: {
+                                include: {
+                                    characterInstance: true,
+                                },
+                            },
                         },
                     },
                 },

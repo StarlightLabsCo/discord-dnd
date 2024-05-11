@@ -145,14 +145,21 @@ model Beat {
 
     type BeatType
 
+    locationId String?
+    location   Location? @relation(fields: [locationId], references: [id], onDelete: Restrict)
+
+    nextBeats Beat[] @relation("BeatConnection")
+    pastBeats Beat[] @relation("BeatConnection")
+
     name        String
     description String
     imageUrl    String
 
-    // TODO
-
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // instances using this model
+    storyBeatInstances StoryBeatInstance[]
 }
 
 // - Location - (Static)
@@ -176,6 +183,7 @@ model Location {
     // models referencing this location
     characters         Character[]
     characterInstances CharacterInstance[]
+    beats              Beat[]
 }
 
 // - Race - (Static)
@@ -606,7 +614,6 @@ model Spell {
 
 // ---- Things the player will create ---- 
 // These are the instances of the models above, which will be instantiated by the players and modified during their playthrough
-
 model CampaignInstance {
     id String @id @default(cuid())
 
@@ -620,8 +627,29 @@ model CampaignInstance {
     campaignId String
     campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Restrict)
 
-    characterInstances CharacterInstance[] // characters that are part of the campaign
-    messages           Message[]
+    characterInstances CharacterInstance[] // player characters that are part of the campaign
+    storyBeatInstances StoryBeatInstance[] // chronological order of story beat instances
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model StoryBeatInstance {
+    id String @id @default(cuid())
+
+    beatId String
+    beat   Beat   @relation(fields: [beatId], references: [id], onDelete: Restrict)
+
+    campaignInstanceId String
+    campaignInstance   CampaignInstance @relation(fields: [campaignInstanceId], references: [id], onDelete: Cascade)
+
+    name        String
+    description String
+    imageUrl    String
+
+    characterInstances CharacterInstance[] // characters that are part of the beat (can be player characters or NPCs)
+
+    messages Message[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -630,13 +658,13 @@ model CampaignInstance {
 model Message {
     id String @id @default(cuid())
 
-    instanceId String
-    instance   CampaignInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+    storyBeatInstanceId String
+    storyBeatInstance   StoryBeatInstance @relation(fields: [storyBeatInstanceId], references: [id], onDelete: Cascade)
 
     characterInstanceId String?
     characterInstance   CharacterInstance? @relation(fields: [characterInstanceId], references: [id], onDelete: Cascade)
 
-    content String // TODO: i have an issue where I'm not saving function calls, what if I just store the whole message response here?
+    content String
 
     audioUrl         String?
     audioWordTimings String?
@@ -739,4 +767,7 @@ model CharacterInstance {
 
     // Things that the character creates 
     messages Message[]
+
+    // Things that reference this characterInstance
+    storyBeatInstances StoryBeatInstance[]
 }

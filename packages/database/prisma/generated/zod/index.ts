@@ -22,7 +22,7 @@ export const ActScalarFieldEnumSchema = z.enum(['id','campaignId','name','descri
 
 export const AdventureScalarFieldEnumSchema = z.enum(['id','actId','name','description','imageUrl','createdAt','updatedAt']);
 
-export const BeatScalarFieldEnumSchema = z.enum(['id','adventureId','type','name','description','imageUrl','createdAt','updatedAt']);
+export const BeatScalarFieldEnumSchema = z.enum(['id','adventureId','type','locationId','name','description','imageUrl','createdAt','updatedAt']);
 
 export const LocationScalarFieldEnumSchema = z.enum(['id','worldId','name','description','imageUrl','parentLocationId','createdAt','updatedAt']);
 
@@ -52,7 +52,9 @@ export const SpellScalarFieldEnumSchema = z.enum(['id','worldId','name','descrip
 
 export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','userId','name','description','imageUrl','campaignId','createdAt','updatedAt']);
 
-export const MessageScalarFieldEnumSchema = z.enum(['id','instanceId','characterInstanceId','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
+export const StoryBeatInstanceScalarFieldEnumSchema = z.enum(['id','beatId','campaignInstanceId','name','description','imageUrl','createdAt','updatedAt']);
+
+export const MessageScalarFieldEnumSchema = z.enum(['id','storyBeatInstanceId','characterInstanceId','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
 
 export const CharacterInstanceScalarFieldEnumSchema = z.enum(['id','userId','characterId','campaignInstanceId','raceId','subraceId','classId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','healthPoints','size','speed','availableLevel1SpellSlots','availableLevel2SpellSlots','availableLevel3SpellSlots','availableLevel4SpellSlots','availableLevel5SpellSlots','availableLevel6SpellSlots','availableLevel7SpellSlots','availableLevel8SpellSlots','availableLevel9SpellSlots','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
@@ -187,6 +189,7 @@ export const BeatSchema = z.object({
   type: BeatTypeSchema,
   id: z.string().cuid(),
   adventureId: z.string(),
+  locationId: z.string().nullable(),
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),
@@ -499,12 +502,29 @@ export const CampaignInstanceSchema = z.object({
 export type CampaignInstance = z.infer<typeof CampaignInstanceSchema>
 
 /////////////////////////////////////////
+// STORY BEAT INSTANCE SCHEMA
+/////////////////////////////////////////
+
+export const StoryBeatInstanceSchema = z.object({
+  id: z.string().cuid(),
+  beatId: z.string(),
+  campaignInstanceId: z.string(),
+  name: z.string(),
+  description: z.string(),
+  imageUrl: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type StoryBeatInstance = z.infer<typeof StoryBeatInstanceSchema>
+
+/////////////////////////////////////////
 // MESSAGE SCHEMA
 /////////////////////////////////////////
 
 export const MessageSchema = z.object({
   id: z.string().cuid(),
-  instanceId: z.string(),
+  storyBeatInstanceId: z.string(),
   characterInstanceId: z.string().nullable(),
   content: z.string(),
   audioUrl: z.string().nullable(),

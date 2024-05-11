@@ -184,6 +184,27 @@ export const inputFieldDictionary: Record<string, InputField[]> = {
             label: "Image URL",
             required: true,
         },
+        {
+            type: "foreignkey",
+            dataType: "location",
+            name: "locationId",
+            label: "Location ID",
+            required: true,
+        },
+        {
+            type: "foreignkeyarray",
+            dataType: "beat",
+            name: "previousBeats",
+            label: "Previous Beats",
+            required: false,
+        },
+        {
+            type: "foreignkeyarray",
+            dataType: "beat",
+            name: "nextBeats",
+            label: "Next Beats",
+            required: false,
+        },
     ],
     campaign: [
         {

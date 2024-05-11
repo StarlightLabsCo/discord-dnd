@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
         !body.type ||
         !body.name ||
         !body.description ||
+        !body.locationId ||
         !body.imageUrl
     ) {
         return new Response("Missing required fields", {
@@ -36,6 +37,11 @@ export async function POST(request: NextRequest) {
             adventure: {
                 connect: {
                     id: body.adventureId,
+                },
+            },
+            location: {
+                connect: {
+                    id: body.locationId,
                 },
             },
             type: body.type,

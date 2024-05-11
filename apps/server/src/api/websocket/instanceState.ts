@@ -45,6 +45,9 @@ export async function addUserToInstanceState(
     let { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
         const selectedCampaign = await findOrCreateCampaignForUser(user);
+        if (!selectedCampaign) {
+            throw new Error("No campaign and wasn't able to create one");
+        }
 
         instanceState = {
             state: "LOBBY",
@@ -128,9 +131,13 @@ async function findOrCreateCampaignForUser(user: User) {
                     inventory: true,
                 },
             },
-            messages: {
+            storyBeatInstances: {
                 include: {
-                    characterInstance: true,
+                    messages: {
+                        include: {
+                            characterInstance: true,
+                        },
+                    },
                 },
             },
         },
@@ -208,9 +215,13 @@ async function findOrCreateCampaignForUser(user: User) {
                         inventory: true,
                     },
                 },
-                messages: {
+                storyBeatInstances: {
                     include: {
-                        characterInstance: true,
+                        messages: {
+                            include: {
+                                characterInstance: true,
+                            },
+                        },
                     },
                 },
             },

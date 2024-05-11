@@ -12,6 +12,7 @@ import {
     ProficiencySchema,
     RaceSchema,
     RacialTraitSchema,
+    StoryBeatInstanceSchema,
     UserSchema,
     WorldSchema,
 } from "database/prisma/generated/zod";
@@ -96,13 +97,19 @@ export const InstanceStateSchema = z.object({
                     })
                 )
             ),
-            messages: z.array(
-                MessageSchema.merge(
+            storyBeatInstances: z.array(
+                StoryBeatInstanceSchema.merge(
                     z.object({
-                        characterInstance: z.union([
-                            CharacterInstanceSchema,
-                            z.null(),
-                        ]),
+                        messages: z.array(
+                            MessageSchema.merge(
+                                z.object({
+                                    characterInstance: z.union([
+                                        CharacterInstanceSchema,
+                                        z.null(),
+                                    ]),
+                                })
+                            )
+                        ),
                     })
                 )
             ),

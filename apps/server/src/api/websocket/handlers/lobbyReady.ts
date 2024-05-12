@@ -4,6 +4,7 @@ import { type LobbyReadyRequest } from "starlight-api-types/websocket";
 import { getInstanceState, updateInstanceState } from "../instanceState";
 import { sendWsError } from "../utils";
 import { db } from "@/lib/db";
+import { introduceStoryBeat } from "@/core/story/introduceStoryBeat";
 
 export async function handleLobbyReadyRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -37,112 +38,19 @@ export async function handleLobbyReadyRequest(
         )
     ) {
         instanceState.state = "IN_GAME";
-
-        const beat = await db.beat.findUnique({
-            where: {
-                id: "clv8ohv9m0009i5bqwioopfmv",
-            },
-        });
-        if (!beat) {
-            throw new Error("No beat found");
-        }
-
-        // If we're starting the campaign for the first time add all connected players to the party
-        if (
-            instanceState.selectedCampaignInstance?.characterInstances
-                .length === 0
-        ) {
-            const updatedCampaignInstance = await db.campaignInstance.update({
-                where: { id: instanceState.selectedCampaignInstance.id },
-                data: {
-                    characterInstances: {
-                        connect: instanceState.connectedPlayers.map((p) => ({
-                            id: p.character!.id,
-                        })),
-                    },
-                    storyBeatInstances: {
-                        create: [
-                            {
-                                beat: {
-                                    connect: {
-                                        id: beat.id,
-                                    },
-                                },
-                                name: beat.name,
-                                description: beat.description,
-                                imageUrl: beat.imageUrl,
-                                characterInstances: {
-                                    connect: instanceState.connectedPlayers.map(
-                                        (p) => ({
-                                            id: p.character!.id,
-                                        })
-                                    ),
-                                },
-                            },
-                        ],
-                    },
-                },
-                include: {
-                    campaign: {
-                        include: {
-                            world: {
-                                include: {
-                                    races: {
-                                        include: {
-                                            racialTraits: true,
-                                        },
-                                    },
-                                    classes: {
-                                        include: {
-                                            proficiencies: true,
-                                            classFeatures: true,
-                                            startingEquipment: true,
-                                        },
-                                    },
-                                    backgrounds: {
-                                        include: {
-                                            proficiencies: true,
-                                            startingEquipment: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    characterInstances: {
-                        include: {
-                            user: true,
-                            race: {
-                                include: {
-                                    racialTraits: true,
-                                },
-                            },
-                            class: {
-                                include: {
-                                    proficiencies: true,
-                                    classFeatures: true,
-                                },
-                            },
-                            proficiencies: true,
-                            feats: true,
-                            inventory: true,
-                        },
-                    },
-                    storyBeatInstances: {
-                        include: {
-                            messages: {
-                                include: {
-                                    characterInstance: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            });
-
-            instanceState.selectedCampaignInstance = updatedCampaignInstance;
-        }
     }
 
     updateInstanceState(ws.data.instanceId, instanceState, release);
+
+    // If the game is now in progress, and the last story beat has no messages, introduce the story beat (acts as the beginning of the game too)
+    if (instanceState.state === "IN_GAME") {
+        const storyBeatInstances =
+            instanceState.selectedCampaignInstance.storyBeatInstances;
+        if (
+            storyBeatInstances[storyBeatInstances.length - 1].messages
+                .length === 0
+        ) {
+            introduceStoryBeat(ws.data.instanceId);
+        }
+    }
 }

@@ -138,6 +138,11 @@ async function findOrCreateCampaignForUser(user: User) {
                             characterInstance: true,
                         },
                     },
+                    beat: {
+                        include: {
+                            location: true,
+                        },
+                    },
                 },
             },
         },
@@ -151,6 +156,15 @@ async function findOrCreateCampaignForUser(user: User) {
         });
         if (!campaign) {
             throw new Error("No campaigns found");
+        }
+
+        const beat = await db.beat.findUnique({
+            where: {
+                id: "clv8ohv9m0009i5bqwioopfmv",
+            },
+        });
+        if (!beat) {
+            throw new Error("No beat found");
         }
 
         campaignInstance = await db.campaignInstance.create({
@@ -168,6 +182,21 @@ async function findOrCreateCampaignForUser(user: User) {
                 name: campaign.name,
                 description: campaign.description,
                 imageUrl: campaign.imageUrl,
+                storyBeatInstances: {
+                    // TODO: need to figure out how/when to add the characterInstances to the first story beat instance, maybe on character create?
+                    create: [
+                        {
+                            beat: {
+                                connect: {
+                                    id: beat.id,
+                                },
+                            },
+                            name: beat.name,
+                            description: beat.description,
+                            imageUrl: beat.imageUrl,
+                        },
+                    ],
+                },
             },
             include: {
                 campaign: {
@@ -220,6 +249,11 @@ async function findOrCreateCampaignForUser(user: User) {
                         messages: {
                             include: {
                                 characterInstance: true,
+                            },
+                        },
+                        beat: {
+                            include: {
+                                location: true,
                             },
                         },
                     },

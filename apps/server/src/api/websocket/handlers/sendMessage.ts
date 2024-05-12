@@ -3,7 +3,7 @@ import type { WebSocketData } from "..";
 import type { SendMessageRequest } from "starlight-api-types/websocket";
 import { db } from "@/lib/db";
 import { sendWsError } from "../utils";
-import { continueStory } from "@/core/continueStory";
+import { continueStoryBeat } from "@/core/story/continueStoryBeat";
 import { getInstanceState, updateInstanceState } from "../instanceState";
 
 export async function handleSendMessageRequest(
@@ -67,5 +67,5 @@ export async function handleSendMessageRequest(
     instanceState.selectedCampaignInstance.messages.push(dbMessage);
     updateInstanceState(ws.data.instanceId, instanceState, release);
 
-    continueStory(ws.data.instanceId);
+    continueStoryBeat(ws.data.instanceId);
 }

@@ -18,15 +18,6 @@ import { useWebsocketStore } from "../websocket";
 import { useGameStore } from ".";
 import { CharacterSelectRequest } from "starlight-api-types/websocket";
 
-type WorldInfo = World & {
-    races: Race[];
-    classes: Class[];
-    backgrounds: (Background & {
-        proficiencies: Proficiency[];
-        startingEquipment: Item[];
-    })[];
-};
-
 type CharacterInstanceInfo = CharacterInstance & {
     race: Race;
     class: Class;

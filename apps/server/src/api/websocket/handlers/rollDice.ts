@@ -3,7 +3,7 @@ import type { WebSocketData } from "..";
 import type { RollDiceRequest } from "starlight-api-types/websocket";
 import { getInstanceState, updateInstanceState } from "../instanceState";
 import { sendWsError } from "../utils";
-import { continueStory } from "@/core/continueStory";
+import { continueStoryBeat } from "@/core/story/continueStoryBeat";
 import { db } from "@/lib/db";
 
 export async function handleRollDiceRequest(
@@ -94,14 +94,14 @@ export async function handleRollDiceRequest(
                     `Roll Dice Result: ${rollDiceInfo.result} - 10 seconds`
                 );
                 setTimeout(async () => {
-                    continueStory(instanceId);
+                    continueStoryBeat(instanceId);
                 }, 9000);
             } else {
                 console.log(
                     `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`
                 );
                 setTimeout(async () => {
-                    continueStory(instanceId);
+                    continueStoryBeat(instanceId);
                 }, 2000);
             }
         }, 2000);

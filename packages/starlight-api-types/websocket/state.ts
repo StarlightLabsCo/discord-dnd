@@ -1,6 +1,7 @@
 import z from "zod";
 import {
     BackgroundSchema,
+    BeatSchema,
     CampaignInstanceSchema,
     CampaignSchema,
     CharacterInstanceSchema,
@@ -8,6 +9,7 @@ import {
     ClassSchema,
     FeatSchema,
     ItemSchema,
+    LocationSchema,
     MessageSchema,
     ProficiencySchema,
     RaceSchema,
@@ -46,75 +48,82 @@ export const RollDiceInfoSchema = z.object({
 });
 export type RollDiceInfo = z.infer<typeof RollDiceInfoSchema>;
 
-export const InstanceStateSchema = z.object({
-    state: GameStateSchema,
-    connectedPlayers: z.array(LobbyPlayerSchema),
-    selectedCampaignInstance: CampaignInstanceSchema.merge(
-        z.object({
-            campaign: CampaignSchema.merge(
-                z.object({
-                    world: WorldSchema.merge(
-                        z.object({
-                            races: z.array(
-                                RaceSchema.merge(
-                                    z.object({
-                                        racialTraits:
-                                            z.array(RacialTraitSchema),
-                                    })
-                                )
-                            ),
-                            classes: z.array(
-                                ClassSchema.merge(
-                                    z.object({
-                                        proficiencies:
-                                            z.array(ProficiencySchema),
-                                        startingEquipment: z.array(ItemSchema),
-                                        classFeatures:
-                                            z.array(ClassFeatureSchema),
-                                    })
-                                )
-                            ),
-                            backgrounds: z.array(
-                                BackgroundSchema.merge(
-                                    z.object({
-                                        proficiencies:
-                                            z.array(ProficiencySchema),
-                                        startingEquipment: z.array(ItemSchema),
-                                    })
-                                )
-                            ),
-                        })
-                    ),
-                })
-            ),
-            characterInstances: z.array(
-                CharacterInstanceSchema.merge(
+export const SelectedCampaignInstanceSchema = CampaignInstanceSchema.merge(
+    z.object({
+        campaign: CampaignSchema.merge(
+            z.object({
+                world: WorldSchema.merge(
                     z.object({
-                        user: z.union([UserSchema, z.null()]),
-                        proficiencies: z.array(ProficiencySchema),
-                        feats: z.array(FeatSchema),
-                        inventory: z.array(ItemSchema),
-                    })
-                )
-            ),
-            storyBeatInstances: z.array(
-                StoryBeatInstanceSchema.merge(
-                    z.object({
-                        messages: z.array(
-                            MessageSchema.merge(
+                        races: z.array(
+                            RaceSchema.merge(
                                 z.object({
-                                    characterInstance: z.union([
-                                        CharacterInstanceSchema,
-                                        z.null(),
-                                    ]),
+                                    racialTraits: z.array(RacialTraitSchema),
+                                })
+                            )
+                        ),
+                        classes: z.array(
+                            ClassSchema.merge(
+                                z.object({
+                                    proficiencies: z.array(ProficiencySchema),
+                                    startingEquipment: z.array(ItemSchema),
+                                    classFeatures: z.array(ClassFeatureSchema),
+                                })
+                            )
+                        ),
+                        backgrounds: z.array(
+                            BackgroundSchema.merge(
+                                z.object({
+                                    proficiencies: z.array(ProficiencySchema),
+                                    startingEquipment: z.array(ItemSchema),
                                 })
                             )
                         ),
                     })
-                )
-            ),
-        })
-    ),
+                ),
+            })
+        ),
+        characterInstances: z.array(
+            CharacterInstanceSchema.merge(
+                z.object({
+                    user: z.union([UserSchema, z.null()]),
+                    proficiencies: z.array(ProficiencySchema),
+                    feats: z.array(FeatSchema),
+                    inventory: z.array(ItemSchema),
+                })
+            )
+        ),
+        storyBeatInstances: z.array(
+            StoryBeatInstanceSchema.merge(
+                z.object({
+                    messages: z.array(
+                        MessageSchema.merge(
+                            z.object({
+                                characterInstance: z.union([
+                                    CharacterInstanceSchema,
+                                    z.null(),
+                                ]),
+                            })
+                        )
+                    ),
+                    beat: BeatSchema.merge(
+                        z.object({
+                            location: LocationSchema,
+                        })
+                    ),
+                })
+            )
+        ),
+    })
+);
+
+export type SelectedCampaignInstance = z.infer<
+    typeof SelectedCampaignInstanceSchema
+>;
+
+export const InstanceStateSchema = z.object({
+    state: GameStateSchema,
+    connectedPlayers: z.array(LobbyPlayerSchema),
+    selectedCampaignInstance: SelectedCampaignInstanceSchema,
     streamedMessageId: z.string().nullable(),
     streamedMessageWordTimings: z.string().nullable(),
     rollDiceInfo: z.union([RollDiceInfoSchema, z.null()]),

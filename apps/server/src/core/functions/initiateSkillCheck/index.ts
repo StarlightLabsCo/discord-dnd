@@ -6,7 +6,7 @@ import type { InstanceState } from "starlight-api-types/websocket";
 const definition = {
     type: "function",
     function: {
-        name: "initiateSkillCheck",
+        name: "initiate_skill_check",
         description: "Initiate a skill check",
         parameters: {
             type: "object",
@@ -60,7 +60,7 @@ const implementation = (
     };
 };
 
-export const initiateSkillCheck = {
+export const initiate_skill_check = {
     definition,
     argsSchema: InitiateSkillCheckArgsSchema,
     implementation,

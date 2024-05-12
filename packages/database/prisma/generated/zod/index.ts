@@ -189,7 +189,7 @@ export const BeatSchema = z.object({
   type: BeatTypeSchema,
   id: z.string().cuid(),
   adventureId: z.string(),
-  locationId: z.string().nullable(),
+  locationId: z.string(),
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),

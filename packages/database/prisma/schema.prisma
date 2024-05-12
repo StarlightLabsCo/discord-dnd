@@ -145,8 +145,8 @@ model Beat {
 
     type BeatType
 
-    locationId String?
-    location   Location? @relation(fields: [locationId], references: [id], onDelete: Restrict)
+    locationId String
+    location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
 
     nextBeats Beat[] @relation("BeatConnection")
     pastBeats Beat[] @relation("BeatConnection")

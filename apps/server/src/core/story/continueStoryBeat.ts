@@ -2,13 +2,13 @@ import {
     getInstanceState,
     updateInstanceState,
 } from "@/api/websocket/instanceState";
-import { getFormattedMessages, getSystemPrompt } from "./utils";
+import { getFormattedMessages, getSystemPrompt } from "../utils";
 import { groq } from "@/lib/groq";
 import { db } from "@/lib/db";
 import { streamAudio } from "@/lib/elevenlabs";
 import { functions } from "@/core/functions";
 
-export async function continueStory(instanceId: string) {
+export async function continueStoryBeat(instanceId: string) {
     const { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
         return null;
@@ -19,9 +19,13 @@ export async function continueStory(instanceId: string) {
         return null;
     }
 
-    const systemPrompt = getSystemPrompt();
+    const systemPrompt = await getSystemPrompt(campaignInstance);
 
-    const messages = campaignInstance.messages;
+    const storyBeatInstances = campaignInstance.storyBeatInstances;
+    const currentStoryBeatInstance =
+        storyBeatInstances[storyBeatInstances.length - 1];
+    const messages = currentStoryBeatInstance.messages;
+
     const formattedMessages = getFormattedMessages(messages);
 
     let completion = await groq.chat.completions.create({
@@ -48,9 +52,9 @@ export async function continueStory(instanceId: string) {
     const newMessage = await db.message.create({
         data: {
             content: JSON.stringify(completion.choices[0].message),
-            instance: {
+            storyBeatInstance: {
                 connect: {
-                    id: campaignInstance.id,
+                    id: currentStoryBeatInstance.id,
                 },
             },
         },
@@ -59,7 +63,7 @@ export async function continueStory(instanceId: string) {
         },
     });
 
-    instanceState.selectedCampaignInstance.messages.push(newMessage);
+    currentStoryBeatInstance.messages.push(newMessage);
 
     // If the completion has a message, stream audio for it
     if (completion.choices[0].message.content) {

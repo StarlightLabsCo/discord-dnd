@@ -58,7 +58,9 @@ export async function introduceStoryBeat(instanceId: string) {
         },
     });
 
-    currentStoryBeatInstance.messages.push(newMessage);
+    instanceState.selectedCampaignInstance.storyBeatInstances[
+        instanceState.selectedCampaignInstance.storyBeatInstances.length - 1
+    ].messages.push(newMessage);
 
     // If the completion has a message, stream audio for it
     if (completion.choices[0].message.content) {

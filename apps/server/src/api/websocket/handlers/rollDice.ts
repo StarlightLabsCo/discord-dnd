@@ -75,9 +75,13 @@ export async function handleRollDiceRequest(
                         content: `${characterInstance.name} rolled a ${rollDiceInfo.result} on the DC ${rollDiceInfo.difficulty} ${rollDiceInfo.check} check. Result: ${rollDiceInfo.result === 1 ? "Critically Failed" : rollDiceInfo.result === 20 ? "Critically Succeeded" : rollDiceInfo.result > rollDiceInfo.difficulty ? "Succeeded" : "Failed"}.`,
                         tool_call_id: rollDiceInfo.toolCallId,
                     }),
-                    instance: {
+                    storyBeatInstance: {
                         connect: {
-                            id: instanceState.selectedCampaignInstance.id,
+                            id: instanceState.selectedCampaignInstance
+                                .storyBeatInstances[
+                                instanceState.selectedCampaignInstance
+                                    .storyBeatInstances.length - 1
+                            ].id,
                         },
                     },
                 },
@@ -86,7 +90,10 @@ export async function handleRollDiceRequest(
                 },
             });
 
-            instanceState.selectedCampaignInstance.messages.push(newMessage);
+            instanceState.selectedCampaignInstance.storyBeatInstances[
+                instanceState.selectedCampaignInstance.storyBeatInstances
+                    .length - 1
+            ].messages.push(newMessage);
             updateInstanceState(instanceId, instanceState, release);
 
             if (rollDiceInfo.result === 20) {

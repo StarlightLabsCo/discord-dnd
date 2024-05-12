@@ -26,6 +26,9 @@ export async function handleSendMessageRequest(
                 },
             },
         },
+        include: {
+            storyBeatInstances: true,
+        },
     });
 
     if (!campaignInstance) {
@@ -33,12 +36,17 @@ export async function handleSendMessageRequest(
         return;
     }
 
+    const storyBeat =
+        campaignInstance.storyBeatInstances[
+            campaignInstance.storyBeatInstances.length - 1
+        ];
+
     const dbMessage = await db.message.create({
         data: {
             content: message,
-            instance: {
+            storyBeatInstance: {
                 connect: {
-                    id: campaignInstance.id,
+                    id: storyBeat.id,
                 },
             },
             characterInstance: {
@@ -64,7 +72,9 @@ export async function handleSendMessageRequest(
         return;
     }
 
-    instanceState.selectedCampaignInstance.messages.push(dbMessage);
+    instanceState.selectedCampaignInstance.storyBeatInstances[
+        instanceState.selectedCampaignInstance.storyBeatInstances.length - 1
+    ].messages.push(dbMessage);
     updateInstanceState(ws.data.instanceId, instanceState, release);
 
     continueStoryBeat(ws.data.instanceId);

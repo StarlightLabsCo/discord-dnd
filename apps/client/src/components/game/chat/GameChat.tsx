@@ -8,9 +8,21 @@ import { DMToolCallMessage } from "./messages/DM/DMToolCallMessage";
 import { DMToolCallResultMessage } from "./messages/DM/DMToolCallResultMessage";
 
 export function GameChat() {
-    const messages =
-        useGameStore().gameState?.selectedCampaignInstance.messages || [];
     const streamedMessageId = useGameStore().gameState?.streamedMessageId;
+
+    // Get messages
+    const selectedCampaignInstance =
+        useGameStore().gameState?.selectedCampaignInstance;
+    if (!selectedCampaignInstance) {
+        return null;
+    }
+
+    const currentStoryBeat =
+        selectedCampaignInstance.storyBeatInstances[
+            selectedCampaignInstance.storyBeatInstances.length - 1
+        ];
+
+    const messages = currentStoryBeat.messages;
 
     return (
         <div className='grow w-3/5 max-w-[60%] flex flex-col gap-y-[2vh] pt-[4vh]'>

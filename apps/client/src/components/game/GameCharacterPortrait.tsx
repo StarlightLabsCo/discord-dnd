@@ -1,4 +1,4 @@
-import { CharacterInstance, Feat, Proficiency, User } from "database";
+import { CharacterInstance, Feat, Item, Proficiency, User } from "database";
 import { DiscordAvatar } from "../DiscordAvatar.js";
 import { s3UrlRewriter } from "@/lib/discord/utils";
 import { useGameStore } from "@/lib/game/";
@@ -9,6 +9,7 @@ type GameCharacterPortraitProps = {
         user: User | null;
         feats: Feat[];
         proficiencies: Proficiency[];
+        inventory: Item[];
     };
     user: User | null;
     isCurrentUser?: boolean;

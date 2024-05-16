@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { LlmFunction } from ".";
+import type { LlmFunction } from "..";
 import type { InstanceState } from "starlight-api-types/websocket";
 
 // --------- Definition ---------
@@ -7,7 +7,8 @@ const definition = {
     type: "function",
     function: {
         name: "transition_to_new_story_beat",
-        description: "Transition to a new story beat",
+        description:
+            "Transition to a new story beat. This should be called after the current story beat is fully completed and the story is ready for the next beat.",
         parameters: {
             type: "object",
             properties: {

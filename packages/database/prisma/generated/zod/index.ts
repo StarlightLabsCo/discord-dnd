@@ -52,7 +52,7 @@ export const SpellScalarFieldEnumSchema = z.enum(['id','worldId','name','descrip
 
 export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','userId','name','description','imageUrl','campaignId','createdAt','updatedAt']);
 
-export const StoryBeatInstanceScalarFieldEnumSchema = z.enum(['id','beatId','campaignInstanceId','name','description','imageUrl','createdAt','updatedAt']);
+export const StoryBeatInstanceScalarFieldEnumSchema = z.enum(['id','beatId','campaignInstanceId','name','description','imageUrl','plan','summary','createdAt','updatedAt']);
 
 export const MessageScalarFieldEnumSchema = z.enum(['id','storyBeatInstanceId','characterInstanceId','visible','verb','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
 
@@ -512,6 +512,8 @@ export const StoryBeatInstanceSchema = z.object({
   name: z.string(),
   description: z.string(),
   imageUrl: z.string(),
+  plan: z.string().nullable(),
+  summary: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })

@@ -24,7 +24,12 @@ function getMutexForInstance(instanceId: string): Mutex {
     return mutex;
 }
 
-export async function getInstanceState(instanceId: string) {
+export async function getReadableInstanceState(instanceId: string) {
+    const state = instanceIdToState.get(instanceId);
+    return state ? structuredClone(state) : undefined;
+}
+
+export async function getWritableInstanceState(instanceId: string) {
     const mutex = getMutexForInstance(instanceId);
     const release = await mutex.acquire(); // Lock
 
@@ -42,7 +47,7 @@ export async function addUserToInstanceState(
     user: User
 ) {
     // State
-    let { instanceState, release } = await getInstanceState(instanceId);
+    let { instanceState, release } = await getWritableInstanceState(instanceId);
     if (!instanceState) {
         const selectedCampaign = await findOrCreateCampaignForUser(user);
         if (!selectedCampaign) {
@@ -269,7 +274,8 @@ export async function removeUserFromInstanceState(
     instanceId: string,
     user: User
 ) {
-    const { instanceState, release } = await getInstanceState(instanceId);
+    const { instanceState, release } =
+        await getWritableInstanceState(instanceId);
     if (!instanceState) {
         release();
         return;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { LlmFunction } from ".";
+import type { LlmFunction } from "..";
 import type { InstanceState } from "starlight-api-types/websocket";
 
 // --------- Definition ---------
@@ -7,7 +7,8 @@ const definition = {
     type: "function",
     function: {
         name: "initiate_skill_check",
-        description: "Initiate a skill check",
+        description:
+            "Initiate a skill check. Calling this will pull up a skill check dialogue for all players to view. The selected player will then roll a d20 dice, which will be compared to the skill check DC. If the roll + the player's additional modifiers is greater than or equal to the DC, the skill check is successful. If the roll is less than the DC, the skill check is unsuccessful.",
         parameters: {
             type: "object",
             properties: {

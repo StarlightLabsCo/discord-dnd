@@ -8,7 +8,7 @@ import type {
 import { uploadPcmToR2 } from "./cloudflare";
 import { db } from "./db";
 import {
-    getInstanceState,
+    getWritableInstanceState,
     updateInstanceState,
 } from "@/api/websocket/instanceState";
 
@@ -26,7 +26,6 @@ export async function streamAudio(
     );
 
     ws.onopen = async () => {
-        console.log(`[11 Labs] Connected to WebSocket`);
         ws.send(
             JSON.stringify({
                 xi_api_key: process.env.ELEVENLABS_API_KEY,
@@ -42,7 +41,6 @@ export async function streamAudio(
         const content = parsedMessage.content;
 
         ws.send(JSON.stringify({ text: content + " ", flush: true }));
-        console.log(`[11 Labs] Sent initial messages`);
     };
 
     let audioBuffer: Buffer[] = [];
@@ -57,7 +55,6 @@ export async function streamAudio(
         wordDurationsMs: [],
     };
     ws.onmessage = (event) => {
-        console.log(`[11 Labs] Received message`);
         const data = JSON.parse(event.data.toString());
 
         if (data.audio) {
@@ -90,7 +87,6 @@ export async function streamAudio(
 
     ws.onclose = async (event) => {
         // Normal close
-        console.log(`[11 Labs] WebSocket closed with code ${event.code}`);
         if (event.code === 1000) {
             const finalAudioBuffer = Buffer.concat(audioBuffer);
             const audioUrl = await uploadPcmToR2(finalAudioBuffer);
@@ -115,8 +111,6 @@ function publishAudio(
     audio: Buffer,
     start: boolean = false
 ) {
-    console.log(`[11 Labs] Publishing audio message ${messageId}`);
-
     const response = {
         type: "BufferAudioResponse",
         data: {
@@ -134,9 +128,8 @@ async function publishWordTimings(
     messageId: string,
     wordTimings: AudioWordTimings
 ) {
-    console.log(`[11 Labs] Publishing word timings for message ${messageId}`);
-
-    const { instanceState, release } = await getInstanceState(instanceId);
+    const { instanceState, release } =
+        await getWritableInstanceState(instanceId);
     if (!instanceState) {
         release();
         return;

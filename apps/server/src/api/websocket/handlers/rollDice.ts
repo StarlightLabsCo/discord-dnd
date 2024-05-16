@@ -1,9 +1,12 @@
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
 import type { RollDiceRequest } from "starlight-api-types/websocket";
-import { getInstanceState, updateInstanceState } from "../instanceState";
+import {
+    getWritableInstanceState,
+    updateInstanceState,
+} from "../instanceState";
 import { sendWsError } from "../utils";
-import { continueStoryBeat } from "@/core/story/continueStoryBeat";
+import { continueBeat } from "@/core/procedures/beat/continue";
 import { db } from "@/lib/db";
 
 export async function handleRollDiceRequest(
@@ -12,7 +15,8 @@ export async function handleRollDiceRequest(
 ) {
     // Get instance state
     const { user, instanceId } = ws.data;
-    const { instanceState, release } = await getInstanceState(instanceId);
+    const { instanceState, release } =
+        await getWritableInstanceState(instanceId);
     if (!instanceState) {
         release();
         sendWsError(ws, `Instance state not found for ID: ${instanceId}`);
@@ -45,7 +49,7 @@ export async function handleRollDiceRequest(
 
         setTimeout(async () => {
             const { instanceState, release } =
-                await getInstanceState(instanceId);
+                await getWritableInstanceState(instanceId);
             if (!instanceState) {
                 release();
                 sendWsError(
@@ -101,14 +105,14 @@ export async function handleRollDiceRequest(
                     `Roll Dice Result: ${rollDiceInfo.result} - 10 seconds`
                 );
                 setTimeout(async () => {
-                    continueStoryBeat(instanceId);
+                    continueBeat(instanceId);
                 }, 9000);
             } else {
                 console.log(
                     `Roll Dice Result: ${rollDiceInfo.result} - only 3 seconds`
                 );
                 setTimeout(async () => {
-                    continueStoryBeat(instanceId);
+                    continueBeat(instanceId);
                 }, 2000);
             }
         }, 2000);

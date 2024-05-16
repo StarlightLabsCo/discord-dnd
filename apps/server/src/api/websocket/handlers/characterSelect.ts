@@ -1,7 +1,10 @@
 import type { ServerWebSocket } from "bun";
 import type { WebSocketData } from "..";
 import type { CharacterSelectRequest } from "starlight-api-types/websocket";
-import { getInstanceState, updateInstanceState } from "../instanceState";
+import {
+    getWritableInstanceState,
+    updateInstanceState,
+} from "../instanceState";
 import { db } from "@/lib/db";
 import { sendWsError } from "../utils";
 
@@ -12,7 +15,8 @@ export async function handleCharacterSelectRequest(
     const { characterInstanceId } = request.data;
     const { user, instanceId } = ws.data;
 
-    const { instanceState, release } = await getInstanceState(instanceId);
+    const { instanceState, release } =
+        await getWritableInstanceState(instanceId);
     if (!instanceState) {
         release();
         sendWsError(ws, `Instance state not found for ID: ${instanceId}`);

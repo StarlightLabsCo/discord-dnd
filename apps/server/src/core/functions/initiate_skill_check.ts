@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { LlmFunction } from "..";
+import type { LlmFunction } from ".";
 import type { InstanceState } from "starlight-api-types/websocket";
 
 // --------- Definition ---------

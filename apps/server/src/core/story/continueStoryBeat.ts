@@ -71,7 +71,9 @@ export async function continueStoryBeat(instanceId: string) {
 
     // Narration
     let isFinishedSpeaking = false;
-    let newMessages: Message[] = [reflectionMessage];
+    let newMessages: (Message & { characterInstance: null })[] = [
+        reflectionMessage,
+    ];
     while (!isFinishedSpeaking) {
         let completion = await groq.chat.completions.create({
             model: "llama3-70b-8192",
@@ -194,6 +196,28 @@ export async function continueStoryBeat(instanceId: string) {
                 updateInstanceState(instanceId, instanceState, release);
             }
         }
+
+        let isFinished = await groq.chat.completions.create({
+            model: "llama3-70b-8192",
+            messages: [
+                systemPrompt,
+                ...getFormattedMessages([...messages, ...newMessages]),
+                {
+                    role: "user",
+                    content:
+                        "Based on the above messages, are you finished narrating for now? If you are, reply with only 'yes'. If you would like to continue, reply with 'no'.",
+                },
+            ],
+        });
+
+        if (!isFinished.choices || isFinished.choices.length === 0) {
+            console.error("No isFinished choices");
+            console.error(isFinished);
+            return null;
+        }
+
+        isFinishedSpeaking = isFinished.choices[0].message.content === "yes";
+        console.log("Is finished speaking:", isFinishedSpeaking);
     }
 
     await db.storyBeatInstance.update({

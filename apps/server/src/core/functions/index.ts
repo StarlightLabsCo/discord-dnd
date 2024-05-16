@@ -1,7 +1,7 @@
 import { ZodSchema } from "zod";
 import type { InstanceState } from "starlight-api-types/websocket";
-import { initiate_skill_check } from "./initiateSkillCheck";
-import { transition_to_new_story_beat } from "./transitionToNewStoryBeat";
+import { initiate_skill_check } from "./initiate_skill_check";
+import { transition_to_new_story_beat } from "./transition_to_new_story_beat";
 
 export type LlmFunction = {
     definition: {

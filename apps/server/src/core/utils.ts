@@ -202,7 +202,7 @@ export function createFakeAssistantMessage(
     visible: boolean,
     action: string | null,
     content: string
-): Message {
+): Message & { characterInstance: null } {
     return {
         id: cuid(),
         storyBeatInstanceId: "",
@@ -216,5 +216,5 @@ export function createFakeAssistantMessage(
         tag: null,
         createdAt: new Date(),
         updatedAt: new Date(),
-    } as Message & { characterInstance: CharacterInstance | null };
+    };
 }

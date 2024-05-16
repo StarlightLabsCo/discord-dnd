@@ -16,7 +16,7 @@ export async function introduceBeat(instanceId: string) {
 
     const systemPrompt = await getSystemPrompt(storyBeatInstance);
 
-    const [newMessages, message, strippedContent] = await narrate(
+    await narrate(
         [systemPrompt],
         `Introduce the story beat of ${storyBeatInstance.name} with the following plan: ${plan}`,
         {

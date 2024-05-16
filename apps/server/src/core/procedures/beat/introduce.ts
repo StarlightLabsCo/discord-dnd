@@ -25,6 +25,10 @@ export async function introduceBeat(instanceId: string) {
         },
     ];
 
+    console.log(`[DEBUG] introduceBeat: ${JSON.stringify(messages)}`);
+
     const [newMessages, message, strippedContent] = await narrate(messages);
+    console.log(`[DEBUG] introduceBeat: ${JSON.stringify(newMessages)}`);
+    console.log(`[DEBUG] introduceBeat: ${JSON.stringify(message)}`);
     console.log(`[DEBUG] introduceBeat: ${strippedContent}`);
 }

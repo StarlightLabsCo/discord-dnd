@@ -26,4 +26,5 @@ export async function introduceBeat(instanceId: string) {
     ];
 
     const [newMessages, message, strippedContent] = await narrate(messages);
+    console.log(`[DEBUG] introduceBeat: ${strippedContent}`);
 }

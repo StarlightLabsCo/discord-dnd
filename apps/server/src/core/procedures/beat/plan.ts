@@ -3,6 +3,7 @@ import { brainstorm } from "@/core/functions/brainstorm";
 import { getCharacterPrompts, getPersonalityPrompt, getStoryContextPrompt } from "@/core/prompts";
 
 export async function planBeat(storyBeatInstanceId: string) {
+    console.log(`[DEBUG] planBeat: ${storyBeatInstanceId}`);
     const storyBeatInstance = await db.storyBeatInstance.findUnique({
         where: {
             id: storyBeatInstanceId,
@@ -33,10 +34,14 @@ export async function planBeat(storyBeatInstanceId: string) {
     const contextPrompt = await getStoryContextPrompt(storyBeatInstance);
     const characterPrompt = await getCharacterPrompts(storyBeatInstance.campaignInstance.id);
 
+    const brainstormPrompt = `${personalityPrompt}\n\n${contextPrompt}\n\n${characterPrompt}\n\nGiven this context, plan the very short-term environment, events, people, and what will happen for the story beat: ${beat.name}. This plan will be edited by you later when you're narrating it so be sure to include any details or thoughts that went into it.`;
+
     const [newMessages, message, strippedContent] = await brainstorm(
         [],
-        `${personalityPrompt}\n\n${contextPrompt}\n\n${characterPrompt}\n\nGiven this context, plan the very short-term environment, events, people, and what will happen for the story beat: ${beat.name}. This plan will be edited by you later when you're narrating it so be sure to include any details or thoughts that went into it.`,
+        brainstormPrompt,
     );
+
+    console.log(`[DEBUG] planBeat: ${brainstormPrompt}`);
 
     console.log(`[DEBUG] planBeat: ${strippedContent}`);
 

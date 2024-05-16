@@ -2,16 +2,18 @@ import { db } from "@/lib/db";
 import { narrate } from "@/core/functions/narrate";
 import { getSystemPrompt } from "@/core/prompts";
 import { getLatestStoryBeatInstance } from "@/core/utils";
+import { planBeat } from "./plan";
 
 export async function introduceBeat(instanceId: string) {
+    console.log(`[DEBUG] introduceBeat: ${instanceId}`);
    const storyBeatInstance = await getLatestStoryBeatInstance(instanceId);
     if (!storyBeatInstance) {
         throw new Error("Story Beat Instance not found");
     }
 
-    const plan = storyBeatInstance.plan;
+    let plan = storyBeatInstance.plan;
     if (!plan) {
-        throw new Error("Plan not found for the story beat");
+       plan = await planBeat(storyBeatInstance.id);
     }
 
     const systemPrompt = await getSystemPrompt(storyBeatInstance);

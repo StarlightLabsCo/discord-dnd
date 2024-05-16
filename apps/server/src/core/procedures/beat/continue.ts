@@ -9,6 +9,7 @@ import { handleToolCalls } from "@/core/tools";
 import { getSystemPrompt } from "@/core/prompts";
 
 export async function continueBeat(instanceId: string) {
+    console.log(`[DEBUG] continueBeat: ${instanceId}`);
     const storyBeatInstance = await getLatestStoryBeatInstance(instanceId);
     
     // Build Prompt
@@ -18,19 +19,21 @@ export async function continueBeat(instanceId: string) {
     const existingMessages = getFormattedMessages(storyBeatInstance.messages);
 
     // Reflect
-    const [withReflection, message, _] = await reflect([systemPrompt, ...existingMessages]);
-    await saveMessage(instanceId, message)
+    const [withReflection, message, content] = await reflect([systemPrompt, ...existingMessages]);
+    console.log(`[DEBUG] continueBeat (reflection): ${content}`);
+    // await saveMessage(instanceId, message)
 
     // Narrate
     let isFinished = false;
     let updatingMessages: CompletionCreateParams.Message[] = withReflection;
     while (!isFinished) {
         const [withNarration, message, content] = await narrate(updatingMessages);
-        const dbMessage = await saveMessage(instanceId, message);
+        console.log(`[DEBUG] continueBeat (narration): ${content}`);
+        // const dbMessage = await saveMessage(instanceId, message);
 
-        if (content) {
-            speak(instanceId, dbMessage); // TODO: I don't like this
-        }
+        // if (content) {
+        //     speak(instanceId, dbMessage); // TODO: I don't like this
+        // }
 
         if (message.tool_calls) {
             await handleToolCalls(message.tool_calls);
@@ -42,5 +45,6 @@ export async function continueBeat(instanceId: string) {
             updatingMessages,
             "I am finished narrating the story beat for now."
         );
+        console.log(`[DEBUG] continueBeat (decision): ${isFinished}`);
     }
 }

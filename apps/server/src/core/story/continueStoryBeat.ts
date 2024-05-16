@@ -27,6 +27,7 @@ export async function continueStoryBeat(instanceId: string) {
     const messages = currentStoryBeatInstance.messages;
 
     const formattedMessages = getFormattedMessages(messages);
+
     // Add a step to do internal reflection
     let reflection = await groq.chat.completions.create({
         model: "llama3-70b-8192",
@@ -54,22 +55,6 @@ export async function continueStoryBeat(instanceId: string) {
                 .replace(/Dungeon Master thinks:\s?/, "")
                 .trim();
     }
-
-    await db.message.create({
-        data: {
-            visible: false,
-            verb: "thinks",
-            content: JSON.stringify(reflection.choices[0].message),
-            storyBeatInstance: {
-                connect: {
-                    id: currentStoryBeatInstance.id,
-                },
-            },
-        },
-        include: {
-            characterInstance: true, // this will be null for DM messages
-        },
-    });
 
     // Narration Step
     let completion = await groq.chat.completions.create({
@@ -105,29 +90,49 @@ export async function continueStoryBeat(instanceId: string) {
     }
 
     // Save the completion as a message
-    const newMessage = await db.message.create({
+    const newMessages = await db.storyBeatInstance.update({
+        where: {
+            id: currentStoryBeatInstance.id,
+        },
         data: {
-            verb: "says",
-            content: JSON.stringify(completion.choices[0].message),
-            storyBeatInstance: {
-                connect: {
-                    id: currentStoryBeatInstance.id,
-                },
+            messages: {
+                create: [
+                    {
+                        visible: false,
+                        verb: "thinks",
+                        content: JSON.stringify(reflection.choices[0].message),
+                    },
+                    {
+                        verb: "says",
+                        content: JSON.stringify(completion.choices[0].message),
+                    },
+                ],
             },
         },
         include: {
-            characterInstance: true, // this will be null for DM messages
+            messages: {
+                include: {
+                    characterInstance: true,
+                },
+            },
         },
     });
 
+    const mostRecentMessage =
+        newMessages.messages[newMessages.messages.length - 1];
+
     instanceState.selectedCampaignInstance.storyBeatInstances[
         instanceState.selectedCampaignInstance.storyBeatInstances.length - 1
-    ].messages.push(newMessage);
+    ].messages.push(mostRecentMessage);
 
     // If the completion has a message, stream audio for it
     if (completion.choices[0].message.content) {
-        instanceState.streamedMessageId = newMessage.id;
-        await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);
+        instanceState.streamedMessageId = mostRecentMessage.id;
+        await streamAudio(
+            instanceId,
+            "1Tbay5PQasIwgSzUscmj",
+            mostRecentMessage
+        );
     }
 
     // Go through any tool calls and handle them

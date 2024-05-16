@@ -59,19 +59,20 @@ export async function getSystemPrompt(
             -- Description: ${adventure.description}
 
             ${
-                storyBeatInstances.length > 1 &&
-                `Past Story Beats (Completed):` +
-                    storyBeatInstances
-                        .slice(0, -1)
-                        .map((storyBeatInstance) => {
-                            return `- ${storyBeatInstance.beat.name}
+                storyBeatInstances.length > 1
+                    ? `Past Story Beats (Completed):` +
+                      storyBeatInstances
+                          .slice(0, -1)
+                          .map((storyBeatInstance) => {
+                              return `- ${storyBeatInstance.beat.name}
                 -- Description: ${storyBeatInstance.beat.description}
                 -- Location:
                 --- Name: ${storyBeatInstance.beat.location.name}
                 --- Description: ${storyBeatInstance.beat.location.description}`;
-                        })
-                        .join("\n") +
-                    `\n`
+                          })
+                          .join("\n") +
+                      `\n`
+                    : ""
             }
      
             - Current Story Beat (In Progress): ${latestStoryBeatInstance.name}

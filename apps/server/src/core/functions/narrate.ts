@@ -29,6 +29,11 @@ export async function narrate(
         tools: Object.values(functions).map((f) => f.definition),
     });
 
+    if (!completion.choices || completion.choices.length === 0) {
+        console.error("No completion choices");
+        console.error(completion);
+    }
+
     const message = completion.choices[0].message;
 
     const completionMessage = {
@@ -44,5 +49,3 @@ export async function narrate(
 
     return [newMessages, message, strippedContent];
 }
-
-

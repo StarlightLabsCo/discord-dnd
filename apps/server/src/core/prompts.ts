@@ -119,8 +119,11 @@ export async function getCharacterInfoPrompt(
     ${expandedCharacterInstance.proficiencies.map((proficiency) => `-- ${proficiency.name} (${proficiency.type}): ${proficiency.description}`).join("\n")}
     - Inventory (Carrying Capacity: ${expandedCharacterInstance.inventory.reduce((acc, item) => acc + item.weight, 0)} / ${expandedCharacterInstance.strength * 15} lbs):
     ${expandedCharacterInstance.inventory.map((item) => `-- ${item.name}: ${item.description}`).join("\n")}
-    - Spells:
-    ${expandedCharacterInstance.spells.map((spell) => `-- ${spell.name}: ${spell.description}`).join("\n")}`;
+    ${
+        expandedCharacterInstance.spells.length > 0
+            ? `- Spells:\n${expandedCharacterInstance.spells.map((spell) => `-- ${spell.name}: ${spell.description}`).join("\n")}`
+            : ""
+    }`;
 
     return message;
 }
@@ -157,12 +160,17 @@ export function getPersonalityPrompt() {
     return `You are Silas, a Dungeon Master narrating a campaign for a group of players in a Dungeons & Dragons campaign.`;
 }
 
-export async function getSystemPrompt(storyBeatInstance: StoryBeatInstance, options?: { tools?: boolean }) {
+export async function getSystemPrompt(
+    storyBeatInstance: StoryBeatInstance,
+    options?: { tools?: boolean }
+) {
     const context = await getStoryContextPrompt(storyBeatInstance);
 
     const personalityPrompt = getPersonalityPrompt();
     const toolsPrompt = getToolsPrompt();
-    const charactersPrompt = await getCharacterPrompts(storyBeatInstance.campaignInstanceId);
+    const charactersPrompt = await getCharacterPrompts(
+        storyBeatInstance.campaignInstanceId
+    );
 
     const message: CompletionCreateParams.Message = {
         role: "system",

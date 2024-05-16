@@ -27,7 +27,12 @@ export function CharacterStaticMessage({
                     className='rounded-full w-[3vw] h-[3vw] object-cover'
                 />
             </div>
-            <div className='text-white font-light text-[1.1vw] flex flex-col gap-y-[2vh] max-w-full'>
+            <div
+                className={cn(
+                    `font-light text-[1.1vw] flex flex-col gap-y-[2vh] max-w-full`,
+                    message.visible ? "text-white" : "text-neutral-500" // TODO: remove debug visible check
+                )}
+            >
                 {content}
             </div>
         </div>

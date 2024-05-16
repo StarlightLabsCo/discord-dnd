@@ -66,7 +66,7 @@ export async function continueStoryBeat(instanceId: string) {
     const reflectionMessage = createFakeAssistantMessage(
         false,
         "thinks",
-        reflection.choices[0].message.content
+        JSON.stringify(reflection.choices[0].message)
     );
 
     // Narration
@@ -79,11 +79,7 @@ export async function continueStoryBeat(instanceId: string) {
             model: "llama3-70b-8192",
             messages: [
                 systemPrompt,
-                ...formattedMessages,
-                {
-                    role: "assistant",
-                    content: reflection.choices[0].message.content,
-                },
+                ...getFormattedMessages([...messages, ...newMessages]),
                 {
                     role: "user",
                     content:

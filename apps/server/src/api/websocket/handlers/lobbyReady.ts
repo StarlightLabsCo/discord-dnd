@@ -6,8 +6,7 @@ import {
     updateInstanceState,
 } from "../instanceState";
 import { sendWsError } from "../utils";
-import { db } from "@/lib/db";
-import { introduceStoryBeat } from "@/core/procedures/beat/introduce";
+import { introduceBeat } from "@/core/procedures/beat/introduce";
 
 export async function handleLobbyReadyRequest(
     ws: ServerWebSocket<WebSocketData>,
@@ -53,7 +52,7 @@ export async function handleLobbyReadyRequest(
             storyBeatInstances[storyBeatInstances.length - 1].messages
                 .length === 0
         ) {
-            introduceStoryBeat(ws.data.instanceId);
+            introduceBeat(ws.data.instanceId);
         }
     }
 }

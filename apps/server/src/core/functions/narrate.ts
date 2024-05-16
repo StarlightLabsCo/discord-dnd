@@ -29,6 +29,8 @@ export async function narrate(
         tools: Object.values(functions).map((f) => f.definition),
     });
 
+    console.log(`narrate completion: ${JSON.stringify(completion)}`);
+
     if (!completion.choices || completion.choices.length === 0) {
         console.error("No completion choices");
         console.error(completion);

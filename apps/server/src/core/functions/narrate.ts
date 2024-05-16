@@ -4,15 +4,18 @@ import type {
 } from "groq-sdk/resources/chat/index.mjs";
 import { groq } from "@/lib/groq";
 import { functions } from "@/core/tools";
+import { db } from "@/lib/db";
+import { speak } from "../utils";
 
 const name = "Dungeon Master";
 const verb = "says";
 
 export async function narrate(
     messages: CompletionCreateParams.Message[],
+    instruction: string,
     options?: {
-        save?: boolean;
-        speak?: boolean;
+        save?: string; // storyBeatInstanceId
+        speak?: string; // instanceId
     }
 ): Promise<
     [CompletionCreateParams.Message[], ChatCompletion.Choice.Message, string]
@@ -23,18 +26,11 @@ export async function narrate(
             ...messages,
             {
                 role: "user",
-                content: `Continue narrating the story beat based on your prior thoughts for this current story beat step. When speaking use the format: '${name} ${verb}: ...' If desired, you can also call a tool to make things happen in the game systems.`,
+                content: `${instruction}\n\nWhen speaking use the format: '${name} ${verb}: ...' If desired, you can also call a tool to make things happen in the game systems.`,
             },
         ],
         tools: Object.values(functions).map((f) => f.definition),
     });
-
-    console.log(`narrate completion: ${JSON.stringify(completion)}`);
-
-    if (!completion.choices || completion.choices.length === 0) {
-        console.error("No completion choices");
-        console.error(completion);
-    }
 
     const message = completion.choices[0].message;
 
@@ -48,6 +44,27 @@ export async function narrate(
     const strippedContent = message.content
         .replace(`${name} ${verb}:\s?`, "")
         .trim();
+
+    // Handle options after returning the new messages
+    if (options?.save) {
+        setTimeout(async () => {
+            const dbMessage = await db.message.create({
+                data: {
+                    storyBeatInstance: {
+                        connect: {
+                            id: options.save,
+                        },
+                    },
+                    verb,
+                    content: JSON.stringify(message),
+                },
+            });
+
+            if (options?.speak) {
+                await speak(options.speak, dbMessage);
+            }
+        }, 0);
+    }
 
     return [newMessages, message, strippedContent];
 }

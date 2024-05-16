@@ -9,10 +9,6 @@ const name = "Dungeon Master";
 export async function brainstorm(
     messages: CompletionCreateParams.Message[],
     description: string,
-    options?: {
-        save?: boolean;
-        speak?: boolean;
-    }
 ): Promise<
     [CompletionCreateParams.Message[], ChatCompletion.Choice.Message, string]
 > {

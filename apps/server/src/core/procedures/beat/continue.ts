@@ -4,36 +4,37 @@ import { reflect } from "@/core/functions/reflect";
 import { decision } from "@/core/functions/decision";
 import { narrate } from "@/core/functions/narrate";
 
-import { getFormattedMessages, getLatestStoryBeatInstance, saveMessage, speak } from "@/core/utils";
+import { getFormattedMessages, getLatestStoryBeatInstance } from "@/core/utils";
 import { handleToolCalls } from "@/core/tools";
 import { getSystemPrompt } from "@/core/prompts";
 
 export async function continueBeat(instanceId: string) {
-    console.log(`[DEBUG] continueBeat: ${instanceId}`);
     const storyBeatInstance = await getLatestStoryBeatInstance(instanceId);
-    
+
     // Build Prompt
     const systemPrompt = await getSystemPrompt(storyBeatInstance, {
         tools: true,
     });
     const existingMessages = getFormattedMessages(storyBeatInstance.messages);
+    const reflectMessages = [systemPrompt, ...existingMessages];
 
     // Reflect
-    const [withReflection, message, content] = await reflect([systemPrompt, ...existingMessages]);
-    console.log(`[DEBUG] continueBeat (reflection): ${content}`);
-    // await saveMessage(instanceId, message)
+    const [withReflection] = await reflect(reflectMessages, {
+        save: storyBeatInstance.id,
+    });
 
     // Narrate
     let isFinished = false;
-    let updatingMessages: CompletionCreateParams.Message[] = withReflection;
+    let updatingMessages = withReflection;
     while (!isFinished) {
-        const [withNarration, message, content] = await narrate(updatingMessages);
-        console.log(`[DEBUG] continueBeat (narration): ${content}`);
-        // const dbMessage = await saveMessage(instanceId, message);
-
-        // if (content) {
-        //     speak(instanceId, dbMessage); // TODO: I don't like this
-        // }
+        const [withNarration, message] = await narrate(
+            updatingMessages,
+            "Continue narrating the story beat based on your prior thoughts for this current story beat step.",
+            {
+                save: storyBeatInstance.id,
+                speak: instanceId,
+            }
+        );
 
         if (message.tool_calls) {
             await handleToolCalls(message.tool_calls);

@@ -1,8 +1,10 @@
+import { db } from "@/lib/db";
 import { groq } from "@/lib/groq";
 import type {
     ChatCompletion,
     CompletionCreateParams,
 } from "groq-sdk/resources/chat/index.mjs";
+import { speak } from "../utils";
 
 const name = "Dungeon Master";
 const verb = "reflects";
@@ -10,8 +12,7 @@ const verb = "reflects";
 export async function reflect(
     messages: CompletionCreateParams.Message[],
     options?: {
-        save?: boolean;
-        speak?: boolean;
+        save?: string; // storyBeatInstanceId
     }
 ): Promise<
     [CompletionCreateParams.Message[], ChatCompletion.Choice.Message, string]
@@ -39,6 +40,24 @@ export async function reflect(
     const strippedContent = message.content
         .replace(`${name} ${verb}:\s?`, "")
         .trim();
+
+    // Handle options after returning the new messages
+    if (options?.save) {
+        setTimeout(async () => {
+            await db.message.create({
+                data: {
+                    storyBeatInstance: {
+                        connect: {
+                            id: options.save,
+                        },
+                    },
+                    verb,
+                    content: JSON.stringify(message),
+                    visible: false,
+                },
+            });
+        }, 0);
+    }
 
     return [newMessages, message, strippedContent];
 }

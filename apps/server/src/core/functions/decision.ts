@@ -6,10 +6,6 @@ const name = "Dungeon Master";
 export async function decision(
     messages: CompletionCreateParams.Message[],
     statement: string,
-    options?: {
-        save?: boolean;
-        speak?: boolean;
-    }
 ): Promise<boolean> {
     const isFinished = await groq.chat.completions.create({
         model: "llama3-70b-8192",

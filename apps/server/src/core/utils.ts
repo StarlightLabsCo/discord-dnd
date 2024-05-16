@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import cuid from "cuid";
 import type { CharacterInstance, Message } from "database";
 import type { CompletionCreateParams } from "groq-sdk/resources/chat/index.mjs";
 import type { SelectedCampaignInstance } from "starlight-api-types/websocket";
@@ -195,4 +196,25 @@ export function getFormattedMessages(
         .filter((message) => message !== undefined);
 
     return formattedMessages as CompletionCreateParams.Message[];
+}
+
+export function createFakeAssistantMessage(
+    visible: boolean,
+    action: string | null,
+    content: string
+): Message {
+    return {
+        id: cuid(),
+        storyBeatInstanceId: "",
+        characterInstanceId: null,
+        characterInstance: null,
+        visible,
+        verb: action,
+        content,
+        audioUrl: null,
+        audioWordTimings: null,
+        tag: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    } as Message & { characterInstance: CharacterInstance | null };
 }

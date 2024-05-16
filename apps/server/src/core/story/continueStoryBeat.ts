@@ -2,17 +2,23 @@ import {
     getInstanceState,
     updateInstanceState,
 } from "@/api/websocket/instanceState";
-import { getFormattedMessages, getSystemPrompt } from "../utils";
+import {
+    createFakeAssistantMessage,
+    getFormattedMessages,
+    getSystemPrompt,
+} from "../utils";
 import { groq } from "@/lib/groq";
-import { db } from "@/lib/db";
 import { streamAudio } from "@/lib/elevenlabs";
 import { functions } from "@/core/functions";
+import type { Message } from "database";
+import { db } from "@/lib/db";
 
 export async function continueStoryBeat(instanceId: string) {
     const { instanceState, release } = await getInstanceState(instanceId);
     if (!instanceState) {
         return null;
     }
+    release(); // i fucking hate this, i shouldn't need a mutex just to read the values
 
     const campaignInstance = instanceState.selectedCampaignInstance;
     if (!campaignInstance) {
@@ -28,7 +34,9 @@ export async function continueStoryBeat(instanceId: string) {
 
     const formattedMessages = getFormattedMessages(messages);
 
-    // Add a step to do internal reflection
+    // TODO: Retrieve relevant information
+
+    // Internal reflection
     let reflection = await groq.chat.completions.create({
         model: "llama3-70b-8192",
         messages: [
@@ -37,10 +45,9 @@ export async function continueStoryBeat(instanceId: string) {
             {
                 role: "user",
                 content:
-                    "Reflect on the current situation of the story beat, and think about where you'd like to take the story next. Use the format: 'Dungeon Master thinks: ...'. Remember none of your thoughts will be shared with the players. They are just for you.",
+                    "Reflect on the current situation of the story beat, and think about where you'd like to take the story next. Use the format: 'Dungeon Master reflects: ...'. Remember none of your thoughts will be shared with the players. They are just for you.",
             },
         ],
-        tools: Object.values(functions).map((f) => f.definition),
     });
 
     if (!reflection.choices || reflection.choices.length === 0) {
@@ -52,127 +59,154 @@ export async function continueStoryBeat(instanceId: string) {
     if (reflection.choices[0].message.content) {
         reflection.choices[0].message.content =
             reflection.choices[0].message.content
-                .replace(/Dungeon Master thinks:\s?/, "")
+                .replace(/Dungeon Master reflects:\s?/, "")
                 .trim();
     }
 
-    // Narration Step
-    let completion = await groq.chat.completions.create({
-        model: "llama3-70b-8192",
-        messages: [
-            systemPrompt,
-            ...formattedMessages,
-            {
-                role: "assistant",
-                content: reflection.choices[0].message.content,
-            },
-            {
-                role: "user",
-                content:
-                    "Continue narrating the story beat based on your reflection and the current situation. Use the format: 'Dungeon Master says: ...'.",
-            },
-        ],
-        tools: Object.values(functions).map((f) => f.definition),
-    });
+    const reflectionMessage = createFakeAssistantMessage(
+        false,
+        "thinks",
+        reflection.choices[0].message.content
+    );
 
-    if (!completion.choices || completion.choices.length === 0) {
-        console.error("No completion choices");
-        console.error(completion);
-        return null;
-    }
+    // Narration
+    let isFinishedSpeaking = false;
+    let newMessages: Message[] = [reflectionMessage];
+    while (!isFinishedSpeaking) {
+        let completion = await groq.chat.completions.create({
+            model: "llama3-70b-8192",
+            messages: [
+                systemPrompt,
+                ...formattedMessages,
+                {
+                    role: "assistant",
+                    content: reflection.choices[0].message.content,
+                },
+                {
+                    role: "user",
+                    content:
+                        "Continue narrating the story beat based on your reflection and the current situation. When speaking use the format: 'Dungeon Master says: ...' Otherwise call a tool function.",
+                },
+            ],
+            tools: Object.values(functions).map((f) => f.definition),
+        });
 
-    // Process content before we save it
-    if (completion.choices[0].message.content) {
-        completion.choices[0].message.content =
-            completion.choices[0].message.content
+        if (!completion.choices || completion.choices.length === 0) {
+            console.error("No completion choices");
+            console.error(completion);
+            return null;
+        }
+
+        const content = completion.choices[0].message.content;
+        const toolCalls = completion.choices[0].message.tool_calls;
+
+        // If the completion has message content
+        if (content && content.trim().length > 0) {
+            completion.choices[0].message.content = content
                 .replace(/Dungeon Master says:\s?/, "")
                 .trim();
-    }
 
-    // Save the completion as a message
-    const newMessages = await db.storyBeatInstance.update({
-        where: {
-            id: currentStoryBeatInstance.id,
-        },
-        data: {
-            messages: {
-                create: [
-                    {
-                        visible: false,
-                        verb: "thinks",
-                        content: JSON.stringify(reflection.choices[0].message),
-                    },
-                    {
-                        verb: "says",
-                        content: JSON.stringify(completion.choices[0].message),
-                    },
-                ],
-            },
-        },
-        include: {
-            messages: {
-                include: {
-                    characterInstance: true,
-                },
-            },
-        },
-    });
+            const newMessage = createFakeAssistantMessage(
+                true,
+                "says",
+                JSON.stringify(completion.choices[0].message)
+            );
+            newMessages.push(newMessage);
 
-    const mostRecentMessage =
-        newMessages.messages[newMessages.messages.length - 1];
+            await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", newMessage);
 
-    instanceState.selectedCampaignInstance.storyBeatInstances[
-        instanceState.selectedCampaignInstance.storyBeatInstances.length - 1
-    ].messages.push(mostRecentMessage);
-
-    // If the completion has a message, stream audio for it
-    if (completion.choices[0].message.content) {
-        instanceState.streamedMessageId = mostRecentMessage.id;
-        await streamAudio(
-            instanceId,
-            "1Tbay5PQasIwgSzUscmj",
-            mostRecentMessage
-        );
-    }
-
-    // Go through any tool calls and handle them
-    const toolCalls = completion.choices[0].message.tool_calls;
-    if (toolCalls && toolCalls.length > 0) {
-        for (const toolCall of toolCalls) {
-            if (!toolCall.id) {
-                continue;
+            // Update the instance state
+            const { instanceState, release } =
+                await getInstanceState(instanceId);
+            if (!instanceState) {
+                return null;
             }
 
-            const name = toolCall.function?.name;
-            if (!name || !functions[name as keyof typeof functions]) {
-                continue;
-            }
+            const storyBeatInstances =
+                instanceState.selectedCampaignInstance.storyBeatInstances;
+            const currentStoryBeatInstance =
+                storyBeatInstances[storyBeatInstances.length - 1];
 
-            console.log("Running function:", name);
-            console.log("Arguments:", toolCall.function?.arguments);
-
-            const func = functions[name as keyof typeof functions];
-            if (toolCall.function?.arguments) {
-                const parsedArgs = JSON.parse(toolCall.function.arguments);
-                const argsValid = func.argsSchema.safeParse(parsedArgs);
-                if (argsValid.success) {
-                    func.implementation(
-                        instanceState,
-                        toolCall.id,
-                        argsValid.data
-                    );
-                } else {
-                    console.error(
-                        "Invalid arguments for function:",
-                        name,
-                        argsValid.error
-                    );
+            currentStoryBeatInstance.messages.push(
+                newMessage as Message & {
+                    characterInstance: null;
                 }
-            } else {
-                func.implementation(instanceState, toolCall.id);
+            );
+
+            instanceState.streamedMessageId = newMessage.id;
+
+            updateInstanceState(instanceId, instanceState, release);
+        } else if (toolCalls && toolCalls.length > 0) {
+            for (const toolCall of toolCalls) {
+                if (!toolCall.id) {
+                    continue;
+                }
+
+                const name = toolCall.function?.name;
+                if (!name || !functions[name as keyof typeof functions]) {
+                    continue;
+                }
+
+                console.log("Running function:", name);
+                console.log("Arguments:", toolCall.function?.arguments);
+
+                const newMessage = createFakeAssistantMessage(
+                    true,
+                    null,
+                    JSON.stringify(completion.choices[0].message)
+                );
+                newMessages.push(newMessage);
+
+                // Update the instance state
+                const { instanceState, release } =
+                    await getInstanceState(instanceId);
+                if (!instanceState) {
+                    return null;
+                }
+
+                currentStoryBeatInstance.messages.push(
+                    newMessage as Message & {
+                        characterInstance: null;
+                    }
+                );
+
+                const func = functions[name as keyof typeof functions];
+                if (toolCall.function?.arguments) {
+                    const parsedArgs = JSON.parse(toolCall.function.arguments);
+                    const argsValid = func.argsSchema.safeParse(parsedArgs);
+                    if (argsValid.success) {
+                        func.implementation(
+                            instanceState,
+                            toolCall.id,
+                            argsValid.data
+                        );
+                    } else {
+                        console.error(
+                            "Invalid arguments for function:",
+                            name,
+                            argsValid.error
+                        );
+                    }
+                } else {
+                    func.implementation(instanceState, toolCall.id);
+                }
+
+                updateInstanceState(instanceId, instanceState, release);
             }
         }
     }
 
-    updateInstanceState(instanceId, instanceState, release);
+    await db.storyBeatInstance.update({
+        where: { id: currentStoryBeatInstance.id },
+        data: {
+            messages: {
+                create: newMessages.map((m) => ({
+                    id: m.id,
+                    content: m.content,
+                    verb: m.verb,
+                    visible: m.visible,
+                })),
+            },
+        },
+    });
 }

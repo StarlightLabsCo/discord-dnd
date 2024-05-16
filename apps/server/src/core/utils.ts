@@ -91,10 +91,6 @@ export async function getSystemPrompt(
             Focus on creating a compelling story with good tempo. Don't compact the story. Imagine each message to be a single small action. e.g. "I approach the barkeep.", "I look over the ridge", etc and match the narration accordingly. Avoid any text that the narrator wouldn't speak, e.g. no asterisks, titles, function calls, etc. Do not ask the player what their actions are, just end the message with your narration, as is. Keep responses on the shorter side. Have fun! `,
     };
 
-    console.log(`----- System Prompt -----`);
-    console.log(message.content);
-    console.log(`----- End of System Prompt -----`);
-
     return message;
 }
 

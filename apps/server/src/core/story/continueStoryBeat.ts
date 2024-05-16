@@ -195,6 +195,10 @@ export async function continueStoryBeat(instanceId: string) {
 
                 updateInstanceState(instanceId, instanceState, release);
             }
+        } else {
+            console.error("No content or tool calls");
+            console.error(completion);
+            return null;
         }
 
         let isFinished = await groq.chat.completions.create({

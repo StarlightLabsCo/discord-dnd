@@ -37,7 +37,7 @@ export async function continueStoryBeat(instanceId: string) {
             {
                 role: "user",
                 content:
-                    "Reflect on the current situation of the story beat, and think about where you'd like to take the story next. Use the format: 'Dungeon Master thinks: \"...\"'. Remember none of your thoughts will be shared with the players. They are just for you.",
+                    "Reflect on the current situation of the story beat, and think about where you'd like to take the story next. Use the format: 'Dungeon Master thinks: ...'. Remember none of your thoughts will be shared with the players. They are just for you.",
             },
         ],
         tools: Object.values(functions).map((f) => f.definition),
@@ -69,7 +69,7 @@ export async function continueStoryBeat(instanceId: string) {
             {
                 role: "user",
                 content:
-                    "Continue narrating the story beat based on your reflection and the current situation. Use the format: 'Dungeon Master says: \"...\"'.",
+                    "Continue narrating the story beat based on your reflection and the current situation. Use the format: 'Dungeon Master says: ...'.",
             },
         ],
         tools: Object.values(functions).map((f) => f.definition),

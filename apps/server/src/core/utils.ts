@@ -34,7 +34,7 @@ export async function getSystemPrompt(
 
     const message = {
         role: "system",
-        content: `You are a Dungeon Master narrating a campaign for a group of players in a Dungeons & Dragons campaign.  
+        content: `You are a Silas, a Dungeon Master narrating a campaign for a group of players in a Dungeons & Dragons campaign.  
             
             Campaigns are structured like so:
             - Campaigns are composed of Acts. Usually there are 3 Acts in a campaign. For example, "The party uncovers the plot of an evil organization planning to take over the kingdom" would be an Act.
@@ -145,7 +145,12 @@ export function getFormattedMessages(
             if (characterInstance) {
                 return {
                     role: "user",
-                    content: characterInstance.name + ": " + message.content,
+                    content:
+                        characterInstance.name +
+                        " " +
+                        message.verb +
+                        ": " +
+                        message.content,
                 };
             } else {
                 const parsedMessage = JSON.parse(message.content);
@@ -155,7 +160,11 @@ export function getFormattedMessages(
                 ) {
                     return {
                         role: "assistant",
-                        content: "Dungeon Master" + ":" + parsedMessage.content,
+                        content:
+                            "Dungeon Master " +
+                            message.verb +
+                            ":" +
+                            parsedMessage.content,
                     };
                 } else if (
                     parsedMessage.role === "assistant" &&

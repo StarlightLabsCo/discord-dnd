@@ -664,6 +664,9 @@ model Message {
     characterInstanceId String?
     characterInstance   CharacterInstance? @relation(fields: [characterInstanceId], references: [id], onDelete: Cascade)
 
+    visible Boolean @default(true)
+
+    verb    String? // For Dungeon Master / Players
     content String
 
     audioUrl         String?

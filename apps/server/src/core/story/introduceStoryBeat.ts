@@ -46,6 +46,7 @@ export async function introduceStoryBeat(instanceId: string) {
     // Save the completion as a message
     const newMessage = await db.message.create({
         data: {
+            verb: "says",
             content: JSON.stringify(completion.choices[0].message),
             storyBeatInstance: {
                 connect: {

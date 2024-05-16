@@ -27,10 +27,66 @@ export async function continueStoryBeat(instanceId: string) {
     const messages = currentStoryBeatInstance.messages;
 
     const formattedMessages = getFormattedMessages(messages);
+    // Add a step to do internal reflection
+    let reflection = await groq.chat.completions.create({
+        model: "llama3-70b-8192",
+        messages: [
+            systemPrompt,
+            ...formattedMessages,
+            {
+                role: "user",
+                content:
+                    "Reflect on the current situation of the story beat, and think about where you'd like to take the story next. Use the format: 'Dungeon Master thinks: \"...\"'. Remember none of your thoughts will be shared with the players. They are just for you.",
+            },
+        ],
+        tools: Object.values(functions).map((f) => f.definition),
+    });
 
+    if (!reflection.choices || reflection.choices.length === 0) {
+        console.error("No reflection choices");
+        console.error(reflection);
+        return null;
+    }
+
+    if (reflection.choices[0].message.content) {
+        reflection.choices[0].message.content =
+            reflection.choices[0].message.content
+                .replace(/Dungeon Master thinks:\s?/, "")
+                .trim();
+    }
+
+    await db.message.create({
+        data: {
+            visible: false,
+            verb: "thinks",
+            content: JSON.stringify(reflection.choices[0].message),
+            storyBeatInstance: {
+                connect: {
+                    id: currentStoryBeatInstance.id,
+                },
+            },
+        },
+        include: {
+            characterInstance: true, // this will be null for DM messages
+        },
+    });
+
+    // Narration Step
     let completion = await groq.chat.completions.create({
         model: "llama3-70b-8192",
-        messages: [systemPrompt, ...formattedMessages],
+        messages: [
+            systemPrompt,
+            ...formattedMessages,
+            {
+                role: "assistant",
+                content: reflection.choices[0].message.content,
+            },
+            {
+                role: "user",
+                content:
+                    "Continue narrating the story beat based on your reflection and the current situation. Use the format: 'Dungeon Master says: \"...\"'.",
+            },
+        ],
         tools: Object.values(functions).map((f) => f.definition),
     });
 
@@ -44,13 +100,14 @@ export async function continueStoryBeat(instanceId: string) {
     if (completion.choices[0].message.content) {
         completion.choices[0].message.content =
             completion.choices[0].message.content
-                .replace(/Dungeon Master:\s?/, "")
+                .replace(/Dungeon Master says:\s?/, "")
                 .trim();
     }
 
     // Save the completion as a message
     const newMessage = await db.message.create({
         data: {
+            verb: "says",
             content: JSON.stringify(completion.choices[0].message),
             storyBeatInstance: {
                 connect: {

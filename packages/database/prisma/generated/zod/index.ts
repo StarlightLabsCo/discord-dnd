@@ -54,7 +54,7 @@ export const CampaignInstanceScalarFieldEnumSchema = z.enum(['id','userId','name
 
 export const StoryBeatInstanceScalarFieldEnumSchema = z.enum(['id','beatId','campaignInstanceId','name','description','imageUrl','createdAt','updatedAt']);
 
-export const MessageScalarFieldEnumSchema = z.enum(['id','storyBeatInstanceId','characterInstanceId','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
+export const MessageScalarFieldEnumSchema = z.enum(['id','storyBeatInstanceId','characterInstanceId','visible','verb','content','audioUrl','audioWordTimings','tag','createdAt','updatedAt']);
 
 export const CharacterInstanceScalarFieldEnumSchema = z.enum(['id','userId','characterId','campaignInstanceId','raceId','subraceId','classId','backgroundId','name','description','imageUrl','pronouns','age','voice','alignment','appearance','backstory','personalityTraits','ideals','bonds','flaws','currentLocationId','level','experience','proficiencyBonus','strength','dexterity','constitution','intelligence','wisdom','charisma','hitDieCount','hitDieType','healthPoints','size','speed','availableLevel1SpellSlots','availableLevel2SpellSlots','availableLevel3SpellSlots','availableLevel4SpellSlots','availableLevel5SpellSlots','availableLevel6SpellSlots','availableLevel7SpellSlots','availableLevel8SpellSlots','availableLevel9SpellSlots','maxLevel1SpellSlots','maxLevel2SpellSlots','maxLevel3SpellSlots','maxLevel4SpellSlots','maxLevel5SpellSlots','maxLevel6SpellSlots','maxLevel7SpellSlots','maxLevel8SpellSlots','maxLevel9SpellSlots','createdAt','updatedAt']);
 
@@ -526,6 +526,8 @@ export const MessageSchema = z.object({
   id: z.string().cuid(),
   storyBeatInstanceId: z.string(),
   characterInstanceId: z.string().nullable(),
+  visible: z.boolean(),
+  verb: z.string().nullable(),
   content: z.string(),
   audioUrl: z.string().nullable(),
   audioWordTimings: z.string().nullable(),

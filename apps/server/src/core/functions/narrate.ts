@@ -28,7 +28,9 @@ export async function narrate(
         tools: Object.values(functions).map((f) => f.definition),
     });
 
-    console.log(`Narration: ${completion.choices[0].message.content}`);
+    console.log(
+        `Narration (pre-strip): ${completion.choices[0].message.content}`
+    );
 
     // Update messages array
     const completionMessage = {
@@ -43,6 +45,10 @@ export async function narrate(
         completion.choices[0].message.content
             .replace(`${name} ${verb}:\s?`, "")
             .trim();
+
+    console.log(
+        `Narration (after-strip): ${completion.choices[0].message.content}`
+    );
 
     const message = completion.choices[0].message;
     const strippedContent = message.content;

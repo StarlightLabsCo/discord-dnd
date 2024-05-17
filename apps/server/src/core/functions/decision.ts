@@ -19,6 +19,5 @@ export async function decision(
     });
 
     console.log(`Decision: ${isFinished.choices[0].message.content}`);
-
     return isFinished.choices[0].message.content === "true";
 }

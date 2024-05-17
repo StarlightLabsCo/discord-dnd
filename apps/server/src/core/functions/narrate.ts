@@ -22,7 +22,7 @@ export async function narrate(
             ...messages,
             {
                 role: "user",
-                content: `${instruction}\n\nWhen speaking use the format: '${name} ${verb}: ...' If desired, you can also call a tool to make things happen in the game systems.`,
+                content: `${instruction}\n\nWhen speaking use the format: '${name} ${verb}: ...' If desired, you can also call a tool to make things happen in the game systems, but this would not be in the narration, this is a seperate tool call.`,
             },
         ],
         tools: Object.values(functions).map((f) => f.definition),

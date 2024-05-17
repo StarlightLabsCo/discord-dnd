@@ -13,11 +13,13 @@ export async function decision(
             ...messages,
             {
                 role: "user",
-                content: `Model the mind of ${name} and decide if ${name} would believe the following statement to be true or false: "${statement}". Please choose true if ${name} believes the statement is true, or false if ${name} believes the statement is false.`,
+                content: `Model the mind of ${name} and decide if ${name} would believe the following statement to be true or false: "${statement}". Please choose true if ${name} believes the statement is true, or false if ${name} believes the statement is false. Only respond with "true" or "false". No new lines, no spaces, no punctuation, no additional information.`,
             },
         ],
     });
 
-    console.log(`Decision: ${isFinished.choices[0].message.content}`);
-    return isFinished.choices[0].message.content === "true";
+    const strippedContent = isFinished.choices[0].message.content.trim();
+
+    console.log(`Decision: ${strippedContent}`);
+    return strippedContent === "true";
 }

@@ -25,6 +25,8 @@ export async function reflect(
         ],
     });
 
+    console.log(`Reflection: ${completion.choices[0].message.content}`);
+
     // Update messages array
     const completionMessage = {
         role: "assistant",

@@ -28,6 +28,8 @@ export async function narrate(
         tools: Object.values(functions).map((f) => f.definition),
     });
 
+    console.log(`Narration: ${completion.choices[0].message.content}`);
+
     // Update messages array
     const completionMessage = {
         role: "assistant",

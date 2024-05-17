@@ -25,18 +25,22 @@ export async function reflect(
         ],
     });
 
-    const message = completion.choices[0].message;
-
+    // Update messages array
     const completionMessage = {
         role: "assistant",
-        content: message.content,
+        content: completion.choices[0].message.content,
     };
 
     const newMessages = [...messages, completionMessage];
 
-    const strippedContent = message.content
-        .replace(`${name} ${verb}:\s?`, "")
-        .trim();
+    // Strip content from message
+    completion.choices[0].message.content =
+        completion.choices[0].message.content
+            .replace(`${name} ${verb}:\s?`, "")
+            .trim();
+
+    const message = completion.choices[0].message;
+    const strippedContent = message.content;
 
     // Handle options async
     if (options?.save) {

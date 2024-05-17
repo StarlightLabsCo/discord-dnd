@@ -38,7 +38,7 @@ export async function reflect(
     // Strip content from message
     completion.choices[0].message.content =
         completion.choices[0].message.content
-            .replace(`${name} ${verb}:\s?`, "")
+            .replace(`${name} ${verb}: `, "")
             .trim();
 
     const message = completion.choices[0].message;

@@ -20,8 +20,9 @@ export async function introduceBeat(instanceId: string) {
         [systemPrompt],
         `Introduce the story beat of ${storyBeatInstance.name} with the following plan: ${plan}`,
         {
-            save: storyBeatInstance.id,
-            speak: instanceId,
+            save: true,
+            speak: true,
+            instanceId,
         }
     );
 }

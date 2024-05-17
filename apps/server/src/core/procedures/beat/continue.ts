@@ -20,7 +20,8 @@ export async function continueBeat(instanceId: string) {
 
     // Reflect
     const [withReflection] = await reflect(reflectMessages, {
-        save: storyBeatInstance.id,
+        save: true,
+        instanceId,
     });
 
     // Narrate
@@ -31,8 +32,9 @@ export async function continueBeat(instanceId: string) {
             updatingMessages,
             "Continue narrating the story beat based on your prior thoughts for this current story beat step.",
             {
-                save: storyBeatInstance.id,
-                speak: instanceId,
+                save: true,
+                speak: true,
+                instanceId,
             }
         );
 

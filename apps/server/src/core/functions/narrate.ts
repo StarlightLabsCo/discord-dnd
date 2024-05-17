@@ -4,8 +4,7 @@ import type {
 } from "groq-sdk/resources/chat/index.mjs";
 import { groq } from "@/lib/groq";
 import { functions } from "@/core/tools";
-import { db } from "@/lib/db";
-import { speak } from "../utils";
+import { handleOptions, type Options } from "../utils";
 
 const name = "Dungeon Master";
 const verb = "says";
@@ -13,10 +12,7 @@ const verb = "says";
 export async function narrate(
     messages: CompletionCreateParams.Message[],
     instruction: string,
-    options?: {
-        save?: string; // storyBeatInstanceId
-        speak?: string; // instanceId
-    }
+    options?: Options
 ): Promise<
     [CompletionCreateParams.Message[], ChatCompletion.Choice.Message, string]
 > {
@@ -32,38 +28,26 @@ export async function narrate(
         tools: Object.values(functions).map((f) => f.definition),
     });
 
-    const message = completion.choices[0].message;
-
+    // Update messages array
     const completionMessage = {
         role: "assistant",
-        content: message.content,
+        content: completion.choices[0].message.content,
     };
 
     const newMessages = [...messages, completionMessage];
 
-    const strippedContent = message.content
-        .replace(`${name} ${verb}:\s?`, "")
-        .trim();
+    // Strip content from message
+    completion.choices[0].message.content =
+        completion.choices[0].message.content
+            .replace(`${name} ${verb}:\s?`, "")
+            .trim();
 
-    // Handle options after returning the new messages
+    const message = completion.choices[0].message;
+    const strippedContent = message.content;
+
+    // Handle options async
     if (options?.save) {
-        setTimeout(async () => {
-            const dbMessage = await db.message.create({
-                data: {
-                    storyBeatInstance: {
-                        connect: {
-                            id: options.save,
-                        },
-                    },
-                    verb,
-                    content: JSON.stringify(message),
-                },
-            });
-
-            if (options?.speak) {
-                await speak(options.speak, dbMessage);
-            }
-        }, 0);
+        handleOptions(options, message, verb, true);
     }
 
     return [newMessages, message, strippedContent];

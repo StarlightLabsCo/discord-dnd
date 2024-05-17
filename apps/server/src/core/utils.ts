@@ -1,7 +1,15 @@
-import { getReadableInstanceState, getWritableInstanceState, updateInstanceState } from "@/api/websocket/instanceState";
+import {
+    getReadableInstanceState,
+    getWritableInstanceState,
+    updateInstanceState,
+} from "@/api/websocket/instanceState";
+import { db } from "@/lib/db";
 import { streamAudio } from "@/lib/elevenlabs";
 import type { CharacterInstance, Message } from "database";
-import type { CompletionCreateParams } from "groq-sdk/resources/chat/index.mjs";
+import type {
+    ChatCompletion,
+    CompletionCreateParams,
+} from "groq-sdk/resources/chat/index.mjs";
 
 export function getFormattedMessages(
     messages: (Message & { characterInstance: CharacterInstance | null })[]
@@ -74,31 +82,80 @@ export async function getLatestStoryBeatInstance(instanceId: string) {
     return storyBeatInstances[storyBeatInstances.length - 1];
 }
 
-export async function saveMessage(
-    instanceId: string,
-    message: CompletionCreateParams.Message
-) {
-    // const newMessage = await db.message.create({
-    //     data: {
-    //         storyBeatInstance: {
-    //             connect: {
-    //                 id: storyBeatInstanceId,
-    //             },
-    //         },
-    //         content: JSON.stringify(message),
-    //     },
-    // });
-    // TODO implement
-}
-
 export async function speak(instanceId: string, message: Message) {
-    const { instanceState, release } = await getWritableInstanceState(instanceId);
+    const { instanceState, release } =
+        await getWritableInstanceState(instanceId);
     if (!instanceState) {
         throw new Error("Instance State not found");
     }
 
     instanceState.streamedMessageId = message.id;
     await streamAudio(instanceId, "1Tbay5PQasIwgSzUscmj", message);
-    
+
     updateInstanceState(instanceId, instanceState, release);
+}
+
+export type Options = {
+    save?: boolean;
+    speak?: boolean;
+    instanceId: string;
+} & (
+    | { save: true; speak?: false; instanceId: string }
+    | { save: true; speak: true; instanceId: string }
+    | { save?: false; speak?: false; instanceId?: string }
+);
+
+export async function handleOptions(
+    options: Options,
+    message: ChatCompletion.Choice.Message,
+    verb: string,
+    visible: boolean
+) {
+    if (options?.save) {
+        // Create message in database
+        const storyBeatInstance = await getLatestStoryBeatInstance(
+            options.instanceId
+        );
+
+        const dbMessage = await db.message.create({
+            data: {
+                storyBeatInstance: {
+                    connect: {
+                        id: storyBeatInstance.id,
+                    },
+                },
+                visible,
+                verb,
+                content: JSON.stringify(message),
+            },
+            include: {
+                characterInstance: true,
+            },
+        });
+
+        // Update instance state
+        const { instanceState, release } = await getWritableInstanceState(
+            options.instanceId
+        );
+        if (!instanceState) {
+            return null;
+        }
+
+        const targetStoryBeatInstance =
+            instanceState.selectedCampaignInstance.storyBeatInstances.find(
+                (instance) => instance.id === storyBeatInstance.id
+            );
+
+        if (targetStoryBeatInstance) {
+            targetStoryBeatInstance.messages.push(dbMessage);
+        }
+
+        updateInstanceState(options.instanceId, instanceState, release);
+
+        // Speak message
+        if (options?.speak) {
+            instanceState.streamedMessageId = dbMessage.id;
+            await speak(options.instanceId, dbMessage);
+        }
+    }
 }

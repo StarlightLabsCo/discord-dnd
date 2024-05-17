@@ -52,7 +52,7 @@ export async function handleLobbyReadyRequest(
             storyBeatInstances[storyBeatInstances.length - 1].messages
                 .length === 0
         ) {
-            introduceBeat(ws.data.instanceId);
+            await introduceBeat(ws.data.instanceId);
         }
     }
 }

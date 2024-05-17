@@ -80,5 +80,5 @@ export async function handleSendMessageRequest(
     ].messages.push(dbMessage);
     updateInstanceState(ws.data.instanceId, instanceState, release);
 
-    continueBeat(ws.data.instanceId);
+    await continueBeat(ws.data.instanceId);
 }

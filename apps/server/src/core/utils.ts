@@ -154,7 +154,6 @@ export async function handleOptions(
 
         // Speak message
         if (options?.speak) {
-            instanceState.streamedMessageId = dbMessage.id;
             await speak(options.instanceId, dbMessage);
         }
     }
